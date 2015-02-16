@@ -34,4 +34,6 @@ public class ITerminalSymbol implements ISymbol {
    public <T, E extends Throwable> T accept(final SymbolVisitor<T, E> visitor) throws E {
       return visitor.intSymbol(name);
    }
+
+    public Object getValue() { return this; }
 }

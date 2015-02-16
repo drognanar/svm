@@ -20,6 +20,11 @@
 			<artifactId>svm-jinstruction</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>com.lexicalscope.symb</groupId>
+            <artifactId>svm-jsymbols</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
