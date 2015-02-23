@@ -7,12 +7,14 @@ import static org.objectweb.asm.Type.getInternalName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.hamcrest.Matcher;
 
 import com.lexicalscope.svm.classloading.AsmSClassLoader;
 import com.lexicalscope.svm.classloading.ClassSource;
 import com.lexicalscope.svm.classloading.SClassLoader;
+import com.lexicalscope.svm.classloading.SelectingClassLoader;
 import com.lexicalscope.svm.classloading.StaticsImpl;
 import com.lexicalscope.svm.heap.HeapFactory;
 import com.lexicalscope.svm.j.instruction.concrete.klass.DefineClassOp;
@@ -55,6 +57,8 @@ public class InitialStateBuilder {
    public JStateImpl createInitialState(
          final StateTag stateTag,
          final StateSearch<JState> search,
+         final Set<String> classAbstractions,
+         final ClassSource abstractSource,
          final ClassSource classSource,
          final SMethodDescriptor entryPointName,
          final Object... args) {
@@ -64,6 +68,12 @@ public class InitialStateBuilder {
             instrumentationBuilder.instrumentation(instructions),
             natives(),
             classSource);
+      final SClassLoader abstractingLoader = new AsmSClassLoader(
+            instructions,
+            instrumentationBuilder.instrumentation(instructions),
+            natives(),
+            abstractSource);
+      final SClassLoader mainLoader = new SelectingClassLoader(classLoader, abstractingLoader);
 
       final StatementBuilder statements = statements(instructions);
       defineBootstrapClassesInstruction(statements.sink(), instructions);
@@ -74,7 +84,7 @@ public class InitialStateBuilder {
 
       final DequeStack stack = new DequeStack();
       stack.push(new SnapshotableStackFrame(JavaConstants.INITIAL_FRAME_NAME, STATIC, initialInstruction, 0, entryPointName.argSize()));
-      return new JStateImpl(stateTag, search, new StaticsImpl(classLoader), stack, heapFactory().heap(), metaState.snapshot());
+      return new JStateImpl(stateTag, search, new StaticsImpl(mainLoader, classAbstractions), stack, heapFactory().heap(), metaState.snapshot());
    }
 
    private void loadArgsInstruction(final StatementBuilder statements, final Object[] args) {

@@ -2,11 +2,7 @@ package com.lexicalscope.svm.classloading;
 
 import static org.objectweb.asm.Type.getInternalName;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.lexicalscope.svm.classloading.asm.AsmSClass;
 import com.lexicalscope.svm.heap.ObjectRef;
@@ -21,10 +17,12 @@ public class StaticsImpl implements Statics {
    // TODO[tim]: need fast-clone version
    private static final String klassKlassName = getInternalName(Class.class);
    private final Map<String, SClass> defined;
+   private final Map<String, SClass> abstractions;
 
    // TODO[tim]: combine these maps for efficiency
    private final Map<SClass, ObjectRef> staticsAddresses;
    private final Map<SClass, ObjectRef> classAddresses;
+   private final Set<String> classAbstractions;
 
    private final SClassLoader classLoader;
 
@@ -35,13 +33,34 @@ public class StaticsImpl implements Statics {
             new HashMap<SClass, ObjectRef>());
    }
 
+   public StaticsImpl(final SClassLoader classLoader, Set<String> classAbstractions) {
+      this(classLoader,
+              classAbstractions,
+              new HashMap<String, SClass>(),
+              new HashMap<String, SClass>(),
+              new HashMap<SClass, ObjectRef>(),
+              new HashMap<SClass, ObjectRef>());
+   }
+
    private StaticsImpl(
          final SClassLoader classLoader,
          final Map<String, SClass> defined,
          final Map<SClass, ObjectRef> staticsAddresses,
          final Map<SClass, ObjectRef> classAddresses) {
+      this(classLoader, new HashSet<String>(), new HashMap<String, SClass>(), defined, staticsAddresses, classAddresses);
+   }
+
+   private StaticsImpl(
+           final SClassLoader classLoader,
+           final Set<String> classAbstractions,
+           final Map<String, SClass> abstractions,
+           final Map<String, SClass> defined,
+           final Map<SClass, ObjectRef> staticsAddresses,
+           final Map<SClass, ObjectRef> classAddresses) {
       this.defined = defined;
       this.classLoader = classLoader;
+      this.abstractions = abstractions;
+      this.classAbstractions = classAbstractions;
       this.staticsAddresses = staticsAddresses;
       this.classAddresses = classAddresses;
    }
@@ -49,6 +68,8 @@ public class StaticsImpl implements Statics {
    @Override public Statics snapshot() {
       return new StaticsImpl(
             classLoader,
+            classAbstractions,
+            abstractions,
             new HashMap<>(defined),
             new HashMap<>(staticsAddresses),
             new HashMap<>(classAddresses));
@@ -62,6 +83,11 @@ public class StaticsImpl implements Statics {
       final List<SClass> result = new ArrayList<>();
       final SClass loaded = classLoader.load(klassName);
       cache(loaded);
+      if (classAbstractions.contains(klassName)) {
+         String abstractKlassName = String.format("@%s", klassName);
+         final SClass a = classLoader.load(abstractKlassName);
+         abstractions.put(a.name(), a);
+      }
       // load all supertypes
       for (final SClass klass : loaded.superTypes()) {
          if(!defined.containsKey(klass.name())){
@@ -141,7 +167,11 @@ public class StaticsImpl implements Statics {
       if(!isDefined(klassName)) {
          throw new MissingClassDefinitionException(klassName, defined);
       }
-      return defined.get(klassName);
+      if (classAbstractions.contains(klassName)) {
+         return abstractions.get(klassName);
+      } else {
+         return defined.get(klassName);
+      }
    }
 
    @Override public void staticsAt(final SClass klass, final ObjectRef staticsAddress) {

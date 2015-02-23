@@ -8,8 +8,10 @@ import static org.objectweb.asm.Type.getMethodDescriptor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
@@ -35,6 +37,8 @@ public class VmRule implements MethodRule {
    private final ReflectionMatcher<FluentAnnotated> annotatedWithTestPointEntry = annotatedWith(TestEntryPoint.class);
    private final JvmBuilder jvmBuilder;
    private final Map<String, SMethodDescriptor> entryPoints = new HashMap<>();
+   private final Set<String> classAbstractions = new HashSet<>();
+   private ClassSource abstractSource;
    private SMethodDescriptor entryPoint;
 
    private final List<Vm<JState>> vm = new ArrayList<>();
@@ -107,12 +111,21 @@ public class VmRule implements MethodRule {
       // can be overridden
    }
 
+   public void setAbstractMarker(Class klass) {
+      abstractSource = classpathClassRepostory(klass);
+   }
+
+   public void addClassMapping(Class fromClass) {
+      String fromName = fromClass.getName().replace('.', '/');
+      classAbstractions.add(fromName);
+   }
+
    public final void entryPoint(final Class<?> klass, final String name, final String desc) {
       this.entryPoint = new AsmSMethodName(klass, name, desc);
    }
 
    public final Vm<JState> build(final Object[] args) {
-      return jvmBuilder.build(tags, classSources, entryPoint, args);
+      return jvmBuilder.build(tags, classSources, classAbstractions, abstractSource, entryPoint, args);
    }
 
    public void loadFrom(final Class<?>[] loadFromWhereverTheseWereLoaded) {
