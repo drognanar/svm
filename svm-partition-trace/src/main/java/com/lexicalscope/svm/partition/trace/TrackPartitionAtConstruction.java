@@ -30,7 +30,7 @@ public class TrackPartitionAtConstruction implements Instrumentor {
             uPart.newInstanceMatcher());
    }
 
-   private static Instrumentor constructionOf(
+   public static Instrumentor constructionOf(
          final Matcher<? super CallContext> aPartNewInstanceMatcher,
          final Matcher<? super CallContext> uPartNewInstanceMatcher) {
       return new TrackPartitionAtConstruction(aPartNewInstanceMatcher, uPartNewInstanceMatcher);
