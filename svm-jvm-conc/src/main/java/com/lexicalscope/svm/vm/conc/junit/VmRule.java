@@ -2,9 +2,12 @@ package com.lexicalscope.svm.vm.conc.junit;
 
 import static com.lexicalscope.fluentreflection.FluentReflection.object;
 import static com.lexicalscope.fluentreflection.ReflectionMatchers.annotatedWith;
+import static com.lexicalscope.svm.classloading.ClasspathClassRepository.classpathClassRepository;
 import static com.lexicalscope.svm.classloading.ClasspathClassRepository.classpathClassRepostory;
 import static org.objectweb.asm.Type.getMethodDescriptor;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -115,6 +118,10 @@ public class VmRule implements MethodRule {
       abstractSource = classpathClassRepostory(klass);
    }
 
+    public void setAbstractMarker(URL abstractionsPath) {
+        abstractSource = new ClasspathClassRepository(new URLClassLoader(new URL[] {abstractionsPath}, null));
+    }
+
    public void addClassMapping(Class fromClass) {
       String fromName = fromClass.getName().replace('.', '/');
       classAbstractions.add(fromName);
@@ -128,13 +135,30 @@ public class VmRule implements MethodRule {
       return jvmBuilder.build(tags, classSources, classAbstractions, abstractSource, entryPoint, args);
    }
 
-   public void loadFrom(final Class<?>[] loadFromWhereverTheseWereLoaded) {
+   public void loadFrom(final Class<?>[][] loadFromWhereverTheseWereLoaded) {
       classSources = new ClassSource[loadFromWhereverTheseWereLoaded.length];
       tags = new StateTag[loadFromWhereverTheseWereLoaded.length];
       for (int i = 0; i < classSources.length; i++) {
-         classSources[i] = classpathClassRepostory(loadFromWhereverTheseWereLoaded[i]);
-         tags[i] = new ClassStateTag(loadFromWhereverTheseWereLoaded[i]);
+         classSources[i] = classpathClassRepository(loadFromWhereverTheseWereLoaded[i]);
+         tags[i] = new ClassStateTag(loadFromWhereverTheseWereLoaded[i][0]);
       }
+   }
+
+   public void loadFrom(final Class[] markers, final URL[][] loadFromTheseLocations) {
+      classSources = new ClassSource[loadFromTheseLocations.length];
+      tags = new StateTag[loadFromTheseLocations.length];
+      for (int i = 0; i < classSources.length; i++) {
+         classSources[i] = classpathClassRepository(loadFromTheseLocations[i]);
+         tags[i] = new ClassStateTag(markers[i]);
+      }
+   }
+
+   public void loadFrom(final Class<?>[] loadFromWhereverTheseWereLoaded) {
+      Class[][] classes = new Class[loadFromWhereverTheseWereLoaded.length][];
+      for (int i = 0; i < loadFromWhereverTheseWereLoaded.length; i++) {
+         classes[i] = new Class[] { loadFromWhereverTheseWereLoaded[i] };
+      }
+      loadFrom(classes);
    }
 
    public final JState execute(final Object ... args) {
