@@ -37,6 +37,64 @@ public class SymbolicTraceMatchers {
       return equivalentTo(solver.checker(), expectedTrace);
    }
 
+   public static Matcher<TraceElement> traceElementMatcher(final FeasibilityChecker checker, final TraceElement expectedTraceElement) {
+      return new TypeSafeDiagnosingMatcher<TraceElement>() {
+         @Override
+         protected boolean matchesSafely(TraceElement actualTraceElement, Description mismatchDescription) {
+            if(expectedTraceElement.methodName().equals(actualTraceElement.methodName()) &&
+                    expectedTraceElement.isCall() == actualTraceElement.isCall()) {
+
+               final Object[] actualArgs = actualTraceElement.args();
+               final Object[] expectedArgs = expectedTraceElement.args();
+               if(expectedArgs.length != actualArgs.length) {
+                  mismatchDescription
+                          .appendText("argument length mismatch ")
+                          .appendValue(expectedTraceElement)
+                          .appendText(" and ")
+                          .appendValue(actualTraceElement);
+                  return false;
+               }
+               for (int i = 0; i < expectedArgs.length; i++) {
+                  final Object actualArg = actualArgs[i];
+                  final Object expectedArg = expectedArgs[i];
+                  if(   actualArg instanceof Symbol
+                          && expectedArg instanceof Symbol) {
+                     if(!checker.equivalent((Symbol) expectedArg, (Symbol) actualArg))
+                     {
+                        mismatchDescription.appendText("unable to prove equivalence of ")
+                                .appendValue(expectedArg)
+                                .appendText(" and ")
+                                .appendValue(actualArg);
+                        return false;
+                     }
+                  } else if (!actualArg.equals(expectedArg)) {
+                     mismatchDescription.appendText("argument mismatch of ")
+                             .appendValue(expectedArg.getClass())
+                             .appendText(":")
+                             .appendValue(expectedArg)
+                             .appendText(" and ")
+                             .appendValue(actualArg.getClass())
+                             .appendText(":")
+                             .appendValue(actualArg);
+                     return false;
+                  }
+               }
+
+            } else {
+               mismatchDescription.appendText("expected ").appendValue(expectedTraceElement);
+               mismatchDescription.appendText("actual ").appendValue(actualTraceElement);
+               return false;
+            }
+            return true;
+         }
+
+         @Override
+         public void describeTo(Description description) {
+            description.appendText("trace item equivalent to ").appendValue(expectedTraceElement);
+         }
+      };
+   }
+
    public static Matcher<Trace> equivalentTo(final FeasibilityChecker checker, final Trace expectedTrace) {
       return new TypeSafeDiagnosingMatcher<Trace>() {
          @Override public void describeTo(final Description description) {
@@ -50,50 +108,9 @@ public class SymbolicTraceMatchers {
                final TraceElement expectedTraceElement = expectedIterator.next();
                final TraceElement actualTraceElement = actualIterator.next();
 
-               if(expectedTraceElement.methodName().equals(actualTraceElement.methodName()) &&
-                  expectedTraceElement.isCall() == actualTraceElement.isCall()) {
 
-                  final Object[] actualArgs = actualTraceElement.args();
-                  final Object[] expectedArgs = expectedTraceElement.args();
-                  if(expectedArgs.length != actualArgs.length) {
-                     mismatchDescription
-                        .appendText("argument length mismatch ")
-                        .appendValue(expectedTraceElement)
-                        .appendText(" and ")
-                        .appendValue(actualTraceElement);
-                     return false;
-                  }
-                  for (int i = 0; i < expectedArgs.length; i++) {
-                     final Object actualArg = actualArgs[i];
-                     final Object expectedArg = expectedArgs[i];
-                     if(   actualArg instanceof Symbol
-                        && expectedArg instanceof Symbol) {
-                        if(!checker.equivalent((Symbol) expectedArg, (Symbol) actualArg))
-                        {
-                           mismatchDescription.appendText("unable to prove equivalence of ")
-                              .appendValue(expectedArg)
-                              .appendText(" and ")
-                              .appendValue(actualArg);
-                           return false;
-                        }
-                     } else if (!actualArg.equals(expectedArg)) {
-                        mismatchDescription.appendText("argument mismatch of ")
-                           .appendValue(expectedArg.getClass())
-                           .appendText(":")
-                           .appendValue(expectedArg)
-                           .appendText(" and ")
-                           .appendValue(actualArg.getClass())
-                           .appendText(":")
-                           .appendValue(actualArg);
-                        return false;
-                     }
-                  }
-
-               } else {
-                  mismatchDescription.appendText("expected ").appendValue(expectedTraceElement);
-                  mismatchDescription.appendText("actual ").appendValue(actualTraceElement);
+               if (!traceElementMatcher(checker, expectedTraceElement).matches(actualTraceElement))
                   return false;
-               }
             }
             // when comparing traces we truncate the longest trace to the
             // length of the shortest trace

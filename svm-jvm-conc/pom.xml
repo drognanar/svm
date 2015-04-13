@@ -40,7 +40,7 @@
          <scope>compile</scope>
       </dependency>
       <!-- workaround for m2e not handling workspace resolution of classifiers -->
-		<!-- 
+		<!--
 		<dependency>
 			<groupId>com.lexicalscope.fluent-reflection</groupId>
 			<artifactId>fluent-reflection</artifactId>
@@ -51,7 +51,7 @@
 		</dependency>
 		-->
 		<!-- stuff required by fluent reflection workspace resolution -->
-		<!-- 
+		<!--
 		<dependency>
 			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
