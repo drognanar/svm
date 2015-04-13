@@ -2,6 +2,8 @@ package com.lexicalscope.svm.partition.spec;
 
 import static org.hamcrest.Matchers.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hamcrest.Description;
@@ -20,6 +22,10 @@ public class MatchersSpec {
 
    public static Matcher<? super CallContext> receiverClass(final String klass) {
       return receiver(objectClass(equalTo(klass)));
+   }
+
+   public static Matcher<Receiver> klassIn(String... klasses) {
+       return klassIn(new HashSet<>(Arrays.asList(klasses)));
    }
 
    public static Matcher<Receiver> klassIn(final Set<String> klasses) {
@@ -41,6 +47,14 @@ public class MatchersSpec {
          }
       };
    }
+
+    public static Matcher<CallContext> calledBy(final Matcher<String> matcher) {
+        return new FeatureMatcher<CallContext, String>(matcher, "receiver", "receiver") {
+            @Override protected String featureValueOf(CallContext actual) {
+                return actual.methodName();
+            }
+        };
+    }
 
    public static Matcher<Invocation> parameter(final String path, final Matcher<Value> matcher) {
       return new FeatureMatcher<Invocation, Value>(matcher, "parameter " + path, "parameter") {

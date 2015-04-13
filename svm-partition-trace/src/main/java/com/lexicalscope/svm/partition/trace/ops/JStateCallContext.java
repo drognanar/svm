@@ -19,6 +19,10 @@ public class JStateCallContext implements CallContext {
       this.klassDesc = klassDesc;
    }
 
+   @Override public String methodName() {
+      return this.ctx.currentFrame().context().toString();
+   }
+
    @Override public Receiver receiver() {
       return new Receiver() {
          @Override public String klass() {
