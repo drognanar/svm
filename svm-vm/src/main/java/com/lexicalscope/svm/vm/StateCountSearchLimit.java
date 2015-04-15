@@ -10,4 +10,8 @@ public class StateCountSearchLimit implements SearchLimits {
    @Override public void searchedState() {
       count++;
    }
+
+   @Override public void reset() {
+      count = 0;
+   }
 }

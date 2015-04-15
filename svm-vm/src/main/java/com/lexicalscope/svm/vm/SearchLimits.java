@@ -4,4 +4,5 @@ public interface SearchLimits {
    boolean withinLimits();
 
    void searchedState();
+   void reset();
 }

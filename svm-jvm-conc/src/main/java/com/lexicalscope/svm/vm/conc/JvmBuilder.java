@@ -1,9 +1,7 @@
 package com.lexicalscope.svm.vm.conc;
 
 import com.lexicalscope.svm.classloading.ClassSource;
-import com.lexicalscope.svm.vm.StateSearch;
-import com.lexicalscope.svm.vm.Vm;
-import com.lexicalscope.svm.vm.VmImpl;
+import com.lexicalscope.svm.vm.*;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.StateTag;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
@@ -16,6 +14,23 @@ public final class JvmBuilder {
 
    public static JvmBuilder jvm() { return new JvmBuilder(); }
 
+    public Vm<JState> build(
+            final StateTag[] tags,
+            final ClassSource[] classSources,
+            final Set<String> classAbstractions,
+            final ClassSource abstractSource,
+            final SMethodDescriptor entryPointName,
+            final SearchLimits searchLimits,
+            final Object... args) {
+        final StateSearch<JState> search = searchFactory.search();
+        for (int i = 0; i < classSources.length; i++) {
+            final ClassSource classSource = classSources[i];
+            final StateTag tag = tags[i];
+            search.consider(initialStateBuilder.createInitialState(tag, search, classAbstractions, abstractSource, classSource, entryPointName, args));
+        }
+        return new VmImpl<JState>(search, searchLimits);
+    }
+
    public Vm<JState> build(
          final StateTag[] tags,
          final ClassSource[] classSources,
@@ -23,13 +38,7 @@ public final class JvmBuilder {
          final ClassSource abstractSource,
          final SMethodDescriptor entryPointName,
          final Object... args) {
-      final StateSearch<JState> search = searchFactory.search();
-      for (int i = 0; i < classSources.length; i++) {
-         final ClassSource classSource = classSources[i];
-         final StateTag tag = tags[i];
-         search.consider(initialStateBuilder.createInitialState(tag, search, classAbstractions, abstractSource, classSource, entryPointName, args));
-      }
-      return new VmImpl<JState>(search);
+       return build(tags, classSources, classAbstractions, abstractSource, entryPointName, new StateCountSearchLimit(), args);
    }
 
    public <T> JvmBuilder initialState(final InitialStateBuilder initialStateBuilder) {

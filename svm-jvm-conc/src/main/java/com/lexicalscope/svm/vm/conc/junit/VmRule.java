@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.lexicalscope.svm.vm.SearchLimits;
+import com.lexicalscope.svm.vm.StateCountSearchLimit;
+import com.lexicalscope.svm.vm.TimerSearchLimit;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
@@ -43,6 +46,7 @@ public class VmRule implements MethodRule {
    private final Set<String> classAbstractions = new HashSet<>();
    private ClassSource abstractSource;
    private SMethodDescriptor entryPoint;
+   private SearchLimits searchLimits;
 
    private final List<Vm<JState>> vm = new ArrayList<>();
    private ClassSource[] classSources = new ClassSource[]{new ClasspathClassRepository()};
@@ -59,6 +63,7 @@ public class VmRule implements MethodRule {
 
    public VmRule(final JvmBuilder jvmBuilder) {
       this.jvmBuilder = jvmBuilder;
+      this.searchLimits = new StateCountSearchLimit();
    }
 
    public JvmBuilder builder() {
@@ -127,12 +132,16 @@ public class VmRule implements MethodRule {
       classAbstractions.add(fromName);
    }
 
+   public void limitBy(int seconds) {
+      this.searchLimits = TimerSearchLimit.limitByTime(seconds);
+   }
+
    public final void entryPoint(final Class<?> klass, final String name, final String desc) {
       this.entryPoint = new AsmSMethodName(klass, name, desc);
    }
 
    public final Vm<JState> build(final Object[] args) {
-      return jvmBuilder.build(tags, classSources, classAbstractions, abstractSource, entryPoint, args);
+      return jvmBuilder.build(tags, classSources, classAbstractions, abstractSource, entryPoint, searchLimits, args);
    }
 
    public void loadFrom(final Class<?>[][] loadFromWhereverTheseWereLoaded) {
