@@ -116,7 +116,8 @@ public class SymbolicTraceMatchers {
             // length of the shortest trace
 
             // TODO[tim]: take into account program termination in the trace
-            return true;
+            // Take into account the possibility that traces are of different length.
+            return !expectedIterator.hasNext() && !actualIterator.hasNext();
          }
       };
    }
