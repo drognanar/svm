@@ -8,9 +8,10 @@ public class SymbolFactory {
     /** Method to select one option out of many. */
     public static native int selectState(int states);
 
-    /** Returns the number of loop iterations. */
-    public static native int loop();
+    /** Randomly chooses between true and false. */
+    public static native boolean randomChoice();
 
-    /** Calls a method with some arguments */
-    public static native void invokeMethod(Object receiver, String methodName, Object[]... arguments);
+    /** Returns a random element from a list */
+    @SuppressWarnings("unchecked")
+    public static native <T> T getArgument(T... arguments);
 }
