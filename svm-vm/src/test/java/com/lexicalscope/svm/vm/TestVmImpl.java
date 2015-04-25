@@ -16,6 +16,7 @@ public class TestVmImpl {
 
    @Test public void pendingStatesAreEvaluatedWhileAvailable() {
       context.checking(new Expectations(){{
+         oneOf(limits).reset();
          oneOf(search).pendingState(); will(returnValue(state0));
          oneOf(limits).withinLimits(); will(returnValue(true));
          oneOf(state0).eval();
@@ -29,6 +30,7 @@ public class TestVmImpl {
 
    @Test public void terminationAtLeafButSearchContinues() {
       context.checking(new Expectations(){{
+         oneOf(limits).reset();
          oneOf(search).pendingState(); will(returnValue(state0));
          oneOf(limits).withinLimits(); will(returnValue(true));
          oneOf(state0).eval(); will(throwException(new TerminationException()));
@@ -43,6 +45,7 @@ public class TestVmImpl {
 
    @Test public void limitsStopSearch() {
       context.checking(new Expectations(){{
+         oneOf(limits).reset();
          oneOf(search).pendingState(); will(returnValue(state0));
          oneOf(limits).withinLimits(); will(returnValue(false));
          oneOf(search).firstResult(); will(returnValue(stateR));
