@@ -1,6 +1,7 @@
 package com.lexicalscope.svm.vm.symb;
 
 import static com.lexicalscope.svm.j.instruction.symbolic.PcMetaKey.PC;
+import static com.lexicalscope.svm.j.instruction.concrete.object.SymbolCounterMetaKey.SC;
 import static com.lexicalscope.svm.vm.conc.InitialStateBuilder.initialState;
 
 import com.lexicalscope.svm.heap.HeapFactory;
@@ -27,7 +28,8 @@ public class SymbVmFactory {
                 .initialState(initialState()
                         .instructionFactory(instructionFactory)
                         .heapFactory(heapFactory)
-                        .meta(PC, new TrueSymbol()));
+                        .meta(PC, new TrueSymbol())
+                        .meta(SC, 0));
         return vmBuilder;
     }
 
