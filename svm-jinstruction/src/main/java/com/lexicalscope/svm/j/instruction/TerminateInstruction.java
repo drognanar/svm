@@ -17,6 +17,7 @@ public class TerminateInstruction implements Instruction {
 
    @Override public void eval(final JState ctx) {
       // TODO[tim]: demeter
+      ctx.setMeta(TerminationMetaKey.TERMINATION, true);
       throw new TerminationException();
    }
 

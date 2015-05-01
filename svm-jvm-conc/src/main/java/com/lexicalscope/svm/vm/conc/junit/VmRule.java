@@ -132,7 +132,7 @@ public class VmRule implements MethodRule {
       classAbstractions.add(fromName);
    }
 
-   public void limitBy(int seconds) {
+   public void setTimeout(int seconds) {
       this.searchLimits = TimerSearchLimit.limitByTime(seconds);
    }
 
@@ -185,12 +185,20 @@ public class VmRule implements MethodRule {
       return vm.get(0).results();
    }
 
-   public <T> List<T> getMatchingMeta(final StateTag tag, final MetaKey<T> key) {
-      List<T> results = new ArrayList<>();
+   public List<JState> getMatchingState(final StateTag tag) {
+      List<JState> results = new ArrayList<>();
       for (final JState result : results()) {
          if (result.descendentTag().equals(tag)) {
-            results.add(result.getMeta(key));
+            results.add(result);
          }
+      }
+      return results;
+   }
+
+   public <T> List<T> getMatchingMeta(final StateTag tag, final MetaKey<T> key) {
+      List<T> results = new ArrayList<>();
+      for (final JState result : getMatchingState(tag)) {
+         results.add(result.getMeta(key));
       }
       return results;
    }
