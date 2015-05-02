@@ -33,8 +33,7 @@ public class Symbolic_getArgument extends AbstractNativeMethodDef {
             JState[] forks = new JState[possibleValues];
             for (int i = 0; i < forks.length; i++) {
                 forks[i] = ctx.snapshot();
-                ObjectRef valueRef = (ObjectRef) ctx.get(possibleValuesRef, 2 + i);
-                forks[i].push(ctx.get(valueRef, 1));
+                forks[i].push(ctx.get(possibleValuesRef, 2 + i));
             }
             ctx.fork(forks);
         }
