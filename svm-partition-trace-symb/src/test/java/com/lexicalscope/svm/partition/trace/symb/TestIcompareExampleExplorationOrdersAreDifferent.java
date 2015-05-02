@@ -21,7 +21,7 @@ import com.lexicalscope.svm.vm.symb.junit.Fresh;
 import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 
 public class TestIcompareExampleExplorationOrdersAreDifferent {
-   @Rule public final SymbVmRule vm = new SymbVmRule(ExamplesOneMarker.class, ExamplesTwoMarker.class);
+   @Rule public final SymbVmRule vm = SymbVmRule.createSymbVmRuleLoadingFrom(ExamplesOneMarker.class, ExamplesTwoMarker.class);
    {
       instrumentPartition(partition().ofClass(InsidePartition.class), partition().ofClass(OutsidePartition.class), vm);
       vm.entryPoint(OutsidePartition.class, "callSomeMethods", "(II)I");
@@ -39,7 +39,7 @@ public class TestIcompareExampleExplorationOrdersAreDifferent {
       // example are not rendered vacuous by any compiler improvements
       // which might effect branch selection order.
       assertThat(
-            vm.getMeta(tag(ExamplesOneMarker.class), TRACE),
-            not(equivalentTo(vm, vm.getMeta(tag(ExamplesTwoMarker.class), TRACE))));
+            vm.getByMeta(tag(ExamplesOneMarker.class), TRACE),
+            not(equivalentTo(vm, vm.getByMeta(tag(ExamplesTwoMarker.class), TRACE))));
    }
 }

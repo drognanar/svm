@@ -1,6 +1,7 @@
 package com.lexicalscope.svm.j.instruction.factory;
 
 import static com.lexicalscope.svm.vm.j.InstructionCode.*;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -54,6 +55,7 @@ import com.lexicalscope.svm.j.instruction.concrete.stack.ReturnInstruction;
 import com.lexicalscope.svm.j.instruction.concrete.stack.Store;
 import com.lexicalscope.svm.j.instruction.concrete.stack.Store2;
 import com.lexicalscope.svm.vm.j.InstructionCode;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Vop;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
@@ -93,7 +95,7 @@ public class BaseInstructionSource implements InstructionSource {
       return this;
    }
 
-   @Override public InstructionSource invokeconstructorofclassobjects(final String klassName, final InstructionSource.InstructionSink sink) {
+   @Override public InstructionSource invokeconstructorofclassobjects(final KlassInternalName klassName, final InstructionSource.InstructionSink sink) {
       MethodCallInstruction.invokeconstructorofclassobjects(klassName, sink);
       return this;
    }
@@ -190,12 +192,12 @@ public class BaseInstructionSource implements InstructionSource {
 
    @Override
    public InstructionSource checkcast(final TypeInsnNode typeInsnNode, final InstructionSource.InstructionSink sink) {
-      return linearInstruction(new CheckCastOp(typeInsnNode.desc), checkcast, sink);
+      return linearInstruction(new CheckCastOp(internalName(typeInsnNode.desc)), checkcast, sink);
    }
 
    @Override
    public InstructionSource instance0f(final TypeInsnNode typeInsnNode, final InstructionSource.InstructionSink sink) {
-      return linearInstruction(new InstanceOfOp(typeInsnNode.desc), instance0f, sink);
+      return linearInstruction(new InstanceOfOp(internalName(typeInsnNode.desc)), instance0f, sink);
    }
 
    @Override
@@ -486,12 +488,12 @@ public class BaseInstructionSource implements InstructionSource {
 
    @Override
    public InstructionSource putstaticfield(final FieldInsnNode fieldInsnNode, final InstructionSource.InstructionSink sink) {
-      return loadingInstruction(fieldInsnNode.owner, new PutStaticOp(fieldInsnNode), putstaticfield, sink);
+      return loadingInstruction(internalName(fieldInsnNode.owner), new PutStaticOp(fieldInsnNode), putstaticfield, sink);
    }
 
    @Override
    public InstructionSource getstaticfield(final FieldInsnNode fieldInsnNode, final InstructionSource.InstructionSink sink) {
-      return loadingInstruction(fieldInsnNode.owner, new GetStaticOp(fieldInsnNode), getstaticfield, sink);
+      return loadingInstruction(internalName(fieldInsnNode.owner), new GetStaticOp(fieldInsnNode), getstaticfield, sink);
    }
 
    @Override
@@ -568,7 +570,7 @@ public class BaseInstructionSource implements InstructionSource {
       return this;
    }
 
-   @Override public InstructionSource newobject(final String klassDesc, final InstructionSource.InstructionSink sink) {
+   @Override public InstructionSource newobject(final KlassInternalName klassDesc, final InstructionSource.InstructionSink sink) {
       return loadingInstruction(klassDesc, new VopAdapter(instructionFactory.newObject(klassDesc)), newobject, sink);
    }
 
@@ -582,7 +584,7 @@ public class BaseInstructionSource implements InstructionSource {
       return this;
    }
 
-   private InstructionSource loadingInstruction(final String klassDesc, final Vop op, final InstructionCode code, final InstructionSource.InstructionSink sink) {
+   private InstructionSource loadingInstruction(final KlassInternalName klassDesc, final Vop op, final InstructionCode code, final InstructionSource.InstructionSink sink) {
       sink.nextOp(new LoadingOp(klassDesc, this), code);
       sink.linearOp(op, code);
       return this;

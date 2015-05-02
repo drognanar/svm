@@ -1,6 +1,7 @@
 package com.lexicalscope.svm.partition.trace;
 
 import com.lexicalscope.svm.vm.j.InstructionQuery;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.klass.SFieldName;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
@@ -85,19 +86,19 @@ public class InstructionQuerySafe<T> implements InstructionQuery<T> {
       throw new UnsupportedOperationException();
    }
 
-   @Override public T invokevirtual(final SMethodDescriptor methodName) {
+   @Override public T invokevirtual(final SMethodDescriptor methodName, final MethodArguments arguments) {
       throw new UnsupportedOperationException();
    }
 
-   @Override public T invokestatic(final SMethodDescriptor methodName) {
+   @Override public T invokestatic(final SMethodDescriptor methodName, final MethodArguments arguments) {
       throw new UnsupportedOperationException();
    }
 
-   @Override public T invokespecial(final SMethodDescriptor methodName) {
+   @Override public T invokespecial(final SMethodDescriptor methodName, final MethodArguments arguments) {
       throw new UnsupportedOperationException();
    }
 
-   @Override public T invokeinterface(final SMethodDescriptor methodName) {
+   @Override public T invokeinterface(final SMethodDescriptor methodName, final MethodArguments arguments) {
       throw new UnsupportedOperationException();
    }
 
@@ -213,7 +214,7 @@ public class InstructionQuerySafe<T> implements InstructionQuery<T> {
       throw new UnsupportedOperationException();
    }
 
-   @Override public T newobject(final String klassDesc) {
+   @Override public T newobject(final KlassInternalName klassDesc) {
       throw new UnsupportedOperationException();
    }
 }

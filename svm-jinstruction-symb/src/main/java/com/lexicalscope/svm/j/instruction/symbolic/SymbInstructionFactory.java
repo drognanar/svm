@@ -44,6 +44,7 @@ import com.lexicalscope.svm.j.instruction.symbolic.symbols.IArrayTerminalSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ITerminalSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.OSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.OTerminalSymbol;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Op;
 import com.lexicalscope.svm.vm.j.Vop;
 import com.lexicalscope.svm.z3.FeasibilityChecker;
@@ -268,7 +269,7 @@ public class SymbInstructionFactory implements InstructionFactory {
       }
    }
 
-   @Override public Op<?> newObject(final String klassDesc) {
+   @Override public Op<?> newObject(final KlassInternalName klassDesc) {
       return new NewObjectOp(klassDesc);
    }
 }

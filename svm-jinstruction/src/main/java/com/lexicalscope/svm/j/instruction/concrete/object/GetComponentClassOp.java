@@ -9,7 +9,7 @@ import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public class GetComponentClassOp implements Vop {
    @Override public void eval(final JState ctx) {
-      final SClass klassFromHeap = ((StaticsMarker) ctx.get((ObjectRef) ctx.pop(), SClass.OBJECT_MARKER_OFFSET)).klass();
+      final SClass klassFromHeap = ((StaticsMarker) ctx.get((ObjectRef) ctx.pop(), SClass.OBJECT_TYPE_MARKER_OFFSET)).klass();
       if(klassFromHeap.isArray()) {
          ctx.push(ctx.whereMyStaticsAt(klassFromHeap.componentType()));
       } else {

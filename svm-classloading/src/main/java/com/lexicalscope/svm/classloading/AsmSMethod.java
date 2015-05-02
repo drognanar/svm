@@ -59,7 +59,7 @@ public class AsmSMethod implements SMethod {
 
       final LinkedMethod linkedMethod;
       if((method.access & Opcodes.ACC_NATIVE) != 0) {
-         linkedMethod =linkNativeMethod();
+         linkedMethod = linkNativeMethod();
       } else {
          linkedMethod = new MethodLinker(method, methodName, getEntryPoint(), instructions, classLoader).linkBytecodeMethod();
       }

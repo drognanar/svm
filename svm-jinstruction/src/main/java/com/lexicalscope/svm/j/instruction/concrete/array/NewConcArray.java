@@ -1,6 +1,6 @@
 package com.lexicalscope.svm.j.instruction.concrete.array;
 
-import static org.objectweb.asm.Type.getInternalName;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import com.lexicalscope.svm.heap.Allocatable;
 import com.lexicalscope.svm.heap.ObjectRef;
@@ -29,7 +29,7 @@ public final class NewConcArray implements ArrayConstructor {
 
    public static void initArrayPreamble(final JState ctx, final ObjectRef arrayAddress, final Object arrayLength) {
       // TODO - arrays can have different types
-      final SClass objectArrayClass = ctx.loadKlassFor(getInternalName(Object[].class));
+      final SClass objectArrayClass = ctx.loadKlassFor(internalName(Object[].class));
       ctx.put(arrayAddress, NewArrayOp.ARRAY_CLASS_OFFSET, objectArrayClass);
       ctx.put(arrayAddress, NewArrayOp.ARRAY_LENGTH_OFFSET, arrayLength);
    }

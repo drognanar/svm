@@ -18,7 +18,7 @@ import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 
 public class TestGuidedSearchFailure {
    @Rule public final ExpectedException exception = ExpectedException.none();
-   @Rule public final SymbVmRule vm = new SymbVmRule(ExamplesOneMarker.class, ExamplesTwoMarker.class);
+   @Rule public final SymbVmRule vm = SymbVmRule.createSymbVmRuleLoadingFrom(ExamplesOneMarker.class, ExamplesTwoMarker.class);
    {
       instrumentPartition(partition().ofClass(InsidePartition.class),
                           partition().ofClass(OutsidePartition.class), vm);

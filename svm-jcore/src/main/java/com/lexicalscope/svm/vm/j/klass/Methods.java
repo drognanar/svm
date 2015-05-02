@@ -4,24 +4,28 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.lexicalscope.svm.stack.trace.SMethodName;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.SVirtualMethodName;
 
 public final class Methods {
    private final Map<SMethodDescriptor, SMethod> methodMap;
    private final Map<SVirtualMethodName, SMethod> virtuals;
-   private final String name;
+   private final KlassInternalName name;
 
-   private Methods(final String name, final Map<SMethodDescriptor, SMethod> methodMap, final Map<SVirtualMethodName, SMethod> virtuals) {
+   private Methods(
+         final KlassInternalName name,
+         final Map<SMethodDescriptor, SMethod> methodMap,
+         final Map<SVirtualMethodName, SMethod> virtuals) {
       this.name = name;
       this.methodMap = methodMap;
       this.virtuals = virtuals;
    }
 
-   public Methods(final String name) {
+   public Methods(final KlassInternalName name) {
       this(name, new LinkedHashMap<SMethodDescriptor, SMethod>(), new LinkedHashMap<SVirtualMethodName, SMethod>());
    }
 
-   public Methods extend(final String name, final DeclaredMethods declaredMethods) {
+   public Methods extend(final KlassInternalName name, final DeclaredMethods declaredMethods) {
       final LinkedHashMap<SVirtualMethodName, SMethod> virtualsCopy = new LinkedHashMap<>(virtuals);
       for (final SMethod smethod : declaredMethods.methods().values()) {
          virtualsCopy.put(smethod.name().virtualName(), smethod);

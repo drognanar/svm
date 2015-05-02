@@ -18,7 +18,7 @@ public final class GetClassOp implements Vop {
    }
 
    public SClass klassFromHeap(final JState ctx, final ObjectRef objectRef) {
-      return (SClass) ctx.get(objectRef, SClass.OBJECT_MARKER_OFFSET);
+      return (SClass) ctx.get(objectRef, SClass.OBJECT_TYPE_MARKER_OFFSET);
    }
 
    @Override public String toString() {

@@ -16,7 +16,7 @@ import com.lexicalscope.svm.vm.symb.junit.Fresh;
 import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 
 public class TestSortedListRefactoringWorking {
-   @Rule public final SymbVmRule vm = new SymbVmRule(ExamplesOneMarker.class, ExamplesTwoMarker.class);
+   @Rule public final SymbVmRule vm = SymbVmRule.createSymbVmRuleLoadingFrom(ExamplesOneMarker.class, ExamplesTwoMarker.class);
    {
       instrumentPartition(partition().ofClass(SortedList.class), partition().ofClass(OutsidePartition.class), vm);
       vm.entryPoint(OutsidePartition.class, "entryPoint", "([I)V");

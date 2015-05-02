@@ -30,10 +30,14 @@ public interface InstructionQuery<T> {
    T lcmp();
    T lushr();
 
-   T invokevirtual(SMethodDescriptor methodName);
-   T invokestatic(SMethodDescriptor methodName);
-   T invokespecial(SMethodDescriptor methodName);
-   T invokeinterface(SMethodDescriptor methodName);
+   public interface MethodArguments {
+      Object[] peekArgs(JState ctx, SMethodDescriptor targetMethod);
+   }
+
+   T invokevirtual(SMethodDescriptor methodName, MethodArguments methodArguments);
+   T invokestatic(SMethodDescriptor methodName, MethodArguments methodArguments);
+   T invokespecial(SMethodDescriptor methodName, MethodArguments methodArguments);
+   T invokeinterface(SMethodDescriptor methodName, MethodArguments methodArguments);
 
    T aconst_null();
    T getfield(SFieldName name);
@@ -65,6 +69,6 @@ public interface InstructionQuery<T> {
    T ifge();
    T putstatic();
 
-   T newobject(String klassDesc);
+   T newobject(KlassInternalName klassDesc);
    T loadarg(Object value);
 }

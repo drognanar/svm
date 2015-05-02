@@ -14,6 +14,7 @@ import com.lexicalscope.svm.stack.Stack;
 import com.lexicalscope.svm.stack.StackFrame;
 import com.lexicalscope.svm.stack.trace.SStackTrace;
 import com.lexicalscope.svm.vm.StateSearch;
+import com.lexicalscope.svm.vm.TerminationException;
 import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public class JStateImpl implements JState {
@@ -44,7 +45,14 @@ public class JStateImpl implements JState {
       try {
          instruction().eval(this);
       } catch (final AssertionError e) {
-         System.out.println(stack.trace());
+         System.out.println(stack.trace()); // TODO[tim]: something better than printing the stack
+         throw e;
+      } catch (final TerminationException e) {
+         throw e;
+      } catch (final RuntimeException e) {
+         System.out.println(e.getClass());
+         System.out.println(e.getMessage());
+         System.out.println(stack.trace()); // TODO[tim]: something better than printing the stack
          throw e;
       }
    }
@@ -162,6 +170,7 @@ public class JStateImpl implements JState {
 
    @Override
    public Object get(final ObjectRef address, final int offset) {
+      assert address != null;
       return heap.get(address, offset);
    }
 
@@ -196,7 +205,7 @@ public class JStateImpl implements JState {
    }
 
    @Override
-   public SClass loadKlassFor(final String klassName) {
+   public SClass loadKlassFor(final KlassInternalName klassName) {
       return statics.load(klassName);
    }
 
@@ -211,17 +220,17 @@ public class JStateImpl implements JState {
    }
 
    @Override
-   public boolean isDefined(final String klass) {
+   public boolean isDefined(final KlassInternalName klass) {
       return statics.isDefined(klass);
    }
 
    @Override
-   public SClass definePrimitiveClass(final String klassName) {
+   public SClass definePrimitiveClass(final KlassInternalName klassName) {
       return statics.definePrimitiveClass(klassName);
    }
 
    @Override
-   public List<SClass> defineClass(final String klassName) {
+   public List<SClass> defineClass(final KlassInternalName klassName) {
       return statics.defineClass(klassName);
    }
 
@@ -237,12 +246,7 @@ public class JStateImpl implements JState {
 
    @Override
    public ObjectRef newObject(final Allocatable klass) {
-      return newObject(klass, null);
-   }
-
-   @Override
-   public ObjectRef newObject(final Allocatable klass, final Object tag) {
-      return heap.newObject(klass, tag);
+      return heap.newObject(klass);
    }
 
    @Override
@@ -265,7 +269,7 @@ public class JStateImpl implements JState {
    }
 
    @Override
-   public ObjectRef whereMyClassAt(final String klassName) {
+   public ObjectRef whereMyClassAt(final KlassInternalName klassName) {
       return statics.whereMyClassAt(klassName);
    }
 

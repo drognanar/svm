@@ -1,13 +1,15 @@
 package com.lexicalscope.svm.vm.j.klass;
 
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 import static org.hamcrest.Matchers.equalTo;
-import static org.objectweb.asm.Type.getInternalName;
 
 import java.net.URL;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 
 public class SClassMatchers {
    public static int withIndex(final int i) {
@@ -42,8 +44,7 @@ public class SClassMatchers {
 
          @Override
          protected boolean matchesSafely(final SClass item, final Description mismatchDescription) {
-            final String definedIn = item.name();
-            final SFieldName qualifiedFieldName = new SFieldName(definedIn, name);
+            final SFieldName qualifiedFieldName = new SFieldName(item.name(), name);
 
             mismatchDescription.appendValue(item);
             return item.hasStaticField(qualifiedFieldName) && item.staticFieldIndex(qualifiedFieldName) == withIndex;
@@ -60,7 +61,7 @@ public class SClassMatchers {
 
          @Override
          protected boolean matchesSafely(final SClass item, final Description mismatchDescription) {
-            final String definedIn = (definingClass != null ? definingClass : item).name();
+            final KlassInternalName definedIn = (definingClass != null ? definingClass : item).name();
             final SFieldName qualifiedFieldName = new SFieldName(definedIn, name);
 
             mismatchDescription.appendValue(item);
@@ -84,10 +85,14 @@ public class SClassMatchers {
    }
 
    public static Matcher<SClass> nameIs(final Class<?> klass) {
-      return name(getInternalName(klass));
+      return name(internalName(klass));
    }
 
    public static Matcher<SClass> name(final String internalName) {
+      return name(internalName(internalName));
+   }
+
+   public static Matcher<SClass> name(final KlassInternalName internalName) {
       return new TypeSafeDiagnosingMatcher<SClass>(SClass.class) {
          @Override
          public void describeTo(final Description description) {

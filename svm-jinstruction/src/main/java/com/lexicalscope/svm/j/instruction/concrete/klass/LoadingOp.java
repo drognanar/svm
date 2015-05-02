@@ -11,6 +11,7 @@ import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
 import com.lexicalscope.svm.j.statementBuilder.StatementBuilder;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Op;
 import com.lexicalscope.svm.vm.j.Vop;
 import com.lexicalscope.svm.vm.j.klass.SClass;
@@ -23,7 +24,7 @@ public class LoadingOp implements Vop {
    private final InstructionSource instructions;
 
    private LoadingOp(
-         final List<String> klassNames,
+         final List<KlassInternalName> klassNames,
          final InstructionSource instructions) {
       this(new DefineClassOp(klassNames), instructions);
    }
@@ -36,7 +37,7 @@ public class LoadingOp implements Vop {
    }
 
    public LoadingOp(
-         final String klassName,
+         final KlassInternalName klassName,
          final InstructionSource instructions) {
       this(asList(klassName), instructions);
    }

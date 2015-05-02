@@ -8,6 +8,7 @@ import org.objectweb.asm.tree.MethodNode;
 import com.lexicalscope.svm.classloading.AsmSMethod;
 import com.lexicalscope.svm.classloading.SClassLoader;
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.code.AsmSMethodName;
 import com.lexicalscope.svm.vm.j.klass.DeclaredFields;
 import com.lexicalscope.svm.vm.j.klass.DeclaredMethods;
@@ -16,7 +17,7 @@ import com.lexicalscope.svm.vm.j.klass.SField;
 import com.lexicalscope.svm.vm.j.klass.SFieldName;
 
 public class AsmSClassBuilder {
-   private String klassName;
+   private KlassInternalName klassName;
    private final SClassLoader classLoader;
    private final DeclaredFields declaredFields = new DeclaredFields();
    private final DeclaredMethods declaredMethods = new DeclaredMethods();
@@ -61,7 +62,7 @@ public class AsmSClassBuilder {
       return this;
    }
 
-   public AsmSClassBuilder withName(final String name) {
+   public AsmSClassBuilder withName(final KlassInternalName name) {
       this.klassName = name;
       return this;
    }

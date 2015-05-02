@@ -3,7 +3,7 @@ package com.lexicalscope.svm.vm.conc;
 import static com.lexicalscope.svm.j.statementBuilder.StatementBuilder.statements;
 import static com.lexicalscope.svm.stack.MethodScope.STATIC;
 import static com.lexicalscope.svm.vm.j.InstructionCode.synthetic;
-import static org.objectweb.asm.Type.getInternalName;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource.InstructionSink;
 import com.lexicalscope.svm.j.instruction.factory.InstructionSourceFactory;
 import com.lexicalscope.svm.j.instruction.instrumentation.InstrumentationBuilder;
-import com.lexicalscope.svm.j.instruction.instrumentation.Instrumentor;
+import com.lexicalscope.svm.j.instruction.instrumentation.MethodInstrumentor;
 import com.lexicalscope.svm.j.natives.DefaultNativeMethods;
 import com.lexicalscope.svm.j.natives.NativeMethods;
 import com.lexicalscope.svm.j.statementBuilder.StatementBuilder;
@@ -43,6 +43,7 @@ import com.lexicalscope.svm.vm.j.Instruction;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.JStateImpl;
 import com.lexicalscope.svm.vm.j.JavaConstants;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.StateTag;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
@@ -57,8 +58,6 @@ public class InitialStateBuilder {
    public JStateImpl createInitialState(
          final StateTag stateTag,
          final StateSearch<JState> search,
-         final Set<String> classAbstractions,
-         final ClassSource abstractSource,
          final ClassSource classSource,
          final SMethodDescriptor entryPointName,
          final Object... args) {
@@ -68,12 +67,7 @@ public class InitialStateBuilder {
             instrumentationBuilder.instrumentation(instructions),
             natives(),
             classSource);
-      final SClassLoader abstractingLoader = new AsmSClassLoader(
-            instructions,
-            instrumentationBuilder.instrumentation(instructions),
-            natives(),
-            abstractSource);
-      final SClassLoader mainLoader = new SelectingClassLoader(classLoader, abstractingLoader);
+      final SClassLoader mainLoader = classLoader;
 
       final StatementBuilder statements = statements(instructions);
       defineBootstrapClassesInstruction(statements.sink(), instructions);
@@ -84,7 +78,7 @@ public class InitialStateBuilder {
 
       final DequeStack stack = new DequeStack();
       stack.push(new SnapshotableStackFrame(JavaConstants.INITIAL_FRAME_NAME, STATIC, initialInstruction, 0, entryPointName.argSize()));
-      return new JStateImpl(stateTag, search, new StaticsImpl(mainLoader, classAbstractions), stack, heapFactory().heap(), metaState.snapshot());
+      return new JStateImpl(stateTag, search, new StaticsImpl(mainLoader), stack, heapFactory().heap(), metaState.snapshot());
    }
 
    private void loadArgsInstruction(final StatementBuilder statements, final Object[] args) {
@@ -94,10 +88,10 @@ public class InitialStateBuilder {
    }
 
    private void defineBootstrapClassesInstruction(final InstructionSink sink, final InstructionSource instructions) {
-      final List<String> bootstrapClasses = new ArrayList<>();
-      bootstrapClasses.add(getInternalName(Class.class));
-      bootstrapClasses.add(getInternalName(String.class));
-      bootstrapClasses.add(getInternalName(Thread.class));
+      final List<KlassInternalName> bootstrapClasses = new ArrayList<>();
+      bootstrapClasses.add(internalName(Class.class));
+      bootstrapClasses.add(internalName(String.class));
+      bootstrapClasses.add(internalName(Thread.class));
       sink.nextOp(new LoadingOp(new DefinePrimitiveClassesOp(new DefineClassOp(bootstrapClasses)), instructions), synthetic);
    }
 
@@ -121,7 +115,7 @@ public class InitialStateBuilder {
       return this;
    }
 
-   public InitialStateBuilder instrument(final Matcher<? super SMethodDescriptor> methodMatcher, final Instrumentor instrumentation) {
+   public InitialStateBuilder instrument(final Matcher<? super SMethodDescriptor> methodMatcher, final MethodInstrumentor instrumentation) {
       instrumentationBuilder.instrument(methodMatcher, instrumentation);
       return this;
    }

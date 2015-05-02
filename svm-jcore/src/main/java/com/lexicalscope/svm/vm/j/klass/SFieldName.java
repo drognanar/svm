@@ -1,10 +1,12 @@
 package com.lexicalscope.svm.vm.j.klass;
 
+import com.lexicalscope.svm.vm.j.KlassInternalName;
+
 public class SFieldName implements Comparable<SFieldName> {
-   private final String definedIn;
+   private final KlassInternalName definedIn;
    private final String name;
 
-   public SFieldName(final String definedIn, final String name) {
+   public SFieldName(final KlassInternalName definedIn, final String name) {
       this.definedIn = definedIn;
       this.name = name;
    }

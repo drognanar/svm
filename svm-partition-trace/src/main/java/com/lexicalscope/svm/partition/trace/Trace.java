@@ -1,6 +1,7 @@
 package com.lexicalscope.svm.partition.trace;
 
 import static com.lexicalscope.svm.partition.trace.Trace.CallReturn.CALL;
+import static java.lang.System.lineSeparator;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,6 +60,12 @@ public class Trace implements Iterable<TraceElement> {
    }
 
    @Override public String toString() {
-      return String.format("%s", asList());
+      final StringBuilder traceToString = new StringBuilder();
+      final List<TraceElement> trace = asList();
+      traceToString.append(String.format("Trace of %s elements%n", trace.size()));
+      for (final TraceElement element : trace) {
+         traceToString.append("\t").append(element).append(lineSeparator());
+      }
+      return traceToString.toString();
    }
 }

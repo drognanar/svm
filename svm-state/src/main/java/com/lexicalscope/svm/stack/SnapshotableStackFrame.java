@@ -43,6 +43,7 @@ public final class SnapshotableStackFrame implements StackFrame {
          final int opBot,
          final int opTop,
          final MetaState meta) {
+      assert noNulls(stack);
       this.context = context;
       this.scope = scope;
       this.instruction = instruction;
@@ -60,6 +61,7 @@ public final class SnapshotableStackFrame implements StackFrame {
 
    @Override
    public StackFrame push(final Object val) {
+      assert val != null;
       assert !(val instanceof Double);
       assert !(val instanceof Long);
       assert !(val instanceof Character);
@@ -72,6 +74,7 @@ public final class SnapshotableStackFrame implements StackFrame {
 
    @Override
    public StackFrame pushDoubleWord(final Object val) {
+      assert val != null;
       assert val instanceof Double || val instanceof Long;
 
       pushInternal(val);
@@ -109,9 +112,19 @@ public final class SnapshotableStackFrame implements StackFrame {
 
    @Override
    public StackFrame pushAll(final Object[] args) {
+      assert noNulls(args);
       System.arraycopy(args, 0, stack, opTop + 1, args.length);
       opTop += args.length;
       return this;
+   }
+
+   private boolean noNulls(final Object[] args) {
+      for (final Object object : args) {
+         if (object == null) {
+            return true;
+         }
+      }
+      return true;
    }
 
    @Override
@@ -121,11 +134,13 @@ public final class SnapshotableStackFrame implements StackFrame {
 
    @Override
    public void local(final int var, final Object val) {
+      assert val != null;
       stack[vars + var] = val;
    }
 
    @Override
    public SnapshotableStackFrame setLocals(final Object[] args) {
+      assert noNulls(args);
       assert args.length <= stack.length - vars : String.format("asked to copy %d args into a stack of length %d", args.length, stack.length - vars);
       System.arraycopy(args, 0, stack, vars, args.length);
       return this;

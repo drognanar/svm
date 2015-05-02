@@ -1,5 +1,7 @@
 package com.lexicalscope.svm.classloading.asm;
 
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class ClassNodeAdapter {
 
    @SuppressWarnings("unchecked")
    public List<FieldNode> fields() {
-      if(classNode.name.equals(JavaConstants.CLASS_CLASS)) {
+      if(internalName(classNode.name).equals(JavaConstants.CLASS_CLASS)) {
          final List<FieldNode> result = new ArrayList<>(classNode.fields);
          result.add(new FieldNode(Opcodes.ACC_PRIVATE | Opcodes.ACC_FINAL, DefineClassOp.internalClassPointer.getName(), Type.getDescriptor(Object.class), "Ljava/lang/Object;", null));
          return result;

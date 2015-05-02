@@ -1,8 +1,8 @@
 package com.lexicalscope.svm.classloading;
 
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.objectweb.asm.Type.getInternalName;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,15 +15,15 @@ public class TestStatics {
    private final StaticsImpl statics = new StaticsImpl(classLoader);
 
    @Test public void definedClassGivesClassRef() {
-      statics.defineClass(getInternalName(EmptyClass.class));
+      statics.defineClass(internalName(EmptyClass.class));
 
-      assertThat(classLoader.load(EmptyClass.class), sameInstance(statics.load(getInternalName(EmptyClass.class))));
+      assertThat(classLoader.load(EmptyClass.class), sameInstance(statics.load(internalName(EmptyClass.class))));
    }
 
    @Test public void definedClassCannotBeRedefined() {
-      statics.defineClass(getInternalName(EmptyClass.class));
+      statics.defineClass(internalName(EmptyClass.class));
 
       exception.expect(DuplicateClassDefinitionException.class);
-      statics.defineClass(getInternalName(EmptyClass.class));
+      statics.defineClass(internalName(EmptyClass.class));
    }
 }

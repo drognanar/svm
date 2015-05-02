@@ -5,6 +5,7 @@ import com.lexicalscope.svm.j.instruction.symbolic.SymbInstructionFactory;
 import com.lexicalscope.svm.vm.conc.JvmBuilder;
 import com.lexicalscope.svm.vm.conc.StateSearchFactory;
 import com.lexicalscope.svm.vm.conc.junit.VmRule;
+import com.lexicalscope.svm.vm.symb.FeasibleBranchSearchFactory;
 import com.lexicalscope.svm.vm.symb.SymbVmFactory;
 import com.lexicalscope.svm.z3.FeasibilityChecker;
 
@@ -12,23 +13,29 @@ public class SymbVmRule extends VmRule {
    private final FeasibilityChecker feasibilityChecker;
    private final SolverRule solverRule;
 
-   public SymbVmRule(final Class<?> ... loadFromWhereverTheseWereLoaded) {
-      this();
-      loadFrom(loadFromWhereverTheseWereLoaded);
-   }
-
-   public SymbVmRule() {
-      this(new FeasibilityChecker(), null);
-   }
-
-   public SymbVmRule(final FeasibilityChecker feasibilityChecker, StateSearchFactory factory) {
-      this(new SymbInstructionFactory(feasibilityChecker), feasibilityChecker, factory);
-   }
-
-   private SymbVmRule(final SymbInstructionFactory symbInstructionFactory, final FeasibilityChecker feasibilityChecker, StateSearchFactory factory) {
-      super(getSearchFactory(symbInstructionFactory, feasibilityChecker, factory));
+   private SymbVmRule(final SymbInstructionFactory symbInstructionFactory, final FeasibilityChecker feasibilityChecker, final JvmBuilder factory) {
+      super(factory);
       this.feasibilityChecker = feasibilityChecker;
       this.solverRule = new SolverRule(symbInstructionFactory, feasibilityChecker);
+   }
+
+   public static SymbVmRule createSymbVmRuleLoadingFrom(final Class<?>... loadFromWhereverTheseWereLoaded) {
+      final SymbVmRule result = createSymbVmRule();
+      result.loadFrom(loadFromWhereverTheseWereLoaded);
+      return result;
+   }
+
+   public static SymbVmRule createSymbVmRule() {
+      final FeasibilityChecker feasibilityChecker = new FeasibilityChecker();
+      return createSymbVmRule(feasibilityChecker, new FeasibleBranchSearchFactory(feasibilityChecker));
+   }
+
+   public static SymbVmRule createSymbVmRule(final FeasibilityChecker feasibilityChecker, final StateSearchFactory factory) {
+      return createSymbVmRule(new SymbInstructionFactory(feasibilityChecker), feasibilityChecker, factory);
+   }
+
+   public static SymbVmRule createSymbVmRule(final SymbInstructionFactory symbInstructionFactory, final FeasibilityChecker feasibilityChecker, final StateSearchFactory factory) {
+      return new SymbVmRule(symbInstructionFactory, feasibilityChecker, SymbVmFactory.symbolicVmBuilder(symbInstructionFactory, factory));
    }
 
    private static JvmBuilder getSearchFactory(SymbInstructionFactory symbInstructionFactory, FeasibilityChecker feasibilityChecker, StateSearchFactory factory) {

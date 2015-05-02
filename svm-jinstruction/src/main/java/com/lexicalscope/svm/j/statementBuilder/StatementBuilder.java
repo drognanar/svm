@@ -7,6 +7,7 @@ import com.lexicalscope.svm.j.instruction.factory.AbstractInstructionSink;
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource.InstructionSink;
 import com.lexicalscope.svm.vm.j.Instruction;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.MethodBody;
 import com.lexicalscope.svm.vm.j.Vop;
 import com.lexicalscope.svm.vm.j.code.AsmSMethodName;
@@ -63,7 +64,7 @@ public final class StatementBuilder {
       return first;
    }
 
-   public StatementBuilder newObject(final String klassDesc) {
+   public StatementBuilder newObject(final KlassInternalName klassDesc) {
       source.newobject(klassDesc, sink);
       return this;
    }
@@ -138,7 +139,7 @@ public final class StatementBuilder {
       return this;
    }
 
-   public StatementBuilder invokeConstructorOfClassObjects(final String klassName) {
+   public StatementBuilder invokeConstructorOfClassObjects(final KlassInternalName klassName) {
       source.invokeconstructorofclassobjects(klassName, sink);
       return this;
    }

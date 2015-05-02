@@ -13,9 +13,10 @@ import com.lexicalscope.svm.stack.StackFrame;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.Vop;
+import com.lexicalscope.svm.vm.j.klass.SClass;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
-public class TraceMethodEntryExitOp implements Vop {
+class TraceMethodEntryExitOp implements Vop {
    private final CallReturn callReturn;
    private final SMethodDescriptor methodName;
 
@@ -31,7 +32,9 @@ public class TraceMethodEntryExitOp implements Vop {
       final StackFrame currentFrame = ctx.currentFrame();
 
       if(callReturn.equals(CallReturn.CALL) && currentFrame.isDynamic()) {
-         currentFrame.setMeta(PARTITION_TAG, ((ObjectRef) currentFrame.local(0)).tag());
+         final ObjectRef receiver = (ObjectRef) currentFrame.local(0);
+         assert receiver != null : "null receiver at call of " + methodName + " in frame " + currentFrame;
+         currentFrame.setMeta(PARTITION_TAG, ctx.get(receiver, SClass.OBJECT_TAG_OFFSET));
       }
 
       final Object previousFrameTag = previousFrame.getMeta(PARTITION_TAG);

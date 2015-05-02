@@ -1,8 +1,11 @@
 package com.lexicalscope.svm.classloading;
 
-import java.io.File;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
+
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 
 public final class ClasspathClassRepository implements ClassSource {
    private final ClassLoader classLoader;
@@ -15,9 +18,14 @@ public final class ClasspathClassRepository implements ClassSource {
       this.classLoader = classLoader;
    }
 
-   @Override public URL loadFromRepository(final String name) {
+   public URL loadFromRepository(final String name) {
+      return loadFromRepository(internalName(name));
+   }
+
+   @Override public URL loadFromRepository(final KlassInternalName name) {
+      assert !name.string().contains(".");
       return classLoader
-            .getResource(name.replace(".", File.separator) + ".class");
+            .getResource(name + ".class");
    }
 
    public static ClasspathClassRepository classpathClassRepostory(final Class<?> loadFromWhereverThisWasLoaded) {

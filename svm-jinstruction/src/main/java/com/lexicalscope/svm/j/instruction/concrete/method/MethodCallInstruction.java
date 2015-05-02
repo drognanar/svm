@@ -11,8 +11,10 @@ import com.lexicalscope.svm.stack.SnapshotableStackFrame;
 import com.lexicalscope.svm.stack.StackFrame;
 import com.lexicalscope.svm.stack.trace.SMethodName;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
+import com.lexicalscope.svm.vm.j.InstructionQuery.MethodArguments;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.JavaConstants;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.MethodResolver;
 import com.lexicalscope.svm.vm.j.klass.SClass;
 import com.lexicalscope.svm.vm.j.klass.SMethod;
@@ -20,7 +22,7 @@ import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 public class MethodCallInstruction {
    private static final class Resolution {
-      public Resolution(final String receiverKlass, final SMethod sMethod) {
+      public Resolution(final KlassInternalName receiverKlass, final SMethod sMethod) {
          this.receiverKlass = receiverKlass;
          this.method = sMethod;
       }
@@ -29,11 +31,11 @@ public class MethodCallInstruction {
          this(sMethod.name().klassName(), sMethod);
       }
 
-      final String receiverKlass;
+      final KlassInternalName receiverKlass;
       final SMethod method;
    }
 
-   private interface MethodInvokation {
+   private interface MethodInvokation extends MethodArguments {
       Object[] args(JState ctx, SMethodDescriptor targetMethod);
 
       String name();
@@ -46,8 +48,16 @@ public class MethodCallInstruction {
    }
 
    private static class VirtualMethodInvokation implements MethodInvokation {
+      @Override public Object[] peekArgs(final JState ctx, final SMethodDescriptor targetMethod) {
+         return ctx.peek(argSize(targetMethod));
+      }
+
       @Override public Object[] args(final JState ctx, final SMethodDescriptor targetMethod) {
-         return ctx.pop(targetMethod.argSize());
+         return ctx.pop(argSize(targetMethod));
+      }
+
+      private int argSize(final SMethodDescriptor targetMethod) {
+         return targetMethod.argSize();
       }
 
       @Override public String name() {
@@ -63,13 +73,21 @@ public class MethodCallInstruction {
       }
 
       @Override public <T> T query(final SMethodDescriptor methodName, final InstructionQuery<T> instructionQuery) {
-         return instructionQuery.invokevirtual(methodName);
+         return instructionQuery.invokevirtual(methodName, this);
       }
    }
 
    private static class InterfaceMethodInvokation implements MethodInvokation {
+      @Override public Object[] peekArgs(final JState ctx, final SMethodDescriptor targetMethod) {
+         return ctx.peek(argSize(targetMethod));
+      }
+
       @Override public Object[] args(final JState ctx, final SMethodDescriptor targetMethod) {
-         return ctx.pop(targetMethod.argSize());
+         return ctx.pop(argSize(targetMethod));
+      }
+
+      private int argSize(final SMethodDescriptor targetMethod) {
+         return targetMethod.argSize();
       }
 
       @Override public String name() {
@@ -85,7 +103,7 @@ public class MethodCallInstruction {
       }
 
       @Override public <T> T query(final SMethodDescriptor methodName, final InstructionQuery<T> instructionQuery) {
-         return instructionQuery.invokeinterface(methodName);
+         return instructionQuery.invokeinterface(methodName, this);
       }
    }
 
@@ -95,15 +113,23 @@ public class MethodCallInstruction {
    }
 
    private static MethodResolver receiver(final Object[] args, final SMethodName sMethodName, final JState ctx) {
-      final Object receiver = ctx.get((ObjectRef) args[0], SClass.OBJECT_MARKER_OFFSET);
+      final Object receiver = ctx.get((ObjectRef) args[0], SClass.OBJECT_TYPE_MARKER_OFFSET);
       assert receiver != null : sMethodName;
       assert receiver instanceof MethodResolver : "no " + sMethodName + " in " + receiver;
       return (MethodResolver) receiver;
    }
 
    private static class SpecialMethodInvokation implements MethodInvokation {
+      @Override public Object[] peekArgs(final JState ctx, final SMethodDescriptor targetMethod) {
+         return ctx.peek(argSize(targetMethod));
+      }
+
       @Override public Object[] args(final JState ctx, final SMethodDescriptor targetMethod) {
-         return ctx.pop(targetMethod.argSize());
+         return ctx.pop(argSize(targetMethod));
+      }
+
+      private int argSize(final SMethodDescriptor targetMethod) {
+         return targetMethod.argSize();
       }
 
       @Override public String name() {
@@ -119,18 +145,24 @@ public class MethodCallInstruction {
       }
 
       @Override public <T> T query(final SMethodDescriptor methodName, final InstructionQuery<T> instructionQuery) {
-         return instructionQuery.invokespecial(methodName);
+         return instructionQuery.invokespecial(methodName, this);
       }
    }
 
    private static class ClassDefaultConstructorMethodInvokation implements MethodInvokation {
-      private final String klassName;
+      private final KlassInternalName klassName;
 
-      public ClassDefaultConstructorMethodInvokation(final String klassName) {
+      public ClassDefaultConstructorMethodInvokation(final KlassInternalName klassName) {
          this.klassName = klassName;
       }
 
       @Override public Object[] args(
+            final JState ctx,
+            final SMethodDescriptor targetMethod) {
+         return new Object[]{ctx.whereMyClassAt(klassName)};
+      }
+
+      @Override public Object[] peekArgs(
             final JState ctx,
             final SMethodDescriptor targetMethod) {
          return new Object[]{ctx.whereMyClassAt(klassName)};
@@ -155,8 +187,16 @@ public class MethodCallInstruction {
    }
 
    private static class StaticMethodInvokation implements MethodInvokation {
+      @Override public Object[] peekArgs(final JState ctx, final SMethodDescriptor targetMethod) {
+         return ctx.peek(argSize(targetMethod));
+      }
+
       @Override public Object[] args(final JState ctx, final SMethodDescriptor targetMethod) {
-         return ctx.pop(targetMethod.argSize() - 1);
+         return ctx.pop(argSize(targetMethod));
+      }
+
+      private int argSize(final SMethodDescriptor targetMethod) {
+         return targetMethod.argSize() - 1;
       }
 
       @Override public String name() {
@@ -172,7 +212,7 @@ public class MethodCallInstruction {
       }
 
       @Override public <T> T query(final SMethodDescriptor methodName, final InstructionQuery<T> instructionQuery) {
-         return instructionQuery.invokestatic(methodName);
+         return instructionQuery.invokestatic(methodName, this);
       }
    }
 
@@ -221,7 +261,7 @@ public class MethodCallInstruction {
       sink.linearOp(new MethodCallOp(sMethodName, new SpecialMethodInvokation()), invokespecial);
    }
 
-   public static void invokeconstructorofclassobjects(final String klassName, final InstructionSource.InstructionSink sink) {
+   public static void invokeconstructorofclassobjects(final KlassInternalName klassName, final InstructionSource.InstructionSink sink) {
       sink.linearOp(new MethodCallOp(JavaConstants.CLASS_CLASS_DEFAULT_CONSTRUCTOR, new ClassDefaultConstructorMethodInvokation(klassName)), invokeconstructorofclassobjects);
    }
 

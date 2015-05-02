@@ -1,12 +1,13 @@
 package com.lexicalscope.svm.classloading;
 
-import static org.objectweb.asm.Type.getInternalName;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import java.util.*;
 
 import com.lexicalscope.svm.classloading.asm.AsmSClass;
 import com.lexicalscope.svm.heap.ObjectRef;
 import com.lexicalscope.svm.vm.j.JavaConstants;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Statics;
 import com.lexicalscope.svm.vm.j.StaticsMarker;
 import com.lexicalscope.svm.vm.j.klass.DeclaredFields;
@@ -15,67 +16,42 @@ import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public class StaticsImpl implements Statics {
    // TODO[tim]: need fast-clone version
-   private static final String klassKlassName = getInternalName(Class.class);
-   private final Map<String, SClass> defined;
-   private final Map<String, SClass> abstractions;
+   private static final KlassInternalName klassKlassName = internalName(Class.class);
+   private final Map<KlassInternalName, SClass> defined;
 
    // TODO[tim]: combine these maps for efficiency
    private final Map<SClass, ObjectRef> staticsAddresses;
    private final Map<SClass, ObjectRef> classAddresses;
-   private final Set<String> classAbstractions;
 
    private final SClassLoader classLoader;
 
    public StaticsImpl(final SClassLoader classLoader) {
       this(classLoader,
-            new HashMap<String, SClass>(),
+            new HashMap<KlassInternalName, SClass>(),
             new HashMap<SClass, ObjectRef>(),
             new HashMap<SClass, ObjectRef>());
    }
 
-   public StaticsImpl(final SClassLoader classLoader, Set<String> classAbstractions) {
-      this(classLoader,
-              classAbstractions,
-              new HashMap<String, SClass>(),
-              new HashMap<String, SClass>(),
-              new HashMap<SClass, ObjectRef>(),
-              new HashMap<SClass, ObjectRef>());
-   }
-
    private StaticsImpl(
          final SClassLoader classLoader,
-         final Map<String, SClass> defined,
+         final Map<KlassInternalName, SClass> defined,
          final Map<SClass, ObjectRef> staticsAddresses,
          final Map<SClass, ObjectRef> classAddresses) {
-      this(classLoader, new HashSet<String>(), new HashMap<String, SClass>(), defined, staticsAddresses, classAddresses);
-   }
-
-   private StaticsImpl(
-           final SClassLoader classLoader,
-           final Set<String> classAbstractions,
-           final Map<String, SClass> abstractions,
-           final Map<String, SClass> defined,
-           final Map<SClass, ObjectRef> staticsAddresses,
-           final Map<SClass, ObjectRef> classAddresses) {
-      this.defined = defined;
-      this.classLoader = classLoader;
-      this.abstractions = abstractions;
-      this.classAbstractions = classAbstractions;
-      this.staticsAddresses = staticsAddresses;
-      this.classAddresses = classAddresses;
+       this.defined = defined;
+       this.classLoader = classLoader;
+       this.staticsAddresses = staticsAddresses;
+       this.classAddresses = classAddresses;
    }
 
    @Override public Statics snapshot() {
       return new StaticsImpl(
             classLoader,
-            classAbstractions,
-            abstractions,
             new HashMap<>(defined),
             new HashMap<>(staticsAddresses),
             new HashMap<>(classAddresses));
    }
 
-   @Override public List<SClass> defineClass(final String klassName) {
+   @Override public List<SClass> defineClass(final KlassInternalName klassName) {
       if(isDefined(klassName)) {
          throw new DuplicateClassDefinitionException(defined.get(klassName));
       }
@@ -83,11 +59,6 @@ public class StaticsImpl implements Statics {
       final List<SClass> result = new ArrayList<>();
       final SClass loaded = classLoader.load(klassName);
       cache(loaded);
-      if (classAbstractions.contains(klassName)) {
-         String abstractKlassName = String.format("@%s", klassName);
-         final SClass a = classLoader.load(abstractKlassName);
-         abstractions.put(a.name(), a);
-      }
       // load all supertypes
       for (final SClass klass : loaded.superTypes()) {
          if(!defined.containsKey(klass.name())){
@@ -106,12 +77,13 @@ public class StaticsImpl implements Statics {
       return result;
    }
 
-   @Override public SClass definePrimitiveClass(final String klassName) {
+   @Override public SClass definePrimitiveClass(final KlassInternalName klassName) {
       if(isDefined(klassName)) {
          throw new DuplicateClassDefinitionException(defined.get(klassName));
       }
 
-      final SClass componentType = klassName.startsWith("[") ? load(toClassName(klassName.substring(1))) : null;
+      // TODO[tim]: sort out this use of nulls
+      final SClass componentType = klassName.isArrayClass() ? load(internalName(klassName.componentType())) : null;
 
       final AsmSClass result =
             new AsmSClass(
@@ -126,52 +98,25 @@ public class StaticsImpl implements Statics {
       return result;
    }
 
-   private String toClassName(final String substring) {
-      switch (substring) {
-         case "Z":
-            return "boolean";
-         case "C":
-            return "char";
-         case "B":
-            return "byte";
-         case "S":
-            return "short";
-         case "I":
-            return "int";
-         case "J":
-            return "long";
-         case "F":
-            return "float";
-         case "D":
-            return "double";
-         case "Ljava/lang/Object;":
-            return "java/lang/Object";
-      }
-      return substring;
-   }
 
    private SClass cache(final SClass result) {
       return cache(result.name(), result);
    }
 
-   private SClass cache(final String klassName, final SClass result) {
+   private SClass cache(final KlassInternalName klassName, final SClass result) {
       defined.put(klassName, result);
       return result;
    }
 
-   @Override public boolean isDefined(final String klass) {
+   @Override public boolean isDefined(final KlassInternalName klass) {
       return defined.containsKey(klass);
    }
 
-   @Override public SClass load(final String klassName) {
+   @Override public SClass load(final KlassInternalName klassName) {
       if(!isDefined(klassName)) {
          throw new MissingClassDefinitionException(klassName, defined);
       }
-      if (classAbstractions.contains(klassName)) {
-         return abstractions.get(klassName);
-      } else {
-         return defined.get(klassName);
-      }
+      return defined.get(klassName);
    }
 
    @Override public void staticsAt(final SClass klass, final ObjectRef staticsAddress) {
@@ -200,7 +145,7 @@ public class StaticsImpl implements Statics {
       return address;
    }
 
-   @Override public ObjectRef whereMyClassAt(final String internalName) {
+   @Override public ObjectRef whereMyClassAt(final KlassInternalName internalName) {
       final SClass klass = load(internalName);
       return whereMyClassAt(klass);
    }

@@ -1,5 +1,7 @@
 package com.lexicalscope.svm.j.instruction.concrete.klass;
 
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
+
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldInsnNode;
 
@@ -17,13 +19,13 @@ public final class PutStaticOp implements Vop {
 
    public PutStaticOp(final FieldInsnNode fieldInsnNode) {
       this.fieldInsnNode = fieldInsnNode;
-      this.name = new SFieldName(fieldInsnNode.owner, fieldInsnNode.name);
+      this.name = new SFieldName(internalName(fieldInsnNode.owner), fieldInsnNode.name);
       final int sort = Type.getType(fieldInsnNode.desc).getSort();
       doubleWord = sort == Type.DOUBLE || sort == Type.LONG;
    }
 
    @Override public void eval(final JState ctx) {
-      final SClass klass = ctx.loadKlassFor(fieldInsnNode.owner);
+      final SClass klass = ctx.loadKlassFor(internalName(fieldInsnNode.owner));
       final ObjectRef staticsAddress = ctx.whereMyStaticsAt(klass);
       final int offset = klass.staticFieldIndex(name);
 

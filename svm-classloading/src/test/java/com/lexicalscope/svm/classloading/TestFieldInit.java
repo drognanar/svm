@@ -1,6 +1,7 @@
 package com.lexicalscope.svm.classloading;
 
 import static com.lexicalscope.svm.vm.j.HeapMatchers.*;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.List;
@@ -8,7 +9,6 @@ import java.util.List;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.objectweb.asm.Type;
 
 import com.lexicalscope.svm.heap.FastHeap;
 import com.lexicalscope.svm.heap.Heap;
@@ -17,12 +17,13 @@ import com.lexicalscope.svm.j.instruction.concrete.object.NewObjectOp;
 import com.lexicalscope.svm.stack.DequeStack;
 import com.lexicalscope.svm.stack.SnapshotableStackFrame;
 import com.lexicalscope.svm.vm.j.JStateImpl;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public class TestFieldInit {
    private final SClassLoader classLoader = new AsmSClassLoader();
    private final StaticsImpl statics = new StaticsImpl(classLoader);
-   private final String klassName = Type.getInternalName(ClassWithAllTypesOfFields.class);
+   private final KlassInternalName klassName = internalName(ClassWithAllTypesOfFields.class);
 
    private final Heap heap = FastHeap.createFastHeap();
    private SClass sClass;

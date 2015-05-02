@@ -8,10 +8,10 @@ import com.lexicalscope.svm.vm.j.klass.SClass;
 
 
 public interface Statics extends Snapshotable<Statics> {
-   SClass load(String klassName);
+   SClass load(KlassInternalName klassName);
 
-   List<SClass> defineClass(String klass);
-   SClass definePrimitiveClass(String klassName);
+   List<SClass> defineClass(KlassInternalName klass);
+   SClass definePrimitiveClass(KlassInternalName klassName);
 
    StaticsMarker staticsMarker(SClass klass);
 
@@ -20,9 +20,9 @@ public interface Statics extends Snapshotable<Statics> {
 
    void classAt(SClass klass, ObjectRef classAddress);
    ObjectRef whereMyClassAt(SClass klass);
-   ObjectRef whereMyClassAt(String internalName);
+   ObjectRef whereMyClassAt(KlassInternalName internalName);
 
-   boolean isDefined(String klass);
+   boolean isDefined(KlassInternalName klass);
 
    SClass classClass();
 }

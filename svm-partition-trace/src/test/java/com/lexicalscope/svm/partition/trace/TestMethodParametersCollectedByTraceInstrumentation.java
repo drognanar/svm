@@ -16,7 +16,7 @@ import org.junit.Test;
 import com.lexicalscope.svm.vm.conc.junit.TestEntryPoint;
 import com.lexicalscope.svm.vm.conc.junit.VmRule;
 
-public class TestMethodParametersInstrumentation {
+public class TestMethodParametersCollectedByTraceInstrumentation {
    @Rule public final VmRule vm = new VmRule();
    {
       instrumentPartition(partition().ofClass(ClassInsidePartition.class), partition().ofClass(ClassOutsidePartition.class), vm);

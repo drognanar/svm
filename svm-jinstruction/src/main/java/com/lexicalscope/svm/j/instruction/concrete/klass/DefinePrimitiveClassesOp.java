@@ -1,7 +1,7 @@
 package com.lexicalscope.svm.j.instruction.concrete.klass;
 
 import static com.lexicalscope.svm.j.instruction.concrete.klass.DefineClassOp.allocate;
-import static org.objectweb.asm.Type.getInternalName;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,26 +10,27 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.lexicalscope.svm.vm.j.InstructionQuery;
-import com.lexicalscope.svm.vm.j.Op;
 import com.lexicalscope.svm.vm.j.JState;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
+import com.lexicalscope.svm.vm.j.Op;
 import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public final class DefinePrimitiveClassesOp implements Op<List<SClass>> {
-   public static final Map<String, String> primitivesMap = new LinkedHashMap<String, String>(){{
-         put(getInternalName(boolean.class), getInternalName(boolean[].class));
-         put(getInternalName(char.class), getInternalName(char[].class));
-         put(getInternalName(byte.class), getInternalName(byte[].class));
-         put(getInternalName(short.class), getInternalName(short[].class));
-         put(getInternalName(int.class), getInternalName(int[].class));
-         put(getInternalName(long.class), getInternalName(long[].class));
-         put(getInternalName(float.class), getInternalName(float[].class));
-         put(getInternalName(double.class), getInternalName(double[].class));
+   public static final Map<KlassInternalName, KlassInternalName> primitivesMap = new LinkedHashMap<KlassInternalName, KlassInternalName>(){{
+         put(internalName(boolean.class), internalName(boolean[].class));
+         put(internalName(char.class), internalName(char[].class));
+         put(internalName(byte.class), internalName(byte[].class));
+         put(internalName(short.class), internalName(short[].class));
+         put(internalName(int.class), internalName(int[].class));
+         put(internalName(long.class), internalName(long[].class));
+         put(internalName(float.class), internalName(float[].class));
+         put(internalName(double.class), internalName(double[].class));
    }};
 
-   public static final List<String> primitives = new ArrayList<String>(){{
+   public static final List<KlassInternalName> primitives = new ArrayList<KlassInternalName>(){{
          addAll(primitivesMap.keySet());
          addAll(primitivesMap.values());
-         add(getInternalName(Object[].class));
+         add(internalName(Object[].class));
    }};
 
    private final DefineClassOp op;
@@ -40,9 +41,9 @@ public final class DefinePrimitiveClassesOp implements Op<List<SClass>> {
 
    @Override public List<SClass> eval(final JState ctx) {
       final List<SClass> result = op.eval(ctx);
-      for (final Entry<String, String> primitive : primitivesMap.entrySet()) {
-         final String primitiveName = primitive.getKey();
-         final String primitiveArrayName = primitive.getValue();
+      for (final Entry<KlassInternalName, KlassInternalName> primitive : primitivesMap.entrySet()) {
+         final KlassInternalName primitiveName = primitive.getKey();
+         final KlassInternalName primitiveArrayName = primitive.getValue();
 
          assert !ctx.isDefined(primitiveName) : primitiveName;
          assert !ctx.isDefined(primitiveArrayName) : primitiveArrayName;
@@ -51,7 +52,7 @@ public final class DefinePrimitiveClassesOp implements Op<List<SClass>> {
          allocate(ctx, ctx.definePrimitiveClass(primitiveName));
          allocate(ctx, ctx.definePrimitiveClass(primitiveArrayName));
       }
-      allocate(ctx, ctx.definePrimitiveClass(getInternalName(Object[].class)));
+      allocate(ctx, ctx.definePrimitiveClass(internalName(Object[].class)));
       return result;
    }
 
@@ -63,7 +64,7 @@ public final class DefinePrimitiveClassesOp implements Op<List<SClass>> {
       return instructionQuery.synthetic();
    }
 
-   public static boolean primitivesContains(final String klassName) {
+   public static boolean primitivesContains(final KlassInternalName klassName) {
       return primitives.contains(klassName);
    }
 }

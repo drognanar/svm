@@ -7,6 +7,7 @@ import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 
 import com.lexicalscope.svm.vm.j.InstructionCode;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Vop;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
@@ -116,7 +117,7 @@ public interface InstructionSource {
    InstructionSource stringpoolload(String cst, InstructionSink sink);
    InstructionSource objectpoolload(Type toLoad, InstructionSink sink);
 
-   InstructionSource newobject(String desc, InstructionSink sink);
+   InstructionSource newobject(KlassInternalName desc, InstructionSink sink);
    InstructionSource instance0f(TypeInsnNode typeInsnNode, InstructionSink sink);
    InstructionSource checkcast(TypeInsnNode typeInsnNode, InstructionSink sink);
    InstructionSource ifnull(JumpInsnNode jumpInsnNode, InstructionSink sink);
@@ -134,7 +135,7 @@ public interface InstructionSource {
     * The JVM is responsible for creating class objects (that is objects that represent the
     * class of other objects).
     */
-   InstructionSource invokeconstructorofclassobjects(String klassName, InstructionSink sink);
+   InstructionSource invokeconstructorofclassobjects(KlassInternalName klassName, InstructionSink sink);
 
    /**
     * Instruction for loading the initial arguments that we will pass to the entry point

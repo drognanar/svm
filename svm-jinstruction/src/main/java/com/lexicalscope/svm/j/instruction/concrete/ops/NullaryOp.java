@@ -17,7 +17,9 @@ public class NullaryOp implements Vop {
 	}
 
    @Override public void eval(final JState ctx) {
-      ctx.push(operator.eval());
+      final Object val = operator.eval();
+      assert val != null : "null result returned by " + operator;
+      ctx.push(val);
    }
 
    @Override public <T> T query(final InstructionQuery<T> instructionQuery) {

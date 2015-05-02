@@ -13,7 +13,7 @@ import com.lexicalscope.svm.vm.symb.junit.Fresh;
 import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 
 public class TestInfeasibleBranch {
-   @Rule public final SymbVmRule vm = new SymbVmRule();
+   @Rule public final SymbVmRule vm = SymbVmRule.createSymbVmRule();
    private @Fresh ISymbol symbol1;
 
    @TestEntryPoint public static int infeasible(final int x) {

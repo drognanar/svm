@@ -52,6 +52,7 @@ import com.lexicalscope.svm.j.instruction.concrete.ops.BinaryOperator;
 import com.lexicalscope.svm.j.instruction.concrete.ops.Nullary2Operator;
 import com.lexicalscope.svm.j.instruction.concrete.ops.NullaryOperator;
 import com.lexicalscope.svm.j.instruction.concrete.ops.UnaryOperator;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Op;
 import com.lexicalscope.svm.vm.j.Vop;
 
@@ -246,7 +247,7 @@ public class ConcInstructionFactory implements InstructionFactory {
       return new LinearOp(new LoadConstantArg(object));
    }
 
-   @Override public Op<?> newObject(final String klassDesc) {
+   @Override public Op<?> newObject(final KlassInternalName klassDesc) {
       return new NewObjectOp(klassDesc);
    }
 }

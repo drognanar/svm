@@ -22,7 +22,7 @@ public class LoadSymbolicObjectArg implements Vop {
             return 2;
          }
       });
-      ctx.put(newObject, SClass.OBJECT_MARKER_OFFSET, new SymbolicObject(symbol));
+      ctx.put(newObject, SClass.OBJECT_TYPE_MARKER_OFFSET, new SymbolicObject(symbol));
       ctx.push(newObject);
    }
 

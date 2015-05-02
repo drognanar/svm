@@ -1,6 +1,7 @@
 package com.lexicalscope.svm.j.instruction.factory;
 
 import static com.lexicalscope.svm.vm.j.InstructionCode.synthetic;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -208,7 +209,7 @@ public class InstructionSwitch {
             final TypeInsnNode typeInsnNode = (TypeInsnNode) abstractInsnNode;
             switch (abstractInsnNode.getOpcode()) {
                case Opcodes.NEW:
-                  return s.newobject(typeInsnNode.desc, sink);
+                  return s.newobject(internalName(typeInsnNode.desc), sink);
                case Opcodes.ANEWARRAY:
                   return s.anewarray(sink);
                case Opcodes.INSTANCEOF:

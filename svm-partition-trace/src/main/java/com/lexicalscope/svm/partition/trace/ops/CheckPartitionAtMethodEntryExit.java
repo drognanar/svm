@@ -1,16 +1,16 @@
-package com.lexicalscope.svm.partition.trace;
+package com.lexicalscope.svm.partition.trace.ops;
 
 import static com.lexicalscope.svm.j.statementBuilder.StatementBuilder.statements;
 import static com.lexicalscope.svm.partition.trace.Trace.CallReturn.*;
 
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
-import com.lexicalscope.svm.j.instruction.instrumentation.Instrumentor;
-import com.lexicalscope.svm.partition.trace.ops.TraceMethodEntryExitOp;
+import com.lexicalscope.svm.j.instruction.instrumentation.MethodInstrumentor;
 import com.lexicalscope.svm.vm.j.Instruction;
+import com.lexicalscope.svm.vm.j.InstructionQueryAdapter;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
-public class CheckPartitionAtMethodEntryExit implements Instrumentor {
-   public static Instrumentor checkPartitionAtMethodEntryExit() {
+public class CheckPartitionAtMethodEntryExit implements MethodInstrumentor {
+   public static MethodInstrumentor checkPartitionAtMethodEntryExit() {
       return new CheckPartitionAtMethodEntryExit();
    }
 

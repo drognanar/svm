@@ -27,5 +27,9 @@
     	<groupId>com.google.guava</groupId>
     	<artifactId>guava</artifactId>
     </dependency>
+    <dependency>
+         <groupId>org.ow2.asm</groupId>
+         <artifactId>asm</artifactId>
+      </dependency>
   </dependencies>
 </project>

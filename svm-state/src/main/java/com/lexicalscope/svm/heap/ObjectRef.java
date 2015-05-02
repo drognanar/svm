@@ -3,11 +3,9 @@ package com.lexicalscope.svm.heap;
 
 public final class ObjectRef {
    private final int address;
-   private final Object tag;
 
-   public ObjectRef(final int address, final Object tag) {
+   ObjectRef(final int address) {
       this.address = address;
-      this.tag = tag;
    }
 
    int address() {
@@ -16,10 +14,6 @@ public final class ObjectRef {
 
    @Override public int hashCode() {
       return address;
-   }
-
-   public Object tag() {
-      return tag;
    }
 
    @Override public boolean equals(final Object obj) {

@@ -1,19 +1,21 @@
 package com.lexicalscope.svm.j.instruction.concrete.klass;
 
 import static com.lexicalscope.svm.j.instruction.concrete.klass.DefinePrimitiveClassesOp.primitivesContains;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import com.lexicalscope.svm.heap.ObjectRef;
 import com.lexicalscope.svm.j.instruction.concrete.array.NewArrayOp;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.JavaConstants;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Vop;
 import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public final class GetPrimitiveClass implements Vop {
    @Override public void eval(final JState ctx) {
       final ObjectRef primitiveNameRef = (ObjectRef) ctx.pop();
-      final String klassName = inGameStringToRealLifeString(ctx, primitiveNameRef);
+      final KlassInternalName klassName = internalName(inGameStringToRealLifeString(ctx, primitiveNameRef));
       assert primitivesContains(klassName) : klassName + " is not a primitive";
       ctx.push(ctx.whereMyClassAt(klassName));
    }
@@ -26,8 +28,7 @@ public final class GetPrimitiveClass implements Vop {
 
    private char[] extractCharArray(final JState ctx, final ObjectRef primitiveNameRef, final int valueFieldIndex) {
       final ObjectRef arrayPointer = (ObjectRef) ctx.get(primitiveNameRef, valueFieldIndex);
-      final Object[] array = extractArray(ctx, arrayPointer);
-      return toCharArray(array);
+      return toCharArray(extractArray(ctx, arrayPointer));
    }
 
    private Object[] extractArray(final JState ctx, final ObjectRef arrayPointer) {

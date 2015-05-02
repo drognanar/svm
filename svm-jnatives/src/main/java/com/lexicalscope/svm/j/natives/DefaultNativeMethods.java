@@ -14,6 +14,7 @@ import com.lexicalscope.svm.vm.j.code.AsmSMethodName;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 public class DefaultNativeMethods implements NativeMethods {
+   private final AsmSMethodName desiredAssertionStatus0 = new AsmSMethodName("java/lang/Class", "desiredAssertionStatus0", "(Ljava/lang/Class;)Z");
    private final Map<SMethodDescriptor, NativeMethodDef> natives;
 
    public DefaultNativeMethods(final Map<SMethodDescriptor, NativeMethodDef> natives) {
@@ -25,7 +26,7 @@ public class DefaultNativeMethods implements NativeMethods {
       if(methodDef != null) {
          return methodDef.instructions(instructions);
       }
-      if (methodName.equals(new AsmSMethodName("java/lang/Class", "desiredAssertionStatus0", "(Ljava/lang/Class;)Z"))) {
+      if (methodName.equals(desiredAssertionStatus0)) {
          return statements(instructions).maxStack(1).iconst_0().return1(methodName).build();
       } else if (methodName.equals(new AsmSMethodName("java/lang/Class", "getPrimitiveClass", "(Ljava/lang/String;)Ljava/lang/Class;"))) {
          return statements(instructions)

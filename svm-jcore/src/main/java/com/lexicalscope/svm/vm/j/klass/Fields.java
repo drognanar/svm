@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.lexicalscope.svm.vm.j.KlassInternalName;
+
 public final class Fields {
    private final List<SField> fields;
    private final Map<SFieldName, Integer> map;
@@ -45,7 +47,7 @@ public final class Fields {
       return new Fields(new ArrayList<>(fields), new LinkedHashMap<>(map));
    }
 
-   public Fields extend(final String subclassName, final DeclaredFields declaredFields) {
+   public Fields extend(final KlassInternalName subclassName, final DeclaredFields declaredFields) {
       final Fields result = copy();
       for (final Entry<SFieldName, Integer> superField : map.entrySet()) {
          // if a field is not shadowed, looking it up in this class should resolve the superclass field

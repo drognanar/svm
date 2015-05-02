@@ -27,6 +27,6 @@ public class InstrumentationContext {
       final int argSize = methodName.argSize();
       final ObjectRef receiver = (ObjectRef) state.peek(argSize)[0];
 
-      return (SClass) state.get(receiver, SClass.OBJECT_MARKER_OFFSET);
+      return (SClass) state.get(receiver, SClass.OBJECT_TYPE_MARKER_OFFSET);
    }
 }

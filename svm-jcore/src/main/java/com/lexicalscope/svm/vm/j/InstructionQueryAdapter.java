@@ -1,219 +1,222 @@
-package com.lexicalscope.svm.partition.trace;
+package com.lexicalscope.svm.vm.j;
 
-import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.klass.SFieldName;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 public class InstructionQueryAdapter<T> implements InstructionQuery<T> {
-   @Override public T nativ3() {
+   protected T defaultResult() {
       return null;
+   }
+
+   @Override public T nativ3() {
+      return defaultResult();
    }
 
    @Override public T synthetic() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T methodentry(final SMethodDescriptor methodName) {
-      return null;
+      return defaultResult();
    }
 
    @Override public T methodexit() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T arraycopy() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T arraylength() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T arrayload() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T arraystore() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T newarray() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T branch() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T f2i() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T iinc() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T i2f() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T i2l() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T checkcast() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T getstatic() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T instance0f() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T l2i() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T lcmp() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T lushr() {
-      return null;
+      return defaultResult();
    }
 
-   @Override public T invokevirtual(final SMethodDescriptor methodName) {
-      return null;
+   @Override public T invokevirtual(final SMethodDescriptor methodName, final MethodArguments methodArguments) {
+      return defaultResult();
    }
 
-   @Override public T invokestatic(final SMethodDescriptor methodName) {
-      return null;
+   @Override public T invokestatic(final SMethodDescriptor methodName, final MethodArguments methodArguments) {
+      return defaultResult();
    }
 
-   @Override public T invokespecial(final SMethodDescriptor methodName) {
-      return null;
+   @Override public T invokespecial(final SMethodDescriptor methodName, final MethodArguments methodArguments) {
+      return defaultResult();
    }
 
-   @Override public T invokeinterface(final SMethodDescriptor methodName) {
-      return null;
+   @Override public T invokeinterface(final SMethodDescriptor methodName, final MethodArguments methodArguments) {
+      return defaultResult();
    }
 
    @Override public T aconst_null() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T getfield(final SFieldName name) {
-      return null;
+      return defaultResult();
    }
 
    @Override public T putfield(final SFieldName name) {
-      return null;
+      return defaultResult();
    }
 
    @Override public T binaryop() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T nularyop() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T unaryop() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T objectpoolload() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T stringpoolload() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T load(final int var) {
-      return null;
+      return defaultResult();
    }
 
    @Override public T store(final int var) {
-      return null;
+      return defaultResult();
    }
 
    @Override public T dup_x1() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T pop() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T r3turn(final SMethodDescriptor methodName, final int returnCount) {
-      return null;
+      return defaultResult();
    }
 
    @Override public T dup() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifacmpeq() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifle() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifacmpne() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifeq() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T iflt() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifne() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifnonnull() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifnull() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T icmp() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifgt() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T got0() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T ifge() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T putstatic() {
-      return null;
+      return defaultResult();
    }
 
    @Override public T loadarg(final Object value) {
-      return null;
+      return defaultResult();
    }
 
-   @Override public T newobject(final String klassDesc) {
-      return null;
+   @Override public T newobject(final KlassInternalName klassDesc) {
+      return defaultResult();
    }
 }

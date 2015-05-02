@@ -10,7 +10,7 @@ import com.lexicalscope.svm.vm.symb.junit.Fresh;
 import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 
 public class TestWithSymbolicObject {
-   @Rule public final SymbVmRule vm = new SymbVmRule();
+   @Rule public final SymbVmRule vm = SymbVmRule.createSymbVmRule();
    private @Fresh(type = SimpleExpression.class) OSymbol symbol1;
 
    public interface SimpleExpression {

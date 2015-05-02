@@ -1,6 +1,7 @@
 package com.lexicalscope.svm.partition.spec;
 
 import static org.hamcrest.Matchers.*;
+import static org.objectweb.asm.Type.getInternalName;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,7 +25,11 @@ public class MatchersSpec {
       return receiver(objectClass(equalTo(klass)));
    }
 
-   public static Matcher<Receiver> klassIn(String... klasses) {
+   public static Matcher<? super CallContext> receiverClass(final Class<?> klass) {
+      return receiver(objectClass(equalTo(getInternalName(klass))));
+   }
+
+   public static Matcher<Receiver> klassIn(final String... klasses) {
        return klassIn(new HashSet<>(Arrays.asList(klasses)));
    }
 
@@ -49,11 +54,27 @@ public class MatchersSpec {
    }
 
     public static Matcher<CallContext> calledBy(final Matcher<String> matcher) {
-        return new FeatureMatcher<CallContext, String>(matcher, "receiver", "receiver") {
-            @Override protected String featureValueOf(CallContext actual) {
-                return actual.methodName();
+        return new FeatureMatcher<CallContext, String>(matcher, "methodName", "methodName") {
+            @Override protected String featureValueOf(final CallContext actual) {
+                return actual.callerMethodName();
             }
         };
+    }
+
+    public static Matcher<Invocation> callerParameter(final int index, final Matcher<Value> matcher) {
+       return new FeatureMatcher<Invocation, Value>(matcher, "caller parameter " + index, "parameter") {
+          @Override protected Value featureValueOf(final Invocation actual) {
+             return actual.callerParameter(index);
+          }
+       };
+    }
+
+    public static Matcher<Invocation> calleeParameter(final int index, final Matcher<Value> matcher) {
+       return new FeatureMatcher<Invocation, Value>(matcher, "callee parameter " + index, "parameter") {
+          @Override protected Value featureValueOf(final Invocation actual) {
+             return actual.calleeParameter(index);
+          }
+       };
     }
 
    public static Matcher<Invocation> parameter(final String path, final Matcher<Value> matcher) {
@@ -64,7 +85,7 @@ public class MatchersSpec {
       };
    }
 
-   public static Matcher<Value> value(final Matcher<Object> matcher) {
+   public static Matcher<Value> value(final Matcher<? super Object> matcher) {
       return new FeatureMatcher<Value, Object>(matcher, "value", "value") {
          @Override protected Object featureValueOf(final Value actual) {
             return actual.value();

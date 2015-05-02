@@ -1,19 +1,22 @@
 package com.lexicalscope.svm.j.instruction.concrete.pool;
 
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
+
 import org.objectweb.asm.Type;
 
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Vop;
 
 public class ObjectPoolLoad implements Vop {
-   private final String internalName;
+   private final KlassInternalName internalName;
 
    public ObjectPoolLoad(final Type type) {
-      this(type.getInternalName());
+      this(internalName(type.getInternalName()));
    }
 
-   public ObjectPoolLoad(final String internalName) {
+   public ObjectPoolLoad(final KlassInternalName internalName) {
       this.internalName = internalName;
    }
 

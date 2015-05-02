@@ -1,17 +1,18 @@
 package com.lexicalscope.svm.j.instruction.concrete.klass;
 
-import static com.lexicalscope.svm.vm.j.klass.SClass.OBJECT_MARKER_OFFSET;
+import static com.lexicalscope.svm.vm.j.klass.SClass.OBJECT_TYPE_MARKER_OFFSET;
 
 import com.lexicalscope.svm.heap.ObjectRef;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.Vop;
 import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public class CheckCastOp implements Vop {
-   private final String klassName;
+   private final KlassInternalName klassName;
 
-   public CheckCastOp(final String klassName) {
+   public CheckCastOp(final KlassInternalName klassName) {
       this.klassName = klassName;
    }
 
@@ -21,7 +22,7 @@ public class CheckCastOp implements Vop {
          return;
       }
 
-      final SClass classFromHeap = (SClass) ctx.get(address, OBJECT_MARKER_OFFSET);
+      final SClass classFromHeap = (SClass) ctx.get(address, OBJECT_TYPE_MARKER_OFFSET);
       final SClass classFromInstruction = ctx.loadKlassFor(klassName);
 
       if(classFromHeap.instanceOf(classFromInstruction)) {

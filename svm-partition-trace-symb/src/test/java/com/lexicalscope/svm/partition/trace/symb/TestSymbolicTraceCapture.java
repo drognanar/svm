@@ -22,7 +22,7 @@ import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 
 public class TestSymbolicTraceCapture {
 
-   @Rule public final SymbVmRule vm = new SymbVmRule();
+   @Rule public final SymbVmRule vm = SymbVmRule.createSymbVmRule();
    {
       instrumentPartition(partition().ofClass(InsidePartition.class), partition().ofClass(OutsidePartition.class), vm);
       vm.builder().initialState().meta(TRACE, trace().build());

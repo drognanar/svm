@@ -24,8 +24,8 @@ public class CheckingHeap implements Heap {
    }
 
    @Override
-   public ObjectRef newObject(final Allocatable klass, final Object tag) {
-      return heap.newObject(klass, tag);
+   public ObjectRef newObject(final Allocatable klass) {
+      return heap.newObject(klass);
    }
 
    @Override
@@ -35,9 +35,13 @@ public class CheckingHeap implements Heap {
    }
 
    private boolean putPreCondition(final ObjectRef address, final int offset, final Object val) {
-      final Object marker = heap.get(address, SClass.OBJECT_MARKER_OFFSET);
-      if(offset == SClass.OBJECT_MARKER_OFFSET) {
+      final Object marker = heap.get(address, SClass.OBJECT_TYPE_MARKER_OFFSET);
+      if(offset == SClass.OBJECT_TYPE_MARKER_OFFSET) {
          assert marker == null;
+         return true;
+      }
+      else if (offset < SClass.OBJECT_PREAMBLE)
+      {
          return true;
       }
       if(marker instanceof SClass) {
@@ -48,8 +52,7 @@ public class CheckingHeap implements Heap {
          final Type type = Type.getType(klass.fieldAtIndex(offset).desc());
          switch(type.getSort()) {
             case Type.INT:
-               assert heapCheck.allowedInIntField(val);
-               break;
+               return heapCheck.allowedInIntField(val);
          }
          return true;
       } else if (marker instanceof StaticsMarker) {

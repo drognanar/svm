@@ -21,7 +21,7 @@ import com.lexicalscope.svm.vm.symb.junit.Fresh;
 import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 
 public class TestSinglePathDifferentVersionsSymbolicTraceInequivalence {
-   @Rule public final SymbVmRule vm = new SymbVmRule(ExamplesOneMarker.class, ExamplesTwoMarker.class);
+   @Rule public final SymbVmRule vm = SymbVmRule.createSymbVmRuleLoadingFrom(ExamplesOneMarker.class, ExamplesTwoMarker.class);
    {
       instrumentPartition(partition().ofClass(InsidePartition.class), partition().ofClass(OutsidePartition.class), vm);
       vm.entryPoint(OutsidePartition.class, "callSomeMethods", "(I)I");
@@ -34,7 +34,7 @@ public class TestSinglePathDifferentVersionsSymbolicTraceInequivalence {
       vm.execute(symbol1);
 
       assertThat(
-            vm.getMeta(tag(ExamplesOneMarker.class), TRACE),
-            not(equivalentTo(vm, vm.getMeta(tag(ExamplesTwoMarker.class), TRACE))));
+            vm.getByMeta(tag(ExamplesOneMarker.class), TRACE),
+            not(equivalentTo(vm, vm.getByMeta(tag(ExamplesTwoMarker.class), TRACE))));
    }
 }

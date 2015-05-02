@@ -1,7 +1,7 @@
 package com.lexicalscope.svm.classloading;
 
 import static com.lexicalscope.svm.classloading.asm.AsmSClassFactory.newSClass;
-import static org.objectweb.asm.Type.getInternalName;
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import org.objectweb.asm.tree.ClassNode;
 
 import com.lexicalscope.svm.classloading.asm.AsmSClass;
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public class ResourceByteCodeReader implements ByteCodeReader {
@@ -31,15 +32,15 @@ public class ResourceByteCodeReader implements ByteCodeReader {
 	}
 
 	@Override
-	public AsmSClass load(final SClassLoader classLoader, final String name) {
-	   assert !name.startsWith("[");
+	public AsmSClass load(final SClassLoader classLoader, final KlassInternalName name) {
+	   assert !name.isArrayClass();
 		if (name == null) {
 			return null;
 		}
 
 		final URL classUrl;
-		if (name.equals(getInternalName(Thread.class))
-				|| name.equals("java/lang/Integer$IntegerCache")) {
+		if (name.equals(internalName(Thread.class))
+				|| name.equals(internalName("java/lang/Integer$IntegerCache"))) {
 			classUrl = loadLocalVersion(name);
 		} else {
 			classUrl = classRepository.loadFromRepository(name);
@@ -52,12 +53,12 @@ public class ResourceByteCodeReader implements ByteCodeReader {
 
 			final ClassNode classNode = loadClassBytecodeFromUrl(classUrl);
 			final SClass superclass = classNode.superName != null ? classLoader
-					.load(classNode.superName) : null;
+					.load(internalName(classNode.superName)) : null;
 
 			@SuppressWarnings("unchecked")
-			final List<String> interfaceNames = classNode.interfaces;
+			final List<KlassInternalName> interfaceNames = internalName(classNode.interfaces);
 			final List<SClass> interfaces = new ArrayList<>();
-			for (final String interfaceName : interfaceNames) {
+			for (final KlassInternalName interfaceName : interfaceNames) {
 				interfaces.add(classLoader.load(interfaceName));
 			}
 
@@ -74,7 +75,7 @@ public class ResourceByteCodeReader implements ByteCodeReader {
 		}
 	}
 
-	private URL loadLocalVersion(final String name) {
+	private URL loadLocalVersion(final KlassInternalName name) {
 	   final String relativeLocation = "lib/" + name + ".class";
 		try {
 		   final URL baseLocation = ResourceByteCodeReader.class.getProtectionDomain()

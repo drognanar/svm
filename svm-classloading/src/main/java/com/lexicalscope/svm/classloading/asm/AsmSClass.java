@@ -13,6 +13,7 @@ import org.objectweb.asm.Type;
 
 import com.lexicalscope.svm.heap.Allocatable;
 import com.lexicalscope.svm.stack.trace.SMethodName;
+import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.klass.DeclaredFields;
 import com.lexicalscope.svm.vm.j.klass.DeclaredMethods;
 import com.lexicalscope.svm.vm.j.klass.Fields;
@@ -24,7 +25,7 @@ import com.lexicalscope.svm.vm.j.klass.SMethod;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 public class AsmSClass implements SClass {
-   private final String klassName;
+   private final KlassInternalName klassName;
    private final Set<SClass> superTypes = new LinkedHashSet<>();
 
    private final DeclaredFields declaredFields;
@@ -38,7 +39,7 @@ public class AsmSClass implements SClass {
 
    public AsmSClass(
          final URL loadedFromUrl,
-         final String klassName,
+         final KlassInternalName klassName,
          final SClass superclass,
          final List<SClass> interfaces,
          final DeclaredFields declaredFields,
@@ -128,7 +129,7 @@ public class AsmSClass implements SClass {
    }
 
    @Override
-   public String name() {
+   public KlassInternalName name() {
       return klassName;
    }
 

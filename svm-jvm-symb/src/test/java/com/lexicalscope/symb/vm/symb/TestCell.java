@@ -30,7 +30,7 @@ public class TestCell {
       return cell.get();
    }
 
-   @Rule public final SymbVmRule vm = new SymbVmRule();
+   @Rule public final SymbVmRule vm = SymbVmRule.createSymbVmRule();
    private @Fresh ISymbol symbol1;
 
    @Test

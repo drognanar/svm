@@ -6,7 +6,7 @@ import com.lexicalscope.rcbittrie.BitTrie;
 public class FastHeap implements Heap {
    public static FastHeap createFastHeap() {
       final BitTrie trie = new BitTrie();
-      return new FastHeap(trie, new ObjectRef(trie.nullPointer(), new Object()));
+      return new FastHeap(trie, new ObjectRef(trie.nullPointer()));
    }
 
    final ObjectRef nullPointer;
@@ -18,9 +18,9 @@ public class FastHeap implements Heap {
    }
 
    @Override
-   public ObjectRef newObject(final Allocatable klass, final Object tag) {
+   public ObjectRef newObject(final Allocatable klass) {
       final int key = trie.allocate(klass.allocateSize());
-      return new ObjectRef(key, tag);
+      return new ObjectRef(key);
    }
 
    @Override

@@ -31,6 +31,9 @@ import com.lexicalscope.fluentreflection.ReflectionMatcher;
 import com.lexicalscope.svm.classloading.ClassSource;
 import com.lexicalscope.svm.classloading.ClasspathClassRepository;
 import com.lexicalscope.svm.metastate.MetaKey;
+import com.lexicalscope.svm.vm.SearchLimits;
+import com.lexicalscope.svm.vm.StateCountSearchLimit;
+import com.lexicalscope.svm.vm.TimerSearchLimit;
 import com.lexicalscope.svm.vm.Vm;
 import com.lexicalscope.svm.vm.conc.InitialStateBuilder;
 import com.lexicalscope.svm.vm.conc.JvmBuilder;
@@ -52,13 +55,14 @@ public class VmRule implements MethodRule {
    private ClassSource[] classSources = new ClassSource[]{new ClasspathClassRepository()};
    private StateTag[] tags = new StateTag[]{new StateTag() {}};
 
-   public VmRule() {
-      this(new JvmBuilder());
+   public static VmRule createVmRuleWithConfiguredClassLoader(final Class<?>[] loadFromWhereverTheseWereLoaded) {
+      final VmRule result = new VmRule();
+      result.loadFrom(loadFromWhereverTheseWereLoaded);
+      return result;
    }
 
-   public VmRule(final Class<?>[] loadFromWhereverTheseWereLoaded) {
-      this();
-      loadFrom(loadFromWhereverTheseWereLoaded);
+   public VmRule() {
+      this(new JvmBuilder());
    }
 
    public VmRule(final JvmBuilder jvmBuilder) {
@@ -141,7 +145,7 @@ public class VmRule implements MethodRule {
    }
 
    public final Vm<JState> build(final Object[] args) {
-      return jvmBuilder.build(tags, classSources, classAbstractions, abstractSource, entryPoint, searchLimits, args);
+      return jvmBuilder.build(tags, classSources, entryPoint, searchLimits, args);
    }
 
    public void loadFrom(final Class<?>[][] loadFromWhereverTheseWereLoaded) {
@@ -203,7 +207,7 @@ public class VmRule implements MethodRule {
       return results;
    }
 
-   public <T> T getMeta(final StateTag tag, final MetaKey<T> key) {
+   public <T> T getByMeta(final StateTag tag, final MetaKey<T> key) {
       for (final JState result : results()) {
          if(result.descendentTag().equals(tag)) {
             return result.getMeta(key);

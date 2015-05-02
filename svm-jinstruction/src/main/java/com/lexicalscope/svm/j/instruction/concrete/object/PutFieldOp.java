@@ -1,5 +1,7 @@
 package com.lexicalscope.svm.j.instruction.concrete.object;
 
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
+
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldInsnNode;
 
@@ -17,7 +19,7 @@ public final class PutFieldOp implements Vop {
 
    public PutFieldOp(final FieldConversionFactory fieldConversionFactory, final FieldInsnNode fieldInsnNode) {
       this.fieldInsnNode = fieldInsnNode;
-      this.name = new SFieldName(fieldInsnNode.owner, fieldInsnNode.name);
+      this.name = new SFieldName(internalName(fieldInsnNode.owner), fieldInsnNode.name);
       this.conversion = conversionForGetField(fieldConversionFactory, fieldInsnNode);
    }
 
@@ -42,7 +44,7 @@ public final class PutFieldOp implements Vop {
 
    @Override public void eval(final JState ctx) {
       // TODO[tim]: link should remove this
-      final int offset = ctx.loadKlassFor(fieldInsnNode.owner).fieldIndex(name);
+      final int offset = ctx.loadKlassFor(internalName(fieldInsnNode.owner)).fieldIndex(name);
 
       final Object val = ctx.pop();
       final ObjectRef obj = (ObjectRef) ctx.pop();

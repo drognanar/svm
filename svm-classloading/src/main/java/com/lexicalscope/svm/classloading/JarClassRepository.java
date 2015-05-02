@@ -5,6 +5,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import com.lexicalscope.svm.vm.j.KlassInternalName;
+
 public class JarClassRepository implements ClassSource {
    private final URL baseLocation;
    private final String prefix;
@@ -18,7 +20,7 @@ public class JarClassRepository implements ClassSource {
       this.prefix = prefix;
    }
 
-   @Override public URL loadFromRepository(final String name) {
+   @Override public URL loadFromRepository(final KlassInternalName name) {
       final String relativeLocation = prefix + name + ".class";
       try {
          if(baseLocation.getProtocol().equals("file")) {
