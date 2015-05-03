@@ -8,13 +8,7 @@ import static org.objectweb.asm.Type.getMethodDescriptor;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.lexicalscope.svm.vm.SearchLimits;
 import com.lexicalscope.svm.vm.StateCountSearchLimit;
@@ -31,9 +25,6 @@ import com.lexicalscope.fluentreflection.ReflectionMatcher;
 import com.lexicalscope.svm.classloading.ClassSource;
 import com.lexicalscope.svm.classloading.ClasspathClassRepository;
 import com.lexicalscope.svm.metastate.MetaKey;
-import com.lexicalscope.svm.vm.SearchLimits;
-import com.lexicalscope.svm.vm.StateCountSearchLimit;
-import com.lexicalscope.svm.vm.TimerSearchLimit;
 import com.lexicalscope.svm.vm.Vm;
 import com.lexicalscope.svm.vm.conc.InitialStateBuilder;
 import com.lexicalscope.svm.vm.conc.JvmBuilder;
@@ -52,8 +43,7 @@ public class VmRule implements MethodRule {
    private SearchLimits searchLimits;
 
    private final List<Vm<JState>> vm = new ArrayList<>();
-   private ClassSource[] classSources = new ClassSource[]{new ClasspathClassRepository()};
-   private StateTag[] tags = new StateTag[]{new StateTag() {}};
+   private TaggableClassSource[] classSources = new TaggableClassSource[]{new TaggableClassSource()};
 
    public static VmRule createVmRuleWithConfiguredClassLoader(final Class<?>[] loadFromWhereverTheseWereLoaded) {
       final VmRule result = new VmRule();
@@ -145,33 +135,25 @@ public class VmRule implements MethodRule {
    }
 
    public final Vm<JState> build(final Object[] args) {
-      return jvmBuilder.build(tags, classSources, entryPoint, searchLimits, args);
+      return jvmBuilder.build(classSources, classSources, entryPoint, searchLimits, args);
+   }
+
+   public void loadFrom(final TaggableClassSource[] classSources) {
+      this.classSources = classSources;
    }
 
    public void loadFrom(final Class<?>[][] loadFromWhereverTheseWereLoaded) {
-      classSources = new ClassSource[loadFromWhereverTheseWereLoaded.length];
-      tags = new StateTag[loadFromWhereverTheseWereLoaded.length];
+      classSources = new TaggableClassSource[loadFromWhereverTheseWereLoaded.length];
       for (int i = 0; i < classSources.length; i++) {
-         classSources[i] = classpathClassRepository(loadFromWhereverTheseWereLoaded[i]);
-         tags[i] = new ClassStateTag(loadFromWhereverTheseWereLoaded[i][0]);
-      }
-   }
-
-   public void loadFrom(final Class[] markers, final URL[][] loadFromTheseLocations) {
-      classSources = new ClassSource[loadFromTheseLocations.length];
-      tags = new StateTag[loadFromTheseLocations.length];
-      for (int i = 0; i < classSources.length; i++) {
-         classSources[i] = classpathClassRepository(loadFromTheseLocations[i]);
-         tags[i] = new ClassStateTag(markers[i]);
+         classSources[i] = TaggableClassSource.loadFromTheseClasses(loadFromWhereverTheseWereLoaded[i]);
       }
    }
 
    public void loadFrom(final Class<?>[] loadFromWhereverTheseWereLoaded) {
-      Class[][] classes = new Class[loadFromWhereverTheseWereLoaded.length][];
+      classSources = new TaggableClassSource[loadFromWhereverTheseWereLoaded.length];
       for (int i = 0; i < loadFromWhereverTheseWereLoaded.length; i++) {
-         classes[i] = new Class[] { loadFromWhereverTheseWereLoaded[i] };
+         classSources[i] = TaggableClassSource.loadFromTheseClasses(loadFromWhereverTheseWereLoaded[i]);
       }
-      loadFrom(classes);
    }
 
    public final JState execute(final Object ... args) {
