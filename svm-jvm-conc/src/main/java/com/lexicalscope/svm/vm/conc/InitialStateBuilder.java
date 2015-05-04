@@ -7,14 +7,12 @@ import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.hamcrest.Matcher;
 
 import com.lexicalscope.svm.classloading.AsmSClassLoader;
 import com.lexicalscope.svm.classloading.ClassSource;
 import com.lexicalscope.svm.classloading.SClassLoader;
-import com.lexicalscope.svm.classloading.SelectingClassLoader;
 import com.lexicalscope.svm.classloading.StaticsImpl;
 import com.lexicalscope.svm.heap.HeapFactory;
 import com.lexicalscope.svm.j.instruction.concrete.klass.DefineClassOp;

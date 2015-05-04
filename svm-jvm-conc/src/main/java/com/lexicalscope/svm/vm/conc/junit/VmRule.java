@@ -2,12 +2,8 @@ package com.lexicalscope.svm.vm.conc.junit;
 
 import static com.lexicalscope.fluentreflection.FluentReflection.object;
 import static com.lexicalscope.fluentreflection.ReflectionMatchers.annotatedWith;
-import static com.lexicalscope.svm.classloading.ClasspathClassRepository.classpathClassRepository;
-import static com.lexicalscope.svm.classloading.ClasspathClassRepository.classpathClassRepostory;
 import static org.objectweb.asm.Type.getMethodDescriptor;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 
 import com.lexicalscope.svm.vm.SearchLimits;
@@ -22,8 +18,6 @@ import com.lexicalscope.fluentreflection.FluentMethod;
 import com.lexicalscope.fluentreflection.FluentObject;
 import com.lexicalscope.fluentreflection.FluentReflection;
 import com.lexicalscope.fluentreflection.ReflectionMatcher;
-import com.lexicalscope.svm.classloading.ClassSource;
-import com.lexicalscope.svm.classloading.ClasspathClassRepository;
 import com.lexicalscope.svm.metastate.MetaKey;
 import com.lexicalscope.svm.vm.Vm;
 import com.lexicalscope.svm.vm.conc.InitialStateBuilder;
@@ -37,8 +31,6 @@ public class VmRule implements MethodRule {
    private final ReflectionMatcher<FluentAnnotated> annotatedWithTestPointEntry = annotatedWith(TestEntryPoint.class);
    private final JvmBuilder jvmBuilder;
    private final Map<String, SMethodDescriptor> entryPoints = new HashMap<>();
-   private final Set<String> classAbstractions = new HashSet<>();
-   private ClassSource abstractSource;
    private SMethodDescriptor entryPoint;
    private SearchLimits searchLimits;
 
@@ -113,19 +105,6 @@ public class VmRule implements MethodRule {
       // can be overridden
    }
 
-   public void setAbstractMarker(Class klass) {
-      abstractSource = classpathClassRepostory(klass);
-   }
-
-    public void setAbstractMarker(URL abstractionsPath) {
-        abstractSource = new ClasspathClassRepository(new URLClassLoader(new URL[] {abstractionsPath}, null));
-    }
-
-   public void addClassMapping(Class fromClass) {
-      String fromName = fromClass.getName().replace('.', '/');
-      classAbstractions.add(fromName);
-   }
-
    public void setTimeout(int seconds) {
       this.searchLimits = TimerSearchLimit.limitByTime(seconds);
    }
@@ -140,13 +119,6 @@ public class VmRule implements MethodRule {
 
    public void loadFrom(final TaggableClassSource[] classSources) {
       this.classSources = classSources;
-   }
-
-   public void loadFrom(final Class<?>[][] loadFromWhereverTheseWereLoaded) {
-      classSources = new TaggableClassSource[loadFromWhereverTheseWereLoaded.length];
-      for (int i = 0; i < classSources.length; i++) {
-         classSources[i] = TaggableClassSource.loadFromTheseClasses(loadFromWhereverTheseWereLoaded[i]);
-      }
    }
 
    public void loadFrom(final Class<?>[] loadFromWhereverTheseWereLoaded) {
