@@ -54,6 +54,7 @@ public class InitialStateBuilder {
    private final NativeMethods natives = DefaultNativeMethods.natives();
    private final InstrumentationBuilder instrumentationBuilder = new InstrumentationBuilder();
    private final MetaState metaState = new HashMetaState();
+   private InstructionSource instructionSource;
 
    public JStateImpl createInitialState(
          final StateTag stateTag,
@@ -61,13 +62,8 @@ public class InitialStateBuilder {
          final ClassSource classSource,
          final SMethodDescriptor entryPointName,
          final Object... args) {
-      final InstructionSource instructions = instructionSourceFactory.instructionSource(instructionFactory);
-      final SClassLoader classLoader = new AsmSClassLoader(
-            instructions,
-            instrumentationBuilder.instrumentation(instructions),
-            natives(),
-            classSource);
-      final SClassLoader mainLoader = classLoader;
+      final InstructionSource instructions = getInstructionSource();
+      final SClassLoader mainLoader = getsClassLoader(classSource);
 
       final StatementBuilder statements = statements(instructions);
       defineBootstrapClassesInstruction(statements.sink(), instructions);
@@ -79,6 +75,21 @@ public class InitialStateBuilder {
       final DequeStack stack = new DequeStack();
       stack.push(new SnapshotableStackFrame(JavaConstants.INITIAL_FRAME_NAME, STATIC, initialInstruction, 0, entryPointName.argSize()));
       return new JStateImpl(stateTag, search, new StaticsImpl(mainLoader), stack, heapFactory().heap(), metaState.snapshot());
+   }
+
+   public SClassLoader getsClassLoader(ClassSource mainSource) {
+      return new AsmSClassLoader(
+              getInstructionSource(),
+              instrumentationBuilder.instrumentation(getInstructionSource()),
+              natives(),
+              mainSource);
+   }
+
+   private InstructionSource getInstructionSource() {
+      if (instructionSource == null) {
+         instructionSource = instructionSourceFactory.instructionSource(instructionFactory);
+      }
+      return instructionSource;
    }
 
    private void loadArgsInstruction(final StatementBuilder statements, final Object[] args) {
