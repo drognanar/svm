@@ -61,6 +61,7 @@ public class DefaultNativeMethods implements NativeMethods {
             new Sun_reflect_reflection_getCallerClass(),
             new Java_security_accessController_doPrivileged(),
             new Symbolic_newSymbol("newIntSymbol", "()I"),
+            new Symbolic_newSymbol("newBooleanSymbol", "()Z"),
             new Symbolic_selectState(),
             new Symbolic_randomChoice(),
             new Symbolic_getArgument()
