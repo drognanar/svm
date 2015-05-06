@@ -1,8 +1,12 @@
 package com.lexicalscope.svm.classloading;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.lexicalscope.svm.classloading.linking.LinkedMethod;
@@ -93,5 +97,17 @@ public class AsmSMethod implements SMethod {
 
    @Override public String toString() {
       return name().toString();
+   }
+
+   @Override public List<String> parameterNames() {
+      final Type[] argumentTypes = Type.getArgumentTypes(method.desc);
+      @SuppressWarnings("unchecked")
+      final List<LocalVariableNode> localVariables = method.localVariables;
+
+      final List<String> result = new ArrayList<>();
+      for (int i = localVariables.size() != argumentTypes.length ? 1 : 0; i < localVariables.size(); i++) {
+         result.add(localVariables.get(i).name);
+      }
+      return result;
    }
 }

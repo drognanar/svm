@@ -7,6 +7,7 @@ import org.hamcrest.Matcher;
 import com.lexicalscope.svm.partition.spec.CallContext;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.KlassInternalName;
+import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 class MatcherPartition {
    private final Matcher<? super CallContext> aMatcher;
@@ -25,8 +26,12 @@ class MatcherPartition {
       this.uPartitionTag = uPartitionTag;
    }
 
-   public Object tagForConstructionOf(final JState ctx, final KlassInternalName klassDesc) {
-      final CallContext callContext = new JStateCallContext(ctx, klassDesc);
+   public Object tagForConstructionOf(
+         final JState ctx,
+         final KlassInternalName klassDesc,
+         final SMethodDescriptor targetMethod,
+         final Object[] args) {
+      final CallContext callContext = new JStateCallContext(ctx, klassDesc, targetMethod, args);
       Object partitionTag;
       if (aMatcher.matches(callContext)) {
          partitionTag = aPartitionTag;

@@ -105,7 +105,8 @@ public class VmRule implements MethodRule {
       // can be overridden
    }
 
-   public void setTimeout(int seconds) {
+
+   public void setTimeout(final int seconds) {
       this.searchLimits = TimerSearchLimit.limitByTime(seconds);
    }
 
@@ -143,8 +144,10 @@ public class VmRule implements MethodRule {
       return vm.get(0).results();
    }
 
+
    public List<JState> getMatchingState(final StateTag tag) {
-      List<JState> results = new ArrayList<>();
+      final List<JState> results = new ArrayList<>();
+
       for (final JState result : results()) {
          if (result.descendentTag().equals(tag)) {
             results.add(result);
@@ -154,14 +157,14 @@ public class VmRule implements MethodRule {
    }
 
    public <T> List<T> getMatchingMeta(final StateTag tag, final MetaKey<T> key) {
-      List<T> results = new ArrayList<>();
+      final List<T> results = new ArrayList<>();
       for (final JState result : getMatchingState(tag)) {
          results.add(result.getMeta(key));
       }
       return results;
    }
 
-   public <T> T getByMeta(final StateTag tag, final MetaKey<T> key) {
+   public <T> T getMeta(final StateTag tag, final MetaKey<T> key) {
       for (final JState result : results()) {
          if(result.descendentTag().equals(tag)) {
             return result.getMeta(key);

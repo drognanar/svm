@@ -64,7 +64,7 @@ public class MatchersSpec {
     public static Matcher<Invocation> callerParameter(final int index, final Matcher<Value> matcher) {
        return new FeatureMatcher<Invocation, Value>(matcher, "caller parameter " + index, "parameter") {
           @Override protected Value featureValueOf(final Invocation actual) {
-             return actual.callerParameter(index);
+             return actual.local(index);
           }
        };
     }

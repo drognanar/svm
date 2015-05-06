@@ -39,7 +39,7 @@ public class TestIcompareExampleExplorationOrdersAreDifferent {
       // example are not rendered vacuous by any compiler improvements
       // which might effect branch selection order.
       assertThat(
-            vm.getByMeta(tag(ExamplesOneMarker.class), TRACE),
-            not(equivalentTo(vm, vm.getByMeta(tag(ExamplesTwoMarker.class), TRACE))));
+            vm.getMeta(tag(ExamplesOneMarker.class), TRACE),
+            not(equivalentTo(vm, vm.getMeta(tag(ExamplesTwoMarker.class), TRACE))));
    }
 }

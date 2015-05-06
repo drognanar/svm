@@ -11,7 +11,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.CombinableMatcher.both;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -23,7 +22,8 @@ public class TestMethodParametersCanBeUsedForPartitioning {
    {
       instrumentPartition(
             receiverClass(ClassOutsidePartition.class),
-            both(receiverClass(ClassSometimesInsidePartition.class)).and(calleeParameter(1, value(equalTo((Object) 2)))),
+            both(receiverClass(ClassSometimesInsidePartition.class)).
+               and(calleeParameter(1, value(equalTo((Object) 2)))),
             vm);
       vm.builder().initialState().meta(TRACE, trace().build());
    }
@@ -47,14 +47,18 @@ public class TestMethodParametersCanBeUsedForPartitioning {
       new ClassOutsidePartition().entry(3, 4);
    }
 
-   @Test @Ignore("need to instrument constructor calls instead of new instructions for this to work") public void collectArgumentsInTrace() throws Exception {
+   @Test public void collectArgumentsInTrace() throws Exception {
       vm.execute();
 
       assertThat(
             vm.result().getMeta(TRACE),
-            has(methodCallOf(ClassSometimesInsidePartition.class, INIT, "(I)V"),
-                methodReturnOf(ClassSometimesInsidePartition.class, INIT, "(I)V"),
-                methodCallOf(ClassSometimesInsidePartition.class, "myMethod", "(I)I", any(Object.class), equalTo((Object) 4)),
-                methodReturnOf(ClassSometimesInsidePartition.class, "myMethod", "(I)I", equalTo((Object) 11))).only().inOrder());
+            has(methodCallOf(ClassSometimesInsidePartition.class,
+                     INIT, "(I)V", any(Object.class), equalTo((Object) 2)),
+                methodReturnOf(ClassSometimesInsidePartition.class,
+                      INIT, "(I)V"),
+                methodCallOf(ClassSometimesInsidePartition.class,
+                      "myMethod", "(I)I", any(Object.class), equalTo((Object) 4)),
+                methodReturnOf(ClassSometimesInsidePartition.class,
+                      "myMethod", "(I)I", equalTo((Object) 8))).only().inOrder());
    }
 }

@@ -4,6 +4,6 @@ public interface Invocation {
    String callerMethodName();
    Receiver receiver();
    Value parameter(String path);
-   Value callerParameter(int index);
+   Value local(int index);
    Value calleeParameter(int index);
 }

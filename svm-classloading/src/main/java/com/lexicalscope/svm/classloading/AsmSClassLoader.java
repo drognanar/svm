@@ -60,7 +60,9 @@ public class AsmSClassLoader implements SClassLoader {
    }
 
    @Override public SMethod virtualMethod(final Class<?> klass, final String methodName, final String desc) {
-      return load(klass).virtualMethod(method(klass, methodName, desc));
+      final SMethod virtualMethod = load(klass).virtualMethod(method(klass, methodName, desc));
+      assert virtualMethod != null;
+      return virtualMethod;
    }
 
    @Override public SMethod declaredMethod(final Class<?> klass, final String methodName, final String desc) {

@@ -13,14 +13,23 @@ import com.lexicalscope.svm.partition.spec.Value;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.klass.SClass;
+import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 class JStateCallContext implements CallContext {
    private final JState ctx;
    private final KlassInternalName klassDesc;
+   private final SMethodDescriptor targetMethod;
+   private final Object[] args;
 
-   public JStateCallContext(final JState ctx, final KlassInternalName klassDesc) {
+   public JStateCallContext(
+         final JState ctx,
+         final KlassInternalName klassDesc,
+         final SMethodDescriptor targetMethod,
+         final Object[] args) {
       this.ctx = ctx;
       this.klassDesc = klassDesc;
+      this.targetMethod = targetMethod;
+      this.args = args;
    }
 
    @Override public String callerMethodName() {
@@ -53,7 +62,7 @@ class JStateCallContext implements CallContext {
       throw new UnsupportedOperationException();
    }
 
-   @Override public Value callerParameter(final int index) {
+   @Override public Value local(final int index) {
       return new Local(){
          @Override public Object value() {
             return ctx.currentFrame().local(index);
@@ -63,7 +72,7 @@ class JStateCallContext implements CallContext {
    @Override public Value calleeParameter(final int index) {
       return new Local(){
          @Override public Object value() {
-            throw new UnsupportedOperationException("we don't know the constructor params because we have to tag the object before its constructor is invoked");
+            return args[index];
          }};
    }
 

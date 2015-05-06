@@ -28,7 +28,7 @@ class TagConstructorRecieverWithPartition implements Vop {
       ctx.put(
             (ObjectRef) args[0],
             SClass.OBJECT_TAG_OFFSET,
-            partition.tagForConstructionOf(ctx, targetMethod.klassName()));
+            partition.tagForConstructionOf(ctx, targetMethod.klassName(), targetMethod, args));
    }
 
    @Override public <T> T query(final InstructionQuery<T> instructionQuery) {

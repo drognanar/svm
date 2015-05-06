@@ -1,5 +1,7 @@
 package com.lexicalscope.svm.vm.j.klass;
 
+import java.util.List;
+
 import com.lexicalscope.svm.vm.j.Instruction;
 
 
@@ -13,4 +15,6 @@ public interface SMethod {
    int argSize();
 
    SMethodDescriptor name();
+
+   List<String> parameterNames();
 }

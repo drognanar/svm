@@ -1,5 +1,8 @@
 package com.lexicalscope.svm.j.natives;
 
+import static com.lexicalscope.svm.j.instruction.concrete.object.SymbolCounterMetaKey.SC;
+import static com.lexicalscope.svm.j.statementBuilder.StatementBuilder.statements;
+
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ITerminalSymbol;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
@@ -7,19 +10,16 @@ import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.MethodBody;
 import com.lexicalscope.svm.vm.j.Vop;
 
-import static com.lexicalscope.svm.j.statementBuilder.StatementBuilder.statements;
-import static com.lexicalscope.svm.j.instruction.concrete.object.SymbolCounterMetaKey.SC;
-
 /**
  * Class that allows dynamic creation of int symbols in execution.
  */
 public class Symbolic_newSymbol extends AbstractNativeMethodDef {
-    public Symbolic_newSymbol(String methodName, String signature) {
+    public Symbolic_newSymbol(final String methodName, final String signature) {
         super("com/lexicalscope/svm/j/instruction/symbolic/symbols/SymbolFactory", methodName, signature);
     }
 
     @Override
-    public MethodBody instructions(InstructionSource instructions) {
+    public MethodBody instructions(final InstructionSource instructions) {
         return statements(instructions)
                 .maxStack(1)
                 .maxLocals(1)
