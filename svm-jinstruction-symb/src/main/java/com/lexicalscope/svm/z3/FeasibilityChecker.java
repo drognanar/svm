@@ -4,14 +4,10 @@ import java.io.Closeable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.*;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.BoolSymbol;
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.IConstSymbol;
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.ISymbol;
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.ITerminalSymbol;
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.Symbol;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BitVecNum;
 import com.microsoft.z3.BoolExpr;
@@ -23,6 +19,7 @@ import com.microsoft.z3.Z3Exception;
 
 public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> implements Closeable {
    private final Map<Object, Expr> cache = new HashMap<>();
+   private final Map<BoolSymbol, Boolean> satisfiableCache = new HashMap<>();
 
    // TODO[tim]: use z3 stack for efficiency
    private final Context ctx;
@@ -36,6 +33,8 @@ public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> im
          throw new RuntimeException("could not enable warning messages", e);
       }
       //Log.open("test.log");
+      satisfiableCache.put(new TrueSymbol(), true);
+      satisfiableCache.put(new FalseSymbol(), false);
 
       final HashMap<String, String> cfg = new HashMap<String, String>();
       cfg.put("model", "true");
@@ -80,13 +79,19 @@ public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> im
    }
 
    public boolean satisfiable(final BoolSymbol pc) {
+      if (satisfiableCache.containsKey(pc)) {
+         return satisfiableCache.get(pc);
+      }
+
       final BoolExpr expr;
       try {
          expr = (BoolExpr) symbolToExpr.toExpr(pc);
       } catch (final Z3Exception e) {
          throw new RuntimeException("could not map PC to Z3: " + pc, e);
       }
-      return checkSat(expr);
+      boolean satistiable = checkSat(expr);
+      satisfiableCache.put(pc, satistiable);
+      return satistiable;
    }
 
    public boolean equivalent(final Symbol left, final Symbol right) {
