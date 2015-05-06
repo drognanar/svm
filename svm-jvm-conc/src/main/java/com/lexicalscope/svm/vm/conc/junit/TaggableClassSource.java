@@ -34,12 +34,17 @@ public class TaggableClassSource implements StateTag, ClassSource {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof TaggableClassSource)) {
+        if (obj == null) {
+            return false;
+        } else if (obj instanceof TaggableClassSource) {
+            TaggableClassSource other = (TaggableClassSource) obj;
+            return tag.equals(other.tag);
+        } else if (obj instanceof StateTag) {
+            StateTag other = (StateTag) obj;
+            return tag.equals(other);
+        } else {
             return false;
         }
-
-        TaggableClassSource other = (TaggableClassSource) obj;
-        return tag.equals(other.tag);
     }
 
     public static TaggableClassSource loadFromTheseClasses(Class<?>... classes) {
