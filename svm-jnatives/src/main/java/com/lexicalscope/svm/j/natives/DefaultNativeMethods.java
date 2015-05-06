@@ -62,6 +62,9 @@ public class DefaultNativeMethods implements NativeMethods {
             new Java_security_accessController_doPrivileged(),
             new Symbolic_newSymbol("newIntSymbol", "()I"),
             new Symbolic_newSymbol("newBooleanSymbol", "()Z"),
+            new Symbolic_getPassedParameter(),
+            new Symbolic_countParameters(),
+            new Symbolic_passParameter(),
             new Symbolic_selectState(),
             new Symbolic_randomChoice(),
             new Symbolic_getArgument()
