@@ -22,6 +22,10 @@ public final class TrueSymbol implements BoolSymbol {
       return "TT";
    }
 
+   @Override public int hashCode() {
+      return TrueSymbol.class.hashCode();
+   }
+
    @Override public boolean equals(final Object obj) {
       return obj != null && obj.getClass().equals(this.getClass());
    }

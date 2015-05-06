@@ -17,4 +17,23 @@ public class ICmpNeSymbol extends AbstractBoolSymbol {
    public String toString() {
       return String.format("(!= %s %s)", value1, value2);
    }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      ICmpNeSymbol that = (ICmpNeSymbol) o;
+
+      if (!value1.equals(that.value1)) return false;
+      return value2.equals(that.value2);
+
+   }
+
+   @Override
+   public int hashCode() {
+      int result = value1.hashCode();
+      result = 31 * result + value2.hashCode();
+      return result;
+   }
 }

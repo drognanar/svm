@@ -21,4 +21,12 @@ public class FalseSymbol implements BoolSymbol {
    @Override public BoolSymbol not() {
       return new TrueSymbol();
    }
+
+   @Override public int hashCode() {
+      return FalseSymbol.class.hashCode();
+   }
+
+   @Override public boolean equals(final Object obj) {
+      return obj != null && obj.getClass().equals(this.getClass());
+   }
 }
