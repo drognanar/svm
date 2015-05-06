@@ -17,6 +17,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.lexicalscope.symb</groupId>
+			<artifactId>svm-state</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.lexicalscope.symb</groupId>
 			<artifactId>svm-snapshot</artifactId>
 		</dependency>
 		<dependency>

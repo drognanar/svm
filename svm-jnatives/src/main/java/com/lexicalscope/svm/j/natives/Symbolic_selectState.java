@@ -1,11 +1,17 @@
 package com.lexicalscope.svm.j.natives;
 
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
+import com.lexicalscope.svm.j.instruction.symbolic.PcMetaKey;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.BoolSymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.ICmpEqSymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.IConstSymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.ITerminalSymbol;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.MethodBody;
 import com.lexicalscope.svm.vm.j.Vop;
 
+import static com.lexicalscope.svm.j.instruction.symbolic.PcMetaKey.PC;
 import static com.lexicalscope.svm.j.statementBuilder.StatementBuilder.statements;
 
 /**
@@ -30,9 +36,13 @@ public class Symbolic_selectState extends AbstractNativeMethodDef {
         public void eval(JState ctx) {
             int count = (int) ctx.pop();
             JState[] forks = new JState[count];
+            ITerminalSymbol selectionSymbol = Symbolic_newSymbol.getNewSymbol(ctx);
             for (int i = 0; i < count; i++) {
                 forks[i] = ctx.snapshot();
                 forks[i].push(i);
+                BoolSymbol previousConstraints = forks[i].getMeta(PC);
+                BoolSymbol newConstraints = previousConstraints.and(new ICmpEqSymbol(selectionSymbol, new IConstSymbol(i)));
+                forks[i].setMeta(PC, newConstraints);
             }
             ctx.fork(forks);
         }

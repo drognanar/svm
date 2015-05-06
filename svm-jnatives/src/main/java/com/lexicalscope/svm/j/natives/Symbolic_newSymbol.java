@@ -30,15 +30,19 @@ public class Symbolic_newSymbol extends AbstractNativeMethodDef {
     private class GetSymbolOp implements Vop {
         @Override
         public void eval(JState ctx) {
-            int counter = ctx.getMeta(SC);
-            ITerminalSymbol symbol = new ITerminalSymbol(String.format("%s%d", "symbol", counter));
-            ctx.setMeta(SC, counter + 1);
-            ctx.push(symbol);
+            ctx.push(getNewSymbol(ctx));
         }
 
         @Override
         public <T> T query(InstructionQuery<T> instructionQuery) {
             return instructionQuery.nativ3();
         }
+    }
+
+    public static ITerminalSymbol getNewSymbol(JState ctx) {
+        int counter = ctx.getMeta(SC);
+        ITerminalSymbol symbol = new ITerminalSymbol(String.format("%s%d", "symbol", counter));
+        ctx.setMeta(SC, counter + 1);
+        return symbol;
     }
 }
