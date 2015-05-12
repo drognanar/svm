@@ -1,13 +1,21 @@
 package com.lexicalscope.svm.z3;
 
+import static com.lexicalscope.svm.j.instruction.symbolic.pc.PcBuilder.and;
+
 import java.io.Closeable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.*;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.BoolSymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.FalseSymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.IConstSymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.ISymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.ITerminalSymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.Symbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.TrueSymbol;
 import com.microsoft.z3.ArithExpr;
 import com.microsoft.z3.BitVecNum;
 import com.microsoft.z3.BoolExpr;
@@ -89,7 +97,7 @@ public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> im
       } catch (final Z3Exception e) {
          throw new RuntimeException("could not map PC to Z3: " + pc, e);
       }
-      boolean satistiable = checkSat(expr);
+      final boolean satistiable = checkSat(expr);
       satisfiableCache.put(pc, satistiable);
       return satistiable;
    }
@@ -224,7 +232,15 @@ public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> im
    //      }
    //   }
 
+   public boolean overlap(final BoolSymbol pc1, final BoolSymbol pc2) {
+      return satisfiable(and(pc1, pc2));
+   }
+
    @Override public String toString() {
       return "Z3 Feasibility Checker";
+   }
+
+   public ViolationModel violationModel(final BoolSymbol pc) {
+      return new ViolationModel(new Simplifier(ctx).powerSimplify(pc));
    }
 }

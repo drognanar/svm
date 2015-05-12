@@ -1,14 +1,14 @@
 package com.lexicalscope.svm.partition.trace.ops;
 
 import static com.lexicalscope.svm.j.instruction.concrete.object.PartitionTagMetaKey.PARTITION_TAG;
-import static com.lexicalscope.svm.partition.trace.Trace.CallReturn.RETURN;
+import static com.lexicalscope.svm.partition.trace.HashTrace.CallReturn.RETURN;
 import static com.lexicalscope.svm.partition.trace.TraceMetaKey.TRACE;
 
 import java.util.Objects;
 
 import com.lexicalscope.svm.heap.ObjectRef;
+import com.lexicalscope.svm.partition.trace.HashTrace.CallReturn;
 import com.lexicalscope.svm.partition.trace.Trace;
-import com.lexicalscope.svm.partition.trace.Trace.CallReturn;
 import com.lexicalscope.svm.stack.StackFrame;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;

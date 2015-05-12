@@ -6,11 +6,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public final class ObjectGoalMap<N> extends AbstractGoalMap<Object, N> {
-   private final LinkedHashMap<Object, N> childMap = new LinkedHashMap<>();
+import com.lexicalscope.svm.partition.trace.Trace;
+
+public final class ObjectGoalMap<N> extends AbstractGoalMap<N> {
+   private final LinkedHashMap<Trace, N> childMap = new LinkedHashMap<>();
    private final List<N> list = new ArrayList<>();
 
-   @Override public N get(final Object goal, final SubtreeFactory<N> factory) {
+   @Override public N get(final Trace goal, final SubtreeFactory<N> factory) {
       N child = childMap.get(goal);
       if(child == null) {
          child = factory.create();
@@ -19,7 +21,7 @@ public final class ObjectGoalMap<N> extends AbstractGoalMap<Object, N> {
       return child;
    }
 
-   @Override public void put(final Object goal, final N node) {
+   @Override public void put(final Trace goal, final N node) {
       list.add(node);
       childMap.put(goal, node);
    }
@@ -36,11 +38,11 @@ public final class ObjectGoalMap<N> extends AbstractGoalMap<Object, N> {
       return childMap.size();
    }
 
-   @Override public boolean containsGoal(final Object goal) {
+   @Override public boolean containsGoal(final Trace goal) {
       return childMap.containsKey(goal);
    }
 
-   @Override public N get(final Object goal) {
+   @Override public N get(final Trace goal) {
       return childMap.get(goal);
    }
 

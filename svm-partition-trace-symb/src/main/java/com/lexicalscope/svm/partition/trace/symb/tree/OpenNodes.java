@@ -8,26 +8,27 @@ import java.util.List;
 import org.hamcrest.Matcher;
 
 import com.lexicalscope.svm.search.Randomiser;
+import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.z3.FeasibilityChecker;
 
-public final class OpenNodes<S> {
+public final class OpenNodes {
    private final FeasibilityChecker feasibilityChecker;
-   private final List<S> nodes = new ArrayList<>();
+   private final List<JState> nodes = new ArrayList<>();
 
    public OpenNodes(final FeasibilityChecker feasibilityChecker) {
       this.feasibilityChecker = feasibilityChecker;
    }
 
-   public void push(final S node) {
+   public void push(final JState node) {
       nodes.add(node);
    }
 
-   public S pop() {
+   public JState pop() {
       return nodes.remove(0);
    }
 
-   public boolean hasMatching(final Matcher<S> nodeMatcher) {
-      for (final S node : nodes) {
+   public boolean hasMatching(final Matcher<JState> nodeMatcher) {
+      for (final JState node : nodes) {
          if(nodeMatcher.matches(node)) {
             return true;
          }
@@ -39,7 +40,7 @@ public final class OpenNodes<S> {
       return nodes.isEmpty();
    }
 
-   public S random(final Randomiser randomiser) {
+   public JState random(final Randomiser randomiser) {
       assert !nodes.isEmpty();
 
       return nodes.remove(randomiser.random(nodes.size()));

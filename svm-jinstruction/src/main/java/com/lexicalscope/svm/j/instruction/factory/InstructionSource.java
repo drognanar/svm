@@ -15,6 +15,7 @@ public interface InstructionSource {
    public interface InstructionSink {
       void linearOp(Vop op, InstructionCode code);
       void nextOp(Vop op, InstructionCode code);
+      void line(int line);
       void noOp();
    }
 

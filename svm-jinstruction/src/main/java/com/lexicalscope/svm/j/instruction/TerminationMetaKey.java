@@ -12,4 +12,8 @@ public class TerminationMetaKey implements MetaKey<Boolean> {
     @Override public Class<Boolean> valueType() {
         return Boolean.class;
     }
+
+    @Override public String toString() {
+      return "Termination";
+   }
 }

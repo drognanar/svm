@@ -26,7 +26,7 @@ public class InitThreadOp implements Vop {
    public static void initThreadInstruction(final StatementBuilder statements) {
       statements
          .linearOp(new InitThreadOp())
-         .createInvokeSpecial(defaultConstructor(THREAD_CLASS));
+         .invokeSpecial(defaultConstructor(THREAD_CLASS));
    }
 
    @Override public <T> T query(final InstructionQuery<T> instructionQuery) {

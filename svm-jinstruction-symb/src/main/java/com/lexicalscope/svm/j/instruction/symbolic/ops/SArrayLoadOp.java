@@ -33,7 +33,7 @@ public class SArrayLoadOp implements Vop {
       } else if (arrayLength instanceof ISymbol) {
          ctx.push(loadFromSymbolicArray(ctx, arrayref, offset));
       } else {
-         throw new UnsupportedOperationException("concrete array symbolic offset");
+         throw new UnsupportedOperationException("concrete array symbolic offset " + offset);
       }
    }
 

@@ -32,6 +32,7 @@ public class TestInfeasibleBranch {
    @Test
    public void symbExecuteShouldSearchOnlyOneBranch() {
       vm.execute(symbol1);
+      System.out.println(vm.results());
       assertThat(vm.results(), hasItem(normalTerminiationWithResult(-10)));
       assertThat(vm.results(), hasSize(1));
    }

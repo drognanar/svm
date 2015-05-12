@@ -13,7 +13,7 @@ import com.lexicalscope.svm.vm.j.klass.SClass;
  *
  * @author tim
  */
-public class TestFieldLInking {
+public class TestFieldLinking {
    private final SClassLoader sClassLoader = new AsmSClassLoader();
    private final SClass classWithFiveFields = sClassLoader.load(ClassWith5Fields.class);
    private final SClass subClassWithThreeFields = sClassLoader.load(SubClassWithAdditionalFields.class);

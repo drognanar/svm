@@ -49,8 +49,8 @@ public class TestTraceGoalMap {
       assertThat("contains by equivalence", traceGoalMap.containsGoal(trace().build()));
    }
 
-   @Test public void emptyTraceNotEqualToItself() throws Exception {
-      assertThat(trace().build(), not(equalTo(trace().build())));
+   @Test public void emptyTraceEqualToItself() throws Exception {
+      assertThat(trace().build(), equalTo(trace().build()));
    }
 }
 

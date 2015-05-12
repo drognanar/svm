@@ -1,11 +1,17 @@
 package com.lexicalscope.svm.vm.j;
 
+import static com.lexicalscope.svm.vm.j.InstructionCode.*;
+import static com.lexicalscope.svm.vm.j.JavaConstants.INITIAL_FRAME_NAME;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.CombinableMatcher.both;
 
 import org.hamcrest.Description;
+import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import com.lexicalscope.svm.stack.trace.SMethodName;
+import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 public class StateMatchers {
    public static Matcher<JState> operandEqual(final Object expected) {
@@ -98,5 +104,57 @@ public class StateMatchers {
 
    public static Matcher<? super JState> normalTerminiation() {
       return both(terminalInstruction()).and(stackSize(1));
+   }
+
+   public static Matcher<JState> entryPoint() {
+      return currentMethodIs(INITIAL_FRAME_NAME);
+   }
+
+   public static Matcher<JState> currentMethodIs(final SMethodName method) {
+      return currentMethod(equalTo(method));
+   }
+
+   private static Matcher<JState> currentMethod(final Matcher<? super SMethodDescriptor> equalTo) {
+      return new FeatureMatcher<JState, SMethodDescriptor>(equalTo, "current method", "currentMethod") {
+         @Override protected SMethodDescriptor featureValueOf(final JState actual) {
+            return (SMethodDescriptor) actual.currentFrame().context();
+         }
+      };
+   }
+
+   public static Matcher<JState> returnVoid() {
+      return instructionCode(returnvoid);
+   }
+
+   public static Matcher<JState> returnOne() {
+      return instructionCode(return1);
+   }
+
+   public static Matcher<JState> lineNumber(final int line) {
+      return lineNumber(equalTo(line));
+   }
+
+   public static Matcher<JState> terminate() {
+      return instructionCode(methodexit);
+   }
+
+   public static Matcher<JState> lineNumber(final Matcher<Integer> equalTo) {
+      return new FeatureMatcher<JState, Integer>(equalTo, "instruction line number", "lineNumber") {
+         @Override protected Integer featureValueOf(final JState actual) {
+            return ((Instruction) actual.currentFrame().instruction()).line();
+         }
+      };
+   }
+
+   public static Matcher<JState> instructionCode(final InstructionCode code) {
+      return instructionCode(equalTo(code));
+   }
+
+   private static Matcher<JState> instructionCode(final Matcher<InstructionCode> equalTo) {
+      return new FeatureMatcher<JState, InstructionCode>(equalTo, "instruction code", "instructionCode") {
+         @Override protected InstructionCode featureValueOf(final JState actual) {
+            return ((Instruction) actual.currentFrame().instruction()).code();
+         }
+      };
    }
 }

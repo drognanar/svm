@@ -29,4 +29,8 @@ public class IArrayTerminalSymbol implements IArraySymbol {
    public <T, E extends Throwable> T accept(final SymbolVisitor<T, E> visitor) throws E {
       return visitor.intArraySymbol(name);
    }
+
+   public int name() {
+      return name;
+   }
 }

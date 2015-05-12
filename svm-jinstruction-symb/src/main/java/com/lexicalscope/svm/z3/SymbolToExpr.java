@@ -20,7 +20,7 @@ public class SymbolToExpr implements SymbolVisitor<Expr, Z3Exception> {
    private static final int intWidth = 32;
    private final Map<Object, Expr> cache;
    private final Context ctx;
-   private final BitVecSort intBvSort;
+   final BitVecSort intBvSort;
    private final BitVecExpr bv0;
    private final ArrayExpr bva0;
 

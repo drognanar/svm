@@ -2,15 +2,15 @@ package com.lexicalscope.svm.j.instruction.symbolic;
 
 import static com.lexicalscope.svm.j.instruction.symbolic.ops.array.NewSymbArray.newSymbolicArray;
 
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.IArraySymbolPair;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.IArrayAndLengthSymbols;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.Vop;
 
 public class LoadSymbolicArrayArg implements Vop {
-   private final IArraySymbolPair arg;
+   private final IArrayAndLengthSymbols arg;
 
-   public LoadSymbolicArrayArg(final IArraySymbolPair arg) {
+   public LoadSymbolicArrayArg(final IArrayAndLengthSymbols arg) {
       this.arg = arg;
    }
 

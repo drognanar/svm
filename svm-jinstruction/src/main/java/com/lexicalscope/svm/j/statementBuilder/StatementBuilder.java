@@ -89,6 +89,11 @@ public final class StatementBuilder {
       return this;
    }
 
+   public StatementBuilder dup() {
+      source.dup(sink);
+      return this;
+   }
+
    public StatementBuilder return1(final SMethodDescriptor methodName) {
       source.return1(methodName, sink);
       return this;
@@ -129,7 +134,7 @@ public final class StatementBuilder {
       return this;
    }
 
-   public StatementBuilder createInvokeSpecial(final SMethodDescriptor sMethodName) {
+   public StatementBuilder invokeSpecial(final SMethodDescriptor sMethodName) {
       source.invokespecial(sMethodName, sink);
       return this;
    }

@@ -1,18 +1,17 @@
 package com.lexicalscope.svm.vm.symb;
 
-import static com.lexicalscope.svm.j.instruction.concrete.object.SymbolicParametersMetaKey.*;
-import static com.lexicalscope.svm.j.instruction.symbolic.PcMetaKey.PC;
 import static com.lexicalscope.svm.j.instruction.concrete.object.SymbolCounterMetaKey.SC;
+import static com.lexicalscope.svm.j.instruction.symbolic.PcMetaKey.PC;
 import static com.lexicalscope.svm.vm.conc.InitialStateBuilder.initialState;
 
 import com.lexicalscope.svm.heap.HeapFactory;
 import com.lexicalscope.svm.j.instruction.concrete.object.SymbolicParametersMetaKey;
 import com.lexicalscope.svm.j.instruction.symbolic.SymbInstructionFactory;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.TrueSymbol;
+import com.lexicalscope.svm.vm.conc.DepthFirstStateSearchFactory;
 import com.lexicalscope.svm.vm.conc.FastHeapFactory;
 import com.lexicalscope.svm.vm.conc.JvmBuilder;
 import com.lexicalscope.svm.vm.conc.StateSearchFactory;
-import com.lexicalscope.svm.z3.FeasibilityChecker;
 
 import java.util.HashMap;
 
@@ -38,10 +37,8 @@ public class SymbVmFactory {
         return vmBuilder;
     }
 
-    public static JvmBuilder symbolicVmBuilder(
-            final SymbInstructionFactory instructionFactory,
-            final FeasibilityChecker feasibilityChecker) {
+    public static JvmBuilder symbolicVmBuilder(final SymbInstructionFactory instructionFactory) {
         return symbolicVmBuilder(instructionFactory,
-                new FeasibleBranchSearchFactory(feasibilityChecker));
+                new DepthFirstStateSearchFactory());
     }
 }

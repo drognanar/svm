@@ -12,7 +12,7 @@ import org.hamcrest.Matcher;
 import com.lexicalscope.svm.partition.trace.Trace;
 import com.lexicalscope.svm.z3.FeasibilityChecker;
 
-public final class TraceGoalMap<N> extends AbstractGoalMap<Trace, N> {
+public final class TraceGoalMap<N> extends AbstractGoalMap<N> {
    private static final class Child<N> {
       private final Trace goal;
       private final N node;

@@ -14,7 +14,7 @@ import com.lexicalscope.fluentreflection.FluentField;
 import com.lexicalscope.fluentreflection.FluentObject;
 import com.lexicalscope.svm.j.instruction.symbolic.SymbInstructionFactory;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.BoolSymbol;
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.IArraySymbolPair;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.IArrayAndLengthSymbols;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ISymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.Symbol;
 import com.lexicalscope.svm.z3.FeasibilityChecker;
@@ -44,9 +44,9 @@ public class SolverRule implements MethodRule {
          // or field.isType(ISymbol.class)
          if(field.type().isType(reflectingOn(ISymbol.class))) {
             field.call(symbInstructionFactory.isymbol());
-         } else if(field.type().isType(reflectingOn(IArraySymbolPair.class))) {
+         } else if(field.type().isType(reflectingOn(IArrayAndLengthSymbols.class))) {
             field.call(
-                  new IArraySymbolPair(
+                  new IArrayAndLengthSymbols(
                         symbInstructionFactory.iasymbol(),
                         symbInstructionFactory.isymbol()));
          } else {

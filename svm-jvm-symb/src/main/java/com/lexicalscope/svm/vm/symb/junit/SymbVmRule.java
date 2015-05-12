@@ -2,10 +2,10 @@ package com.lexicalscope.svm.vm.symb.junit;
 
 import com.lexicalscope.fluentreflection.FluentObject;
 import com.lexicalscope.svm.j.instruction.symbolic.SymbInstructionFactory;
+import com.lexicalscope.svm.vm.conc.DepthFirstStateSearchFactory;
 import com.lexicalscope.svm.vm.conc.JvmBuilder;
 import com.lexicalscope.svm.vm.conc.StateSearchFactory;
 import com.lexicalscope.svm.vm.conc.junit.VmRule;
-import com.lexicalscope.svm.vm.symb.FeasibleBranchSearchFactory;
 import com.lexicalscope.svm.vm.symb.SymbVmFactory;
 import com.lexicalscope.svm.z3.FeasibilityChecker;
 
@@ -26,8 +26,7 @@ public class SymbVmRule extends VmRule {
    }
 
    public static SymbVmRule createSymbVmRule() {
-      final FeasibilityChecker feasibilityChecker = new FeasibilityChecker();
-      return createSymbVmRule(feasibilityChecker, new FeasibleBranchSearchFactory(feasibilityChecker));
+      return createSymbVmRule(new FeasibilityChecker(), new DepthFirstStateSearchFactory());
    }
 
    public static SymbVmRule createSymbVmRule(final FeasibilityChecker feasibilityChecker, final StateSearchFactory factory) {

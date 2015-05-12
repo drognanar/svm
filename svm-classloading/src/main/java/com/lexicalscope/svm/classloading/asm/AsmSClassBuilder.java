@@ -1,7 +1,10 @@
 package com.lexicalscope.svm.classloading.asm;
 
+import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
+
 import java.util.List;
 
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
@@ -52,12 +55,22 @@ public class AsmSClassBuilder {
 
    public AsmSClassBuilder withMethods(final List<MethodNode> methods) {
       for (final MethodNode method : methods) {
+         if(klassName.equals(internalName("java/lang/Integer")) &&
+            method.name.equals("valueOf") &&
+            method.desc.equals("(I)Ljava/lang/Integer;"))
+         {
+            // we want to replace the normal implementation of
+            // this method with one that can more easily box symbols
+            method.access = method.access | Opcodes.ACC_NATIVE;
+         }
+
          declaredMethods.add(
                new AsmSMethod(
                      classLoader,
                      new AsmSMethodName(klassName, method.name, method.desc),
                      instructions,
                      method));
+
       }
       return this;
    }

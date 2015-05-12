@@ -17,7 +17,7 @@ public final class VmImpl<S extends VmState> implements Vm<S> {
 
    @Override
 	public S execute() {
-	  limits.reset();
+	   limits.reset();
       S pending;
       while ((pending = search.pendingState()) != null && limits.withinLimits()) {
 			try {

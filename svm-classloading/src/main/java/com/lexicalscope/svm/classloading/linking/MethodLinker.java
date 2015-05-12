@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.google.common.collect.LinkedListMultimap;
@@ -99,6 +100,7 @@ public class MethodLinker {
 
       switch (abstractInsnNode.getType()) {
          case AbstractInsnNode.LINE:
+            sink.line(((LineNumberNode) abstractInsnNode).line);
          case AbstractInsnNode.FRAME:
          case AbstractInsnNode.LABEL:
             sink.noOp();

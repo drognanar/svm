@@ -2,6 +2,14 @@ package com.lexicalscope.svm.j.instruction.symbolic.symbols;
 
 
 public class FalseSymbol implements BoolSymbol {
+   @Override public boolean isTT() {
+      return false;
+   }
+
+   @Override public boolean isFF() {
+      return true;
+   }
+
    @Override public <T, E extends Throwable> T accept(final SymbolVisitor<T, E> visitor) throws E {
       return visitor.fals3();
    }

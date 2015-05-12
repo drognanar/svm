@@ -40,7 +40,7 @@ public class SymbolicTraceMatchers {
    public static Matcher<TraceElement> traceElementMatcher(final FeasibilityChecker checker, final TraceElement expectedTraceElement) {
       return new TypeSafeDiagnosingMatcher<TraceElement>() {
          @Override
-         protected boolean matchesSafely(TraceElement actualTraceElement, Description mismatchDescription) {
+         protected boolean matchesSafely(final TraceElement actualTraceElement, final Description mismatchDescription) {
             if(expectedTraceElement.methodName().equals(actualTraceElement.methodName()) &&
                     expectedTraceElement.isCall() == actualTraceElement.isCall()) {
 
@@ -89,7 +89,7 @@ public class SymbolicTraceMatchers {
          }
 
          @Override
-         public void describeTo(Description description) {
+         public void describeTo(final Description description) {
             description.appendText("trace item equivalent to ").appendValue(expectedTraceElement);
          }
       };
@@ -109,8 +109,9 @@ public class SymbolicTraceMatchers {
                final TraceElement actualTraceElement = actualIterator.next();
 
 
-               if (!traceElementMatcher(checker, expectedTraceElement).matches(actualTraceElement))
+               if (!traceElementMatcher(checker, expectedTraceElement).matches(actualTraceElement)) {
                   return false;
+               }
             }
             // when comparing traces we truncate the longest trace to the
             // length of the shortest trace

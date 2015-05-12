@@ -6,7 +6,7 @@ public interface StateSearch<S> {
    S pendingState();
 
    void reachedLeaf();
-   void fork(S[] states);
+   void fork(S parent, S[] states);
    void goal();
 
    S firstResult();

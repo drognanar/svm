@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class SortedList {
    private final ArrayList<Integer> internal = new ArrayList<>();
+   //private final LinkedList<Integer> internal = new LinkedList<>();
 
    public void add(final int newElement) {
       for (int j = 0; j < internal.size(); j++) {

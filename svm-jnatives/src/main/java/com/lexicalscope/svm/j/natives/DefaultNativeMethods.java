@@ -55,6 +55,7 @@ public class DefaultNativeMethods implements NativeMethods {
             new Java_lang_double_doubleToRawLongBits(),
             new Java_lang_object_hashCode(),
             new Java_lang_reflect_array_newArray(),
+            new Java_lang_integer_valueOf(),
             new Sun_misc_unsafe_arrayBaseOffset(),
             new Sun_misc_unsafe_arrayIndexScale(),
             new Sun_misc_unsafe_addressSize(),

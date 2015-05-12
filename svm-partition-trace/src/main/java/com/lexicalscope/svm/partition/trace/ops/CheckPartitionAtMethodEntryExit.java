@@ -1,7 +1,7 @@
 package com.lexicalscope.svm.partition.trace.ops;
 
 import static com.lexicalscope.svm.j.statementBuilder.StatementBuilder.statements;
-import static com.lexicalscope.svm.partition.trace.Trace.CallReturn.*;
+import static com.lexicalscope.svm.partition.trace.HashTrace.CallReturn.*;
 
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
 import com.lexicalscope.svm.j.instruction.instrumentation.MethodInstrumentor;

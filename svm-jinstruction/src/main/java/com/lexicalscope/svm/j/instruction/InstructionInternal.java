@@ -30,9 +30,12 @@ public class InstructionInternal implements Instruction {
 
    private final List<Instruction> targetOf = new LinkedList<>();
 
-   public InstructionInternal(final Vop op, final InstructionCode code) {
+   private final int line;
+
+   public InstructionInternal(final Vop op, final InstructionCode code, final int line) {
       this.op = op;
       this.code = code;
+      this.line = line;
 
       next = terminate;
       target = terminate;
@@ -72,7 +75,7 @@ public class InstructionInternal implements Instruction {
    }
 
    @Override public String toString() {
-      return String.format("%s", op.toString(), next);
+      return String.format("%05d:%s", line, op);
    }
 
    @Override public InstructionCode code() {
@@ -163,5 +166,9 @@ public class InstructionInternal implements Instruction {
             throw new UnsupportedOperationException();
          }
       };
+   }
+
+   @Override public int line() {
+      return line;
    }
 }

@@ -1,7 +1,7 @@
 package com.lexicalscope.svm.classloading;
 
-import static com.lexicalscope.svm.classloading.linking.InstructionSequenceMatcher.instructionSequence;
 import static com.lexicalscope.svm.vm.j.InstructionCode.*;
+import static com.lexicalscope.svm.vm.j.InstructionMatchers.instructionSequence;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;

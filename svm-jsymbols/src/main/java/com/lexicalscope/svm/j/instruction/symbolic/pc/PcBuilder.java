@@ -1,6 +1,7 @@
 package com.lexicalscope.svm.j.instruction.symbolic.pc;
 
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.BoolSymbol;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.FalseSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ICmpEqSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ICmpGeSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ICmpGtSymbol;
@@ -43,7 +44,15 @@ public class PcBuilder {
       return left.and(right);
    }
 
+   public static BoolSymbol or(final BoolSymbol left, final BoolSymbol right) {
+      return left.or(right);
+   }
+
    public static BoolSymbol truth() {
       return new TrueSymbol();
+   }
+
+   public static BoolSymbol falsity() {
+      return new FalseSymbol();
    }
 }

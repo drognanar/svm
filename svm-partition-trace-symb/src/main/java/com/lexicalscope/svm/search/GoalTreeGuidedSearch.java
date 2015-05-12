@@ -1,5 +1,7 @@
 package com.lexicalscope.svm.search;
 
+import static com.lexicalscope.svm.partition.trace.TraceMetaKey.TRACE;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,36 +9,42 @@ import java.util.List;
 import com.lexicalscope.svm.partition.trace.symb.tree.GoalTreeCorrespondence;
 import com.lexicalscope.svm.partition.trace.symb.tree.GoalTreePair;
 import com.lexicalscope.svm.vm.StateSearch;
+import com.lexicalscope.svm.vm.j.JState;
 
-public class GoalTreeGuidedSearch<T, S> implements StateSearch<S> {
-   private final GoalTreeCorrespondence<T, S> correspondence;
+@Deprecated() // please use TreeSearch instead
+public class GoalTreeGuidedSearch implements StateSearch<JState> {
+   private final GoalTreeCorrespondence correspondence;
 
-   private final SearchMetaExtractor<T, S> goalExtractor;
-   private final List<S> result = new ArrayList<>();
-   private GoalTreePair<T, S> correspondenceUnderConsideration;
+   private final SearchMetaExtractor goalExtractor;
+   private final List<JState> result = new ArrayList<>();
+   private GoalTreePair correspondenceUnderConsideration;
    private boolean pInitialised;
    private boolean qInitialised;
-   private S pending;
+   private JState pending;
 
-   private GuidedSearchState<T, S> side;
+   private GuidedSearchState side;
+
+   private final GuidedSearchObserver observer;
 
    public GoalTreeGuidedSearch(
-         final GoalTreeCorrespondence<T, S> correspondence,
-         final SearchMetaExtractor<T, S> goalExtractor,
+         final GuidedSearchObserver observer,
+         final GoalTreeCorrespondence correspondence,
+         final SearchMetaExtractor goalExtractor,
          final Randomiser randomiser) {
+      this.observer = observer;
       this.correspondence = correspondence;
       this.goalExtractor = goalExtractor;
-      side = new GuidedSearchInitialState<>(randomiser);
+      side = new GuidedSearchInitialState(randomiser);
    }
 
-   @Override public S pendingState() {
+   @Override public JState pendingState() {
       if(pending == null) {
          return switchSides();
       }
       return pending;
    }
 
-   private S switchSides() {
+   private JState switchSides() {
       side.searchedSide(correspondence, correspondenceUnderConsideration);
 
       while(side.searchMore(correspondence)) {
@@ -45,42 +53,48 @@ public class GoalTreeGuidedSearch<T, S> implements StateSearch<S> {
                side.pickCorrespondence(correspondence, correspondenceUnderConsideration);
 
          if(side.isOpen(correspondenceUnderConsideration)) {
-            return pending = side.pickSearchNode(correspondenceUnderConsideration);
+            pending = side.pickSearchNode(correspondenceUnderConsideration);
+            observer.picked(pending, side);
+            return pending;
          }
       }
       return pending = null;
    }
 
    @Override public void reachedLeaf() {
+      observer.leaf(pending);
       result.add(pending);
       switchSides();
    }
 
-   @Override public void fork(final S[] states) {
+   @Override public void fork(final JState parent, final JState[] states) {
+//      assert states.length == 2;
+      observer.forkAt(parent);
       side.fork(correspondenceUnderConsideration, states);
       switchSides();
    }
 
    @Override public void goal() {
+      observer.goal(pending);
       side.goal(
             correspondence,
             correspondenceUnderConsideration,
-            goalExtractor.goal(pending),
+            pending.getMeta(TRACE),
             pending,
             goalExtractor.pc(pending));
 
       switchSides();
    }
 
-   @Override public S firstResult() {
+   @Override public JState firstResult() {
       return result.get(0);
    }
 
-   @Override public Collection<S> results() {
+   @Override public Collection<JState> results() {
       return result;
    }
 
-   @Override public void consider(final S state) {
+   @Override public void consider(final JState state) {
       if(!pInitialised) {
          goalExtractor.configureInitial(state);
          correspondence.pInitial(state);

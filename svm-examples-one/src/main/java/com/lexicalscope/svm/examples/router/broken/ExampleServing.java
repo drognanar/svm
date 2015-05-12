@@ -1,16 +1,16 @@
 package com.lexicalscope.svm.examples.router.broken;
 
 public class ExampleServing {
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         main(0);
     }
 
-    private static void main(int a) {
+    private static void main(final int a) {
         new ExampleServing().serve(a);
     }
 
-    private void serve(int a) {
-        Router router = new Router();
+    private void serve(final int a) {
+        final Router router = new Router();
         String result;
         if (a < 0) {
             result = "/";
@@ -21,7 +21,7 @@ public class ExampleServing {
         } else {
             result = "/applications/name";
         }
-        String requestUrl = result;
+        final String requestUrl = result;
         if (requestUrl.equals("/applications/id/12") ||
                 requestUrl.equals("/applications") ||
                 requestUrl.equals("/")) {

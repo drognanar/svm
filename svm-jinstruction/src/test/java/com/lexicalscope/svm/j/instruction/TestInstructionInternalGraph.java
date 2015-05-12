@@ -10,14 +10,14 @@ import org.junit.Test;
 import com.lexicalscope.svm.vm.j.Instruction;
 
 public class TestInstructionInternalGraph {
-   final Instruction node1 = new InstructionInternal(new NoOp("1"), synthetic);
-   final Instruction node2 = new InstructionInternal(new NoOp("2"), synthetic);
-   final Instruction node3 = new InstructionInternal(new NoOp("3"), synthetic);
-   final Instruction node4 = new InstructionInternal(new NoOp("4"), synthetic);
-   final Instruction node5 = new InstructionInternal(new NoOp("5"), synthetic);
+   final Instruction node1 = new InstructionInternal(new NoOp("1"), synthetic, -1);
+   final Instruction node2 = new InstructionInternal(new NoOp("2"), synthetic, -1);
+   final Instruction node3 = new InstructionInternal(new NoOp("3"), synthetic, -1);
+   final Instruction node4 = new InstructionInternal(new NoOp("4"), synthetic, -1);
+   final Instruction node5 = new InstructionInternal(new NoOp("5"), synthetic, -1);
 
-   final Instruction nodeE = new InstructionInternal(new NoOp("E"), synthetic);
-   final Instruction nodeF = new InstructionInternal(new NoOp("F"), synthetic);
+   final Instruction nodeE = new InstructionInternal(new NoOp("E"), synthetic, -1);
+   final Instruction nodeF = new InstructionInternal(new NoOp("F"), synthetic, -1);
 
    @Test public void instructionsAreAppendedAtTheEndOfTheChain() {
       node1.append(node2);

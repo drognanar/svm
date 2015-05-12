@@ -37,8 +37,9 @@ public class DepthFirstStateSearch<S> implements StateSearch<S> {
    }
 
    @Override
-   public void fork(final S[] states) {
-      pending().pop();
+   public void fork(final S parent, final S[] states) {
+      final S popped = pending().pop();
+      assert popped == parent;
       for (final S state : states) {
          pending().push(state);
       }

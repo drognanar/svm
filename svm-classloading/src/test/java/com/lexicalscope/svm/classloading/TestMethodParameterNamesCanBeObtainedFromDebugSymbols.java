@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.lexicalscope.svm.vm.j.klass.SMethod;
 
-public class TestMethodNamesCanBeObtainedFromDebugSymbols {
+public class TestMethodParameterNamesCanBeObtainedFromDebugSymbols {
    private final SClassLoader sClassLoader = new AsmSClassLoader();
 
    public static class MethodNames {

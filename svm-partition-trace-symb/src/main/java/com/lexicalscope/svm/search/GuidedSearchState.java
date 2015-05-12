@@ -1,32 +1,34 @@
 package com.lexicalscope.svm.search;
 
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.BoolSymbol;
+import com.lexicalscope.svm.partition.trace.Trace;
 import com.lexicalscope.svm.partition.trace.symb.tree.GoalTreeCorrespondence;
 import com.lexicalscope.svm.partition.trace.symb.tree.GoalTreePair;
-
-interface GuidedSearchState<T1, S1> {
+import com.lexicalscope.svm.vm.j.JState;
+// TODO[tim]: not public
+public interface GuidedSearchState {
    void searchedSide(
-         GoalTreeCorrespondence<T1, S1> correspondence,
-         GoalTreePair<T1, S1> correspondenceUnderConsideration);
+         GoalTreeCorrespondence correspondence,
+         GoalTreePair correspondenceUnderConsideration);
 
-   boolean searchMore(GoalTreeCorrespondence<T1, S1> correspondence);
+   boolean searchMore(GoalTreeCorrespondence correspondence);
 
-   GuidedSearchState<T1, S1> nextSide();
+   GuidedSearchState nextSide();
 
-   GoalTreePair<T1, S1> pickCorrespondence(
-         GoalTreeCorrespondence<T1, S1> correspondence,
-         GoalTreePair<T1, S1> correspondenceUnderConsideration);
+   GoalTreePair pickCorrespondence(
+         GoalTreeCorrespondence correspondence,
+         GoalTreePair correspondenceUnderConsideration);
 
-   boolean isOpen(GoalTreePair<T1, S1> correspondenceUnderConsideration);
+   boolean isOpen(GoalTreePair correspondenceUnderConsideration);
 
-   S1 pickSearchNode(GoalTreePair<T1, S1> correspondenceUnderConsideration);
+   JState pickSearchNode(GoalTreePair correspondenceUnderConsideration);
 
-   void fork(GoalTreePair<T1, S1> correspondenceUnderConsideration, S1[] states);
+   void fork(GoalTreePair correspondenceUnderConsideration, JState[] states);
 
    void goal(
-         GoalTreeCorrespondence<T1, S1> correspondence,
-         GoalTreePair<T1, S1> correspondenceUnderConsideration,
-         T1 goal,
-         S1 pending,
+         GoalTreeCorrespondence correspondence,
+         GoalTreePair correspondenceUnderConsideration,
+         Trace goal,
+         JState pending,
          BoolSymbol pc);
 }

@@ -39,7 +39,7 @@ import com.lexicalscope.svm.j.instruction.symbolic.ops.SIUnaryOperator;
 import com.lexicalscope.svm.j.instruction.symbolic.ops.SIUnaryOperatorAdapter;
 import com.lexicalscope.svm.j.instruction.symbolic.ops.SymbFieldConversionFactory;
 import com.lexicalscope.svm.j.instruction.symbolic.ops.array.NewSymbArray;
-import com.lexicalscope.svm.j.instruction.symbolic.symbols.IArraySymbolPair;
+import com.lexicalscope.svm.j.instruction.symbolic.symbols.IArrayAndLengthSymbols;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.IArrayTerminalSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ITerminalSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.OSymbol;
@@ -109,53 +109,53 @@ public class SymbInstructionFactory implements InstructionFactory {
 
    @Override
    public Vop ifge(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.geInstruction();
+      return SBranchInstruction.geInstruction(feasibilityChecker);
    }
 
    @Override public Vop ifgt(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.gtInstruction();
+      return SBranchInstruction.gtInstruction(feasibilityChecker);
    }
 
    @Override
    public Vop ifle(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.leInstruction();
+      return SBranchInstruction.leInstruction(feasibilityChecker);
    }
 
    @Override
    public Vop iflt(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.ltInstruction();
+      return SBranchInstruction.ltInstruction(feasibilityChecker);
    }
 
    @Override public Vop ifne(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.neInstruction();
+      return SBranchInstruction.neInstruction(feasibilityChecker);
    }
 
    @Override public Vop ifeq(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.eqInstruction();
+      return SBranchInstruction.eqInstruction(feasibilityChecker);
    }
 
    @Override public Vop ificmpeq(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.icmpeqInstruction();
+      return SBranchInstruction.icmpeqInstruction(feasibilityChecker);
    }
 
    @Override public Vop ificmpne(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.icmpneInstruction();
+      return SBranchInstruction.icmpneInstruction(feasibilityChecker);
    }
 
    @Override public Vop ificmple(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.icmpleInstruction();
+      return SBranchInstruction.icmpleInstruction(feasibilityChecker);
    }
 
    @Override public Vop ificmpge(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.icmpgeInstruction();
+      return SBranchInstruction.icmpgeInstruction(feasibilityChecker);
    }
 
    @Override public Vop ificmplt(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.icmpltInstruction();
+      return SBranchInstruction.icmpltInstruction(feasibilityChecker);
    }
 
    @Override public Vop ificmpgt(final JumpInsnNode jumpInsnNode) {
-      return SBranchInstruction.icmpgtInstruction();
+      return SBranchInstruction.icmpgtInstruction(feasibilityChecker);
    }
 
    @Override public Vop ifacmpeq(final JumpInsnNode jumpInsnNode) {
@@ -261,9 +261,9 @@ public class SymbInstructionFactory implements InstructionFactory {
 //         final OTerminalSymbol terminalSymbol = (OTerminalSymbol)object;
 //         return new LoadingOp(terminalSymbol.klass(), new LoadSymbolicObjectArg(terminalSymbol), instructions);
 //      } else {
-      if (object instanceof IArraySymbolPair) {
+      if (object instanceof IArrayAndLengthSymbols) {
          return new LinearOp(
-               new LoadSymbolicArrayArg((IArraySymbolPair) object));
+               new LoadSymbolicArrayArg((IArrayAndLengthSymbols) object));
       } else {
          return new LinearOp(new LoadConstantArg(object));
       }

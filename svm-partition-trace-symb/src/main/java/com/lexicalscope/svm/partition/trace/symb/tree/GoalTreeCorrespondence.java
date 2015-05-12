@@ -5,9 +5,11 @@ import java.util.Collection;
 import org.hamcrest.Matcher;
 
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.BoolSymbol;
+import com.lexicalscope.svm.partition.trace.Trace;
 import com.lexicalscope.svm.search.Randomiser;
+import com.lexicalscope.svm.vm.j.JState;
 
-public interface GoalTreeCorrespondence<T, S> extends Iterable<GoalTreePair<T, S>>  {
+public interface GoalTreeCorrespondence extends Iterable<GoalTreePair>  {
    boolean hasChildren();
 
    boolean isOpen();
@@ -15,29 +17,29 @@ public interface GoalTreeCorrespondence<T, S> extends Iterable<GoalTreePair<T, S
    /**
     * potentially expensive
     */
-   GoalTreePair<T, S> correspondence(T rootGoal);
+   GoalTreePair correspondence(Trace rootGoal);
 
-   GoalTreePair<T, S> reachedP(GoalTreePair<T, S> parent, T goal, S state, BoolSymbol childPc);
+   GoalTreePair reachedP(GoalTreePair parent, Trace goal, JState state, BoolSymbol childPc);
 
-   GoalTreePair<T, S> reachedQ(GoalTreePair<T, S> parent, T goal, S state, BoolSymbol childPc);
+   GoalTreePair reachedQ(GoalTreePair parent, Trace goal, JState state, BoolSymbol childPc);
 
-   boolean hasChild(Matcher<? super GoalTreePair<T, S>> childMatcher);
+   boolean hasChild(Matcher<? super GoalTreePair> childMatcher);
 
    int childCount();
 
    /**
     * @param pstate0 an initial state in p
     */
-   void pInitial(S pstate0);
+   void pInitial(JState pstate0);
 
    /**
     * @param qstate0 an initial state in q
     */
-   void qInitial(S qstate0);
+   void qInitial(JState qstate0);
 
-   Collection<GoalTreePair<T, S>> children();
+   Collection<GoalTreePair> children();
 
-   void stillOpen(GoalTreePair<T, S> node);
+   void stillOpen(GoalTreePair node);
    boolean hasOpenChildren();
-   GoalTreePair<T, S> randomOpenChild(Randomiser randomiser);
+   GoalTreePair randomOpenChild(Randomiser randomiser);
 }

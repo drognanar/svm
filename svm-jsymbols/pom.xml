@@ -25,6 +25,11 @@
 			<artifactId>svm-snapshot</artifactId>
 		</dependency>
 		<dependency>
+		   <groupId>com.lexicalscope.symb</groupId>
+         <artifactId>svm-state</artifactId>
+         <version>${project.version}</version>
+      </dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>

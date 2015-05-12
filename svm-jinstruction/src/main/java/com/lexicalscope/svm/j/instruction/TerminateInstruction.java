@@ -126,4 +126,8 @@ public class TerminateInstruction implements Instruction {
    @Override public void replaceOp(final Vop op) {
       throw new IllegalStateException("TERMINATE has no operation");
    }
+
+   @Override public int line() {
+      return -1;
+   }
 }

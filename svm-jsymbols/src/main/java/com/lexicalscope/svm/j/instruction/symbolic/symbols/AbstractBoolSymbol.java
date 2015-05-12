@@ -2,6 +2,14 @@ package com.lexicalscope.svm.j.instruction.symbolic.symbols;
 
 
 public abstract class AbstractBoolSymbol implements BoolSymbol {
+   @Override public boolean isTT() {
+      return false;
+   }
+
+   @Override public boolean isFF() {
+      return false;
+   }
+
    @Override public final BoolSymbol and(final BoolSymbol conjunct) {
       if(conjunct instanceof TrueSymbol) {
          return this;

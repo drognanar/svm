@@ -45,7 +45,7 @@ public class TrackPartitionAtConstruction {
                      });
                      // TODO[tim]:make it easier to manufacture instructions
                      assert tagger != null;
-                     instruction.insertHere(new InstructionInternal(new LinearOp(tagger), InstructionCode.synthetic));
+                     instruction.insertHere(new InstructionInternal(new LinearOp(tagger), InstructionCode.synthetic, -1));
                   }
                });
    }

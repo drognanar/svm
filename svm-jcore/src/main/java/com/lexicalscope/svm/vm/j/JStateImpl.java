@@ -22,18 +22,18 @@ public class JStateImpl implements JState {
    private final Stack stack;
    private final Heap heap;
    private final MetaState meta;
-   private final StateSearch<JState> vm;
+   private final StateSearch<JState> search;
    private final StateTag descendentTag;
 
    public JStateImpl(
          final StateTag tag,
-         final StateSearch<JState> vm,
+         final StateSearch<JState> search,
          final Statics statics,
          final Stack stack,
          final Heap heap,
          final MetaState meta) {
       this.descendentTag = tag;
-      this.vm = vm;
+      this.search = search;
       this.statics = statics;
       this.stack = stack;
       this.heap = heap;
@@ -50,9 +50,9 @@ public class JStateImpl implements JState {
       } catch (final TerminationException e) {
          throw e;
       } catch (final RuntimeException e) {
-         System.out.println(e.getClass());
+         /*System.out.println(e.getClass());
          System.out.println(e.getMessage());
-         System.out.println(stack.trace()); // TODO[tim]: something better than printing the stack
+         System.out.println(stack.trace()); // TODO[tim]: something better than printing the stack */
          throw e;
       }
    }
@@ -91,7 +91,7 @@ public class JStateImpl implements JState {
    }
 
    @Override public final JStateImpl snapshot() {
-      return new JStateImpl(descendentTag, vm, statics.snapshot(), stack().snapshot(), heap.snapshot(), meta == null ? null : meta.snapshot());
+      return new JStateImpl(descendentTag, search, statics.snapshot(), stack().snapshot(), heap.snapshot(), meta == null ? null : meta.snapshot());
    }
 
    @Override public final SStackTrace trace() {
@@ -100,7 +100,14 @@ public class JStateImpl implements JState {
 
    @Override
    public final String toString() {
-      return String.format("stackframe:<%s>, heap:<>, meta:<%s>", stackFrame(), meta);
+      return String.format("state%n"
+            + "\ttag:<%s>%n"
+            + "\tstackframe:<%s>%n"
+            + "\theap:<>%n"
+            + "\tmeta:<%s>",
+            descendentTag,
+            stackFrame(),
+            meta);
    }
 
    @Override public boolean equals(final Object obj) {
@@ -109,7 +116,7 @@ public class JStateImpl implements JState {
          return
                equal(that.descendentTag, this.descendentTag) &&
                equal(that.meta, this.meta) &&
-               equal(that.vm, this.vm) &&
+               equal(that.search, this.search) &&
                equal(that.statics, this.statics) &&
                equal(that.heap, this.heap) &&
                equal(that.heap, this.heap);
@@ -285,11 +292,18 @@ public class JStateImpl implements JState {
 
    @Override
    public void fork(final JState[] states) {
-      vm.fork(states);
+      /*if(states.length > 1)
+      {
+         System.out.println("fork at " + this);
+         for (final JState state : states) {
+            System.out.println(state);
+         }
+      }*/
+      search.fork(this, states);
    }
 
    @Override public void goal() {
-      vm.goal();
+      search.goal();
    }
 
    @Override

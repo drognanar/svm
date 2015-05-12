@@ -40,6 +40,7 @@ public interface Instruction extends Iterable<Instruction> {
    Collection<Instruction> targetOf();
 
    InstructionCode code();
+   int line();
 
    <T> T query(InstructionQuery<T> instructionQuery);
 }

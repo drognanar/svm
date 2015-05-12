@@ -4,16 +4,18 @@ import java.util.Collection;
 
 import org.hamcrest.Matcher;
 
-public interface GoalMap<T, N> extends Iterable<N> {
+import com.lexicalscope.svm.partition.trace.Trace;
+
+public interface GoalMap<N> extends Iterable<N> {
    public interface SubtreeFactory<N> { N create(); }
 
-   void put(T goal, N node);
-   N get(T goal);
-   N get(T goal, SubtreeFactory<N> factory);
+   void put(Trace goal, N node);
+   N get(Trace goal);
+   N get(Trace goal, SubtreeFactory<N> factory);
 
    boolean containsMatching(Matcher<? super N> childMatcher);
-   boolean containsGoal(T goal);
-   boolean isChildForGoal(N child, T goal);
+   boolean containsGoal(Trace goal);
+   boolean isChildForGoal(N child, Trace goal);
 
    Collection<N> values();
    int size();

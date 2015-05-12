@@ -71,9 +71,15 @@ public class Simplifier {
       final Tactic simplify = ctx.mkTactic("simplify");
       final Tactic solveEquations = ctx.mkTactic("solve-eqs");
       final Tactic bitBlast = ctx.mkTactic("bit-blast");
+      final Tactic andInvertedGraphs = ctx.mkTactic("aig");
       final Tactic propositional = ctx.mkTactic("sat");
 
-      final Tactic tactic = ctx.parAndThen(simplify, ctx.parAndThen(solveEquations, ctx.parAndThen(bitBlast, propositional)));
+      final Tactic tactic =
+            ctx.parAndThen(simplify,
+                ctx.parAndThen(solveEquations,
+                      ctx.parAndThen(bitBlast,
+                            ctx.parAndThen(andInvertedGraphs,
+                                  propositional))));
 
       return applyTactic(solver, tactic, exprToSolve);
    }
