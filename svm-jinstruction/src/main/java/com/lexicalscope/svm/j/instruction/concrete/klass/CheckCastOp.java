@@ -25,7 +25,7 @@ public class CheckCastOp implements Vop {
       final SClass classFromHeap = (SClass) ctx.get(address, OBJECT_TYPE_MARKER_OFFSET);
       final SClass classFromInstruction = ctx.loadKlassFor(klassName);
 
-      if(classFromHeap.instanceOf(classFromInstruction)) {
+      if(classFromHeap == null || classFromHeap.instanceOf(classFromInstruction)) {
          return;
       }
 
