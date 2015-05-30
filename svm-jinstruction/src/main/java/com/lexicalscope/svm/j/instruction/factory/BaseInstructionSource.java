@@ -370,7 +370,7 @@ public class BaseInstructionSource implements InstructionSource {
 
    @Override
    public InstructionSource caload(final InstructionSource.InstructionSink sink) {
-      return linearInstruction(ArrayLoadOp.caLoad(), caload, sink);
+      return linearInstruction(instructionFactory.caLoad(), caload, sink);
    }
 
    @Override
@@ -385,7 +385,7 @@ public class BaseInstructionSource implements InstructionSource {
 
    @Override
    public InstructionSource castore(final InstructionSource.InstructionSink sink) {
-      return linearInstruction(ArrayStoreOp.caStore(), castore, sink);
+      return linearInstruction(instructionFactory.caStore(), castore, sink);
    }
 
    @Override public InstructionSource lconst(final long val, final InstructionSource.InstructionSink sink) {
@@ -474,6 +474,10 @@ public class BaseInstructionSource implements InstructionSource {
    @Override
    public InstructionSource iadd(final InstructionSource.InstructionSink sink) {
       return binaryOp(instructionFactory.iaddOperation(), iadd, sink);
+   }
+
+   public InstructionSource irem(final InstructionSource.InstructionSink sink) {
+      return binaryOp(instructionFactory.iremOperation(), irem, sink);
    }
 
    @Override

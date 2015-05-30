@@ -32,6 +32,7 @@ public enum InstructionCode {
 
    iand,
    iadd,
+   irem,
    imul,
    isub,
    ineg,

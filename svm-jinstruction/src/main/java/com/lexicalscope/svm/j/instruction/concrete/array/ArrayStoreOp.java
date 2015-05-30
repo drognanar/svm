@@ -55,7 +55,7 @@ public class ArrayStoreOp implements Vop {
       return instructionQuery.arraystore();
    }
 
-   public static Vop caStore() {
+   public static ArrayStoreOp caStore() {
       return new ArrayStoreOp(truncateToChar);
    }
 

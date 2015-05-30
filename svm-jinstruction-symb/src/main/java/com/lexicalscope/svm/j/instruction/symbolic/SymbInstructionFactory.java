@@ -1,5 +1,6 @@
 package com.lexicalscope.svm.j.instruction.symbolic;
 
+import com.lexicalscope.svm.j.instruction.symbolic.ops.SIRemOperator;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 
@@ -67,6 +68,11 @@ public class SymbInstructionFactory implements InstructionFactory {
    @Override
    public BinaryOperator iaddOperation() {
       return siBinary(new SIAddOperator());
+   }
+
+   @Override
+   public BinaryOperator iremOperation() {
+      return siBinary(new SIRemOperator());
    }
 
    @Override public BinaryOperator iandOperation() {
@@ -248,12 +254,20 @@ public class SymbInstructionFactory implements InstructionFactory {
       return SArrayStoreOp.iaStore(feasibilityChecker);
    }
 
+   @Override public Vop caStore() {
+      return SArrayStoreOp.caStore(feasibilityChecker);
+   }
+
    @Override public Vop aaLoad() {
       return SArrayLoadOp.aaLoad(feasibilityChecker);
    }
 
    @Override public Vop iaLoad() {
       return SArrayLoadOp.iaLoad(feasibilityChecker);
+   }
+
+   @Override public Vop caLoad() {
+      return SArrayLoadOp.caLoad(feasibilityChecker);
    }
 
    @Override public Vop loadArg(final Object object, final InstructionSource instructions) {

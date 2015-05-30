@@ -1,5 +1,6 @@
 package com.lexicalscope.svm.j.instruction.factory;
 
+import com.lexicalscope.svm.j.instruction.concrete.integer.IRemOperator;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 
@@ -59,6 +60,10 @@ import com.lexicalscope.svm.vm.j.Vop;
 public class ConcInstructionFactory implements InstructionFactory {
    @Override public BinaryOperator iaddOperation() {
       return new IAddOperator();
+   }
+
+   @Override public BinaryOperator iremOperation() {
+      return new IRemOperator();
    }
 
    @Override
@@ -235,12 +240,20 @@ public class ConcInstructionFactory implements InstructionFactory {
       return ArrayStoreOp.iaStore();
    }
 
+   @Override public Vop caStore() {
+      return ArrayStoreOp.caStore();
+   }
+
    @Override public Vop iaLoad() {
       return ArrayLoadOp.iaLoad();
    }
 
    @Override public Vop aaLoad() {
       return ArrayLoadOp.aaLoad();
+   }
+
+   @Override public Vop caLoad() {
+      return ArrayLoadOp.caLoad();
    }
 
    @Override public Vop loadArg(final Object object, final InstructionSource instructions) {

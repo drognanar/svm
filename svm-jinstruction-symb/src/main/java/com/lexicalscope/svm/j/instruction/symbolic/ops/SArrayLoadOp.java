@@ -55,6 +55,10 @@ public class SArrayLoadOp implements Vop {
       return new SArrayLoadOp(feasibilityChecker, ArrayLoadOp.aaLoad());
    }
 
+   public static Vop caLoad(final FeasibilityChecker feasibilityChecker) {
+      return new SArrayLoadOp(feasibilityChecker, ArrayLoadOp.caLoad());
+   }
+
    @Override public <T> T query(final InstructionQuery<T> instructionQuery) {
       return instructionQuery.arrayload();
    }

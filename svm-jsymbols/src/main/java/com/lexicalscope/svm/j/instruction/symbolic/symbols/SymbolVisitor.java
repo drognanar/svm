@@ -2,6 +2,7 @@ package com.lexicalscope.svm.j.instruction.symbolic.symbols;
 
 public interface SymbolVisitor<T, E extends Throwable> {
    T add(ISymbol left, ISymbol right) throws E;
+   T rem(ISymbol left, ISymbol right) throws E;
    T and(ISymbol left, ISymbol right) throws E;
    T mul(ISymbol left, ISymbol right) throws E;
    T sub(ISymbol left, ISymbol right) throws E;

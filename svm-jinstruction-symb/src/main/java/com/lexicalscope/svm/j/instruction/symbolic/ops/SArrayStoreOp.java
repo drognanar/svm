@@ -57,6 +57,10 @@ public class SArrayStoreOp implements Vop {
       return new SArrayStoreOp(feasibilityChecker, ArrayStoreOp.iaStore());
    }
 
+   public static Vop caStore(final FeasibilityChecker feasibilityChecker) {
+      return new SArrayStoreOp(feasibilityChecker, ArrayStoreOp.caStore());
+   }
+
    @Override public <T> T query(final InstructionQuery<T> instructionQuery) {
       return instructionQuery.arraystore();
    }

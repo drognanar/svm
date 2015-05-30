@@ -46,6 +46,7 @@ public interface InstructionSource {
 
    InstructionSource iand(InstructionSink sink);
    InstructionSource iadd(InstructionSink sink);
+   InstructionSource irem(InstructionSink sink);
    InstructionSource imul(InstructionSink sink);
    InstructionSource isub(InstructionSink sink);
    InstructionSource ineg(InstructionSink sink);

@@ -15,6 +15,7 @@ import com.lexicalscope.svm.vm.j.Vop;
 public interface InstructionFactory {
    BinaryOperator iaddOperation();
    BinaryOperator imulOperation();
+   BinaryOperator iremOperation();
    BinaryOperator isubOperation();
    BinaryOperator iandOperation();
    UnaryOperator inegOperation();
@@ -36,9 +37,11 @@ public interface InstructionFactory {
    Vop reflectionNewArray();
    Vop aaStore();
    Vop iaStore();
+   Vop caStore();
 
    Vop iaLoad();
    Vop aaLoad();
+   Vop caLoad();
 
    Op<?> newObject(KlassInternalName klassDesc);
    Vop putField(FieldInsnNode fieldInsnNode);

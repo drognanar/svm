@@ -85,6 +85,8 @@ public class InstructionSwitch {
                   return s.land(sink);
                case Opcodes.IADD:
                   return s.iadd(sink);
+               case Opcodes.IREM:
+                  return s.irem(sink);
                case Opcodes.IMUL:
                   return s.imul(sink);
                case Opcodes.FMUL:
