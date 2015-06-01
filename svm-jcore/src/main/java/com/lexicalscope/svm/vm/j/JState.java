@@ -30,6 +30,7 @@ public interface JState extends Snapshotable<JState>, VmState {
    void local(int var, Object val);
 
    void fork(JState[] states);
+   void forkDisjoined(JState[] states);
    JState[] fork();
    void goal();
 

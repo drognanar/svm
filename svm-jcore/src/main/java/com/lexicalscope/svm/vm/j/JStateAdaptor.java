@@ -94,6 +94,11 @@ public class JStateAdaptor implements JState {
    }
 
    @Override
+   public void forkDisjoined(final JState[] states) {
+      delegate.forkDisjoined(states);
+   }
+
+   @Override
    public JState[] fork() {
       return delegate.fork();
    }

@@ -46,6 +46,11 @@ public class DepthFirstStateSearch<S> implements StateSearch<S> {
       roundRobin();
    }
 
+   @Override
+   public void forkDisjoined(final S parent, final S[] states) {
+      fork(parent, states);
+   }
+
    private void roundRobin() {
       current = (current + 1) % pending.size();
    }

@@ -7,6 +7,7 @@ public interface StateSearch<S> {
 
    void reachedLeaf();
    void fork(S parent, S[] states);
+   void forkDisjoined(S parent, S[] states);
    void goal();
 
    S firstResult();

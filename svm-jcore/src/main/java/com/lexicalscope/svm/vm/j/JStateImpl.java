@@ -302,6 +302,11 @@ public class JStateImpl implements JState {
       search.fork(this, states);
    }
 
+   @Override
+   public void forkDisjoined(final JState[] states) {
+      search.forkDisjoined(this, states);
+   }
+
    @Override public void goal() {
       search.goal();
    }

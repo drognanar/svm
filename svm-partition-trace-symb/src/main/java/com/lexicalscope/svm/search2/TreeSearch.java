@@ -104,6 +104,10 @@ public class TreeSearch implements StateSearch<JState> {
       pending = null;
    }
 
+   @Override public void forkDisjoined(final JState parent, final JState[] states) {
+      fork(parent, states);
+   }
+
    @Override public void goal() {
       observer.goal(pending);
 
@@ -147,6 +151,9 @@ public class TreeSearch implements StateSearch<JState> {
    }
 
    @Override public JState firstResult() {
+      if (results.size() == 0) {
+         return null;
+      }
       return results.get(0);
    }
 
