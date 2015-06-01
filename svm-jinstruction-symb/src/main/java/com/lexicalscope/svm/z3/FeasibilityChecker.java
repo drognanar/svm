@@ -28,6 +28,7 @@ import com.microsoft.z3.Z3Exception;
 public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> implements Closeable {
    private final Map<Object, Expr> cache = new HashMap<>();
    private final Map<BoolSymbol, Boolean> satisfiableCache = new HashMap<>();
+   private int uniqueQueries = 0;
 
    // TODO[tim]: use z3 stack for efficiency
    private final Context ctx;
@@ -90,6 +91,7 @@ public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> im
       if (satisfiableCache.containsKey(pc)) {
          return satisfiableCache.get(pc);
       }
+      uniqueQueries++;
 
       final BoolExpr expr;
       try {
@@ -120,6 +122,10 @@ public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> im
       } catch (final Z3Exception e) {
          throw new RuntimeException("could not check if: " + pc + " implies " + largerPc, e);
       }
+   }
+
+   public int getUniqueQueries() {
+      return uniqueQueries;
    }
 
    /**
