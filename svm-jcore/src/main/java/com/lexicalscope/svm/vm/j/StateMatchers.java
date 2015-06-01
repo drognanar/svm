@@ -10,6 +10,7 @@ import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+import com.lexicalscope.svm.metastate.MetaKey;
 import com.lexicalscope.svm.stack.trace.SMethodName;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
@@ -118,6 +119,14 @@ public class StateMatchers {
       return new FeatureMatcher<JState, SMethodDescriptor>(equalTo, "current method", "currentMethod") {
          @Override protected SMethodDescriptor featureValueOf(final JState actual) {
             return (SMethodDescriptor) actual.currentFrame().context();
+         }
+      };
+   }
+
+   public static <T> Matcher<JState> metaIs(final MetaKey<T> meta, final Matcher<? super T> matcher) {
+      return new FeatureMatcher<JState, T>(matcher, "meta " + meta, "meta") {
+         @Override protected T featureValueOf(final JState actual) {
+            return actual.getMeta(meta);
          }
       };
    }

@@ -22,6 +22,7 @@ public class CheckPartitionAtMethodEntryExit implements MethodInstrumentor {
          instruction.query(new InstructionQueryAdapter<Void>() {
             @Override public Void methodentry(final SMethodDescriptor methodName) {
                instruction.insertNext(statements(instructions).
+                     line(instruction.line()).
                      linearOp(new TraceMethodEntryExitOp(methodName, CALL)).
                      buildInstruction());
                return null;
@@ -29,6 +30,7 @@ public class CheckPartitionAtMethodEntryExit implements MethodInstrumentor {
 
             @Override public Void r3turn(final SMethodDescriptor methodName, final int returnCount) {
                instruction.insertHere(statements(instructions).
+                     line(instruction.line()).
                      linearOp(new TraceMethodEntryExitOp(methodName, RETURN)).
                      buildInstruction());
                return null;

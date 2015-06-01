@@ -5,6 +5,8 @@ import static com.lexicalscope.svm.vm.j.InstructionCode.methodexit;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.lexicalscope.svm.metastate.HashMetaState;
+import com.lexicalscope.svm.metastate.MetaKey;
 import com.lexicalscope.svm.vm.TerminationException;
 import com.lexicalscope.svm.vm.j.Instruction;
 import com.lexicalscope.svm.vm.j.InstructionCode;
@@ -13,6 +15,8 @@ import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.Vop;
 
 public class TerminateInstruction implements Instruction {
+   private final HashMetaState meta = new HashMetaState();
+
    private Instruction prev;
 
    @Override public void eval(final JState ctx) {
@@ -129,5 +133,21 @@ public class TerminateInstruction implements Instruction {
 
    @Override public int line() {
       return -1;
+   }
+
+   @Override public <T> T get(final MetaKey<T> key) {
+      return meta.get(key);
+   }
+
+   @Override public <T> void set(final MetaKey<T> key, final T value) {
+      meta.set(key, value);
+   }
+
+   @Override public boolean contains(final MetaKey<?> key) {
+      return meta.contains(key);
+   }
+
+   @Override public void remove(final MetaKey<?> key) {
+      meta.remove(key);
    }
 }

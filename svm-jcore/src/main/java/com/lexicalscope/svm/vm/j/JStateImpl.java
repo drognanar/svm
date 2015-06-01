@@ -9,7 +9,7 @@ import com.lexicalscope.svm.heap.Heap;
 import com.lexicalscope.svm.heap.ObjectRef;
 import com.lexicalscope.svm.metastate.MetaFactory;
 import com.lexicalscope.svm.metastate.MetaKey;
-import com.lexicalscope.svm.metastate.MetaState;
+import com.lexicalscope.svm.metastate.SnapshotableMetaState;
 import com.lexicalscope.svm.stack.Stack;
 import com.lexicalscope.svm.stack.StackFrame;
 import com.lexicalscope.svm.stack.trace.SStackTrace;
@@ -21,7 +21,7 @@ public class JStateImpl implements JState {
    private final Statics statics;
    private final Stack stack;
    private final Heap heap;
-   private final MetaState meta;
+   private final SnapshotableMetaState meta;
    private final StateSearch<JState> search;
    private final StateTag descendentTag;
 
@@ -31,7 +31,7 @@ public class JStateImpl implements JState {
          final Statics statics,
          final Stack stack,
          final Heap heap,
-         final MetaState meta) {
+         final SnapshotableMetaState meta) {
       this.descendentTag = tag;
       this.search = search;
       this.statics = statics;

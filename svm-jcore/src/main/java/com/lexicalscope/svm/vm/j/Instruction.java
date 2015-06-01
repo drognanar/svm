@@ -2,13 +2,15 @@ package com.lexicalscope.svm.vm.j;
 
 import java.util.Collection;
 
+import com.lexicalscope.svm.metastate.MetaState;
+
 
 /**
  * double-linked intra-procedural graph of instructions.
  *
  * @author tim
  */
-public interface Instruction extends Iterable<Instruction> {
+public interface Instruction extends Iterable<Instruction>, MetaState {
    void eval(JState ctx);
 
    Instruction append(Instruction instruction);

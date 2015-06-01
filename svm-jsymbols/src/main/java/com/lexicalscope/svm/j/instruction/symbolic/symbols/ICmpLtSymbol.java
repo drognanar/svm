@@ -19,15 +19,20 @@ public class ICmpLtSymbol extends AbstractBoolSymbol {
    }
 
    @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+   public boolean equals(final Object o) {
+      if (this == o) {
+         return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+         return false;
+      }
 
-      ICmpLtSymbol that = (ICmpLtSymbol) o;
+      final ICmpLtSymbol that = (ICmpLtSymbol) o;
 
-      if (!value1.equals(that.value1)) return false;
+      if (!value1.equals(that.value1)) {
+         return false;
+      }
       return value2.equals(that.value2);
-
    }
 
    @Override

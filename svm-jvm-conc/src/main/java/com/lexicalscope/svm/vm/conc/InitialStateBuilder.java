@@ -32,7 +32,6 @@ import com.lexicalscope.svm.j.natives.NativeMethods;
 import com.lexicalscope.svm.j.statementBuilder.StatementBuilder;
 import com.lexicalscope.svm.metastate.HashMetaState;
 import com.lexicalscope.svm.metastate.MetaKey;
-import com.lexicalscope.svm.metastate.MetaState;
 import com.lexicalscope.svm.stack.DequeStack;
 import com.lexicalscope.svm.stack.SnapshotableStackFrame;
 import com.lexicalscope.svm.vm.StateSearch;
@@ -50,7 +49,7 @@ public class InitialStateBuilder {
    private InstructionSourceFactory instructionSourceFactory = new BaseInstructionSourceFactory();
    private HeapFactory heapFactory = new CheckingHeapFactory();
    private final InstrumentationBuilder instrumentationBuilder = new InstrumentationBuilder();
-   private final MetaState metaState = new HashMetaState();
+   private final HashMetaState metaState = new HashMetaState();
    private NativeMethods natives = DefaultNativeMethods.natives();
    private InstructionSource instructionSource;
 

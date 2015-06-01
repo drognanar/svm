@@ -3,7 +3,7 @@ package com.lexicalscope.svm.metastate;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HashMetaState implements MetaState {
+public class HashMetaState implements SnapshotableMetaState {
    // TODO[tim]: use a map that has better sharing characteristics
    private final Map<MetaKey<?>, Object> meta;
 

@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.lexicalscope.svm.metastate.HashMetaState;
+import com.lexicalscope.svm.metastate.MetaKey;
 import com.lexicalscope.svm.vm.j.Instruction;
 import com.lexicalscope.svm.vm.j.InstructionCode;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
@@ -21,16 +23,16 @@ import com.lexicalscope.svm.vm.j.Vop;
 public class InstructionInternal implements Instruction {
    private static TerminateInstruction terminate = new TerminateInstruction();
 
+   private final InstructionCode code;
+   private final int line;
+   private final HashMetaState meta = new HashMetaState();
+
    private Vop op;
    private Instruction prev;
    private Instruction next;
    private Instruction target;
 
-   private final InstructionCode code;
-
    private final List<Instruction> targetOf = new LinkedList<>();
-
-   private final int line;
 
    public InstructionInternal(final Vop op, final InstructionCode code, final int line) {
       this.op = op;
@@ -170,5 +172,21 @@ public class InstructionInternal implements Instruction {
 
    @Override public int line() {
       return line;
+   }
+
+   @Override public <T> T get(final MetaKey<T> key) {
+      return meta.get(key);
+   }
+
+   @Override public <T> void set(final MetaKey<T> key, final T value) {
+      meta.set(key, value);
+   }
+
+   @Override public boolean contains(final MetaKey<?> key) {
+      return meta.contains(key);
+   }
+
+   @Override public void remove(final MetaKey<?> key) {
+      meta.remove(key);
    }
 }

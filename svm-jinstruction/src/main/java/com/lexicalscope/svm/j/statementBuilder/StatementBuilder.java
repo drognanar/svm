@@ -166,4 +166,9 @@ public final class StatementBuilder {
    public InstructionSink sink() {
       return sink;
    }
+
+   public StatementBuilder line(final int line) {
+      sink.line(line);
+      return this;
+   }
 }

@@ -9,6 +9,7 @@ import com.lexicalscope.svm.z3.ViolationModel;
 
 public class PartitionViolationException extends RuntimeException {
    private final Trace nodeTraceP;
+
    private final Trace nodeTraceQ;
    private final BoolSymbol pPc;
    private final BoolSymbol qPc;
@@ -46,6 +47,14 @@ public class PartitionViolationException extends RuntimeException {
 
    public BoolSymbol qPc() {
       return qPc;
+   }
+
+   public Trace nodeTraceP() {
+      return nodeTraceP;
+   }
+
+   public Trace nodeTraceQ() {
+      return nodeTraceQ;
    }
 
    public ViolationModel violationModel() {

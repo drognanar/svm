@@ -10,7 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.lexicalscope.svm.heap.Heap;
-import com.lexicalscope.svm.metastate.MetaState;
+import com.lexicalscope.svm.metastate.SnapshotableMetaState;
 import com.lexicalscope.svm.stack.Stack;
 import com.lexicalscope.svm.vm.StateSearch;
 
@@ -33,8 +33,8 @@ public class TestStateSnapshot {
       final Heap heap = context.mock(Heap.class, "Heap");
       final Heap heapCopy = context.mock(Heap.class, "Heap copy");
 
-      final MetaState meta = context.mock(MetaState.class, "Meta");
-      final MetaState metaCopy = context.mock(MetaState.class, "Meta copy");
+      final SnapshotableMetaState meta = context.mock(SnapshotableMetaState.class, "Meta");
+      final SnapshotableMetaState metaCopy = context.mock(SnapshotableMetaState.class, "Meta copy");
 
       context.checking(new Expectations(){{
          oneOf(statics).snapshot(); will(returnValue(staticsCopy));

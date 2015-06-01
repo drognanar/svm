@@ -20,12 +20,20 @@ public class PcBuilder {
       return new ICmpLtSymbol(value1, value2);
    }
 
+   public static BoolSymbol icmplt(final int i, final ISymbol symbol) {
+      return icmplt(asISymbol(i), symbol);
+   }
+
    public static BoolSymbol invert(final BoolSymbol value1) {
       return value1.not();
    }
 
    public static BoolSymbol icmpgt(final ISymbol value1, final ISymbol value2) {
       return new ICmpGtSymbol(value1, value2);
+   }
+
+   public static BoolSymbol icmpgt(final ISymbol symbol, final int i) {
+      return icmpgt(symbol, asISymbol(i));
    }
 
    public static BoolSymbol icmpge(final ISymbol value1, final ISymbol value2) {

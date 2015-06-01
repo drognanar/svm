@@ -6,7 +6,7 @@ import static java.util.Arrays.copyOf;
 
 import com.lexicalscope.svm.metastate.HashMetaState;
 import com.lexicalscope.svm.metastate.MetaKey;
-import com.lexicalscope.svm.metastate.MetaState;
+import com.lexicalscope.svm.metastate.SnapshotableMetaState;
 import com.lexicalscope.svm.stack.trace.SMethodName;
 
 public final class SnapshotableStackFrame implements StackFrame {
@@ -18,7 +18,7 @@ public final class SnapshotableStackFrame implements StackFrame {
    private Object instruction; // PC
    private final SMethodName context;
    private final MethodScope scope;
-   private final MetaState meta;
+   private final SnapshotableMetaState meta;
 
    public SnapshotableStackFrame(
          final SMethodName context,
@@ -42,7 +42,7 @@ public final class SnapshotableStackFrame implements StackFrame {
          final Object[] stack,
          final int opBot,
          final int opTop,
-         final MetaState meta) {
+         final SnapshotableMetaState meta) {
       assert noNulls(stack);
       this.context = context;
       this.scope = scope;
@@ -61,7 +61,7 @@ public final class SnapshotableStackFrame implements StackFrame {
 
    @Override
    public StackFrame push(final Object val) {
-      assert val != null;
+      assert val != null : this;
       assert !(val instanceof Double);
       assert !(val instanceof Long);
       assert !(val instanceof Character);

@@ -32,6 +32,7 @@ import com.lexicalscope.svm.search.ConstantRandomiser;
 import com.lexicalscope.svm.search.GuidedSearchObserver;
 import com.lexicalscope.svm.search2.PartitionViolationException;
 import com.lexicalscope.svm.search2.TreeSearchFactory;
+import com.lexicalscope.svm.search2.TreeSearchStateSelectionRandom;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 
@@ -45,7 +46,7 @@ public class TestTreeSearchToMismatch {
    {
       instrumentPartition(changedRouter(), unchangedEntry(), vm);
       vm.entryPoint(ExampleServing.class, "main", "(I)V");
-      vm.builder().searchWith(new TreeSearchFactory(searchObserver, vm.feasbilityChecker(), new ConstantRandomiser(0)));
+      vm.builder().searchWith(new TreeSearchFactory(searchObserver, vm.feasbilityChecker(), new TreeSearchStateSelectionRandom(new ConstantRandomiser(0))));
    }
 
    public ISymbol symbol = new ITerminalSymbol("s");
