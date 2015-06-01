@@ -64,6 +64,10 @@ public class InstructionQueryAdapter<T> implements InstructionQuery<T> {
       return defaultResult();
    }
 
+   @Override public T i2c() {
+      return defaultResult();
+   }
+
    @Override public T checkcast() {
       return defaultResult();
    }

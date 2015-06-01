@@ -21,6 +21,7 @@ public interface InstructionQuery<T> {
    T iinc();
    T i2f();
    T i2l();
+   T i2c();
    T checkcast();
 
    T getstatic();

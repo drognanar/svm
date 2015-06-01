@@ -57,6 +57,7 @@ public interface InstructionSource {
    InstructionSource ixor(InstructionSink sink);
    InstructionSource lushr(InstructionSink sink);
    InstructionSource iinc(IincInsnNode iincInsnNode, InstructionSink sink);
+   InstructionSource i2c(InstructionSink sink);
    InstructionSource i2l(InstructionSink sink);
    InstructionSource i2f(InstructionSink sink);
    InstructionSource iconst(int val, InstructionSink sink);

@@ -155,6 +155,8 @@ public class InstructionSwitch {
                   return s.i2f(sink);
                case Opcodes.F2I:
                   return s.f2i(sink);
+               case Opcodes.I2C:
+                  return s.i2c(sink);
                case Opcodes.FCMPG:
                   return s.fcmpg(sink);
                case Opcodes.FCMPL:

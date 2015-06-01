@@ -62,6 +62,10 @@ public class InstructionQuerySafe<T> implements InstructionQuery<T> {
       throw new UnsupportedOperationException();
    }
 
+   @Override public T i2c() {
+      throw new UnsupportedOperationException();
+   }
+
    @Override public T checkcast() {
       throw new UnsupportedOperationException();
    }

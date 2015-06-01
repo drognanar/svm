@@ -43,6 +43,7 @@ public enum InstructionCode {
    ixor,
    lushr,
    iinc,
+   i2c,
    i2l,
    i2f,
    iconst,
