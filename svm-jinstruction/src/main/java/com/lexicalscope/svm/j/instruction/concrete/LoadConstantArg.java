@@ -13,7 +13,11 @@ public final class LoadConstantArg implements Vop {
    }
 
    @Override public void eval(final JState ctx) {
-      ctx.push(value);
+      if (value == null) {
+         ctx.push(ctx.nullPointer());
+      } else {
+         ctx.push(value);
+      }
    }
 
    @Override public <S> S query(final InstructionQuery<S> instructionQuery) {
