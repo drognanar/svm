@@ -105,7 +105,20 @@ public class TreeSearch implements StateSearch<JState> {
    }
 
    @Override public void forkDisjoined(final JState parent, final JState[] states) {
-      fork(parent, states);
+      observer.goal(pending);
+
+      final Trace goal = metaExtractor.goal(pending);
+      final TraceTree child = pushGoalToCurrentNode(goal);
+
+      observer.forkAt(parent);
+      for (JState state : states) {
+         final Trace disjoinedGoal = metaExtractor.goal(state);
+         final TraceTree disjoinedChild = child.child(disjoinedGoal);
+
+         pushStateToSearchLater(disjoinedChild, state);
+      }
+
+      pending = null;
    }
 
    @Override public void goal() {

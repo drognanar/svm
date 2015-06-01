@@ -94,6 +94,10 @@ public class FakeVmState implements JState {
 
    }
 
+   @Override public void forkDisjoined(final JState[] states) {
+
+   }
+
    @Override public JState[] fork() {
       return null;
    }
