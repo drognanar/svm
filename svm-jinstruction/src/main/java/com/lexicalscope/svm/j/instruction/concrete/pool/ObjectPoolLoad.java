@@ -2,6 +2,7 @@ package com.lexicalscope.svm.j.instruction.concrete.pool;
 
 import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
+import com.lexicalscope.svm.j.instruction.concrete.klass.DefineClassOp;
 import org.objectweb.asm.Type;
 
 import com.lexicalscope.svm.vm.j.InstructionQuery;
@@ -21,6 +22,7 @@ public class ObjectPoolLoad implements Vop {
    }
 
    @Override public void eval(final JState ctx) {
+      new DefineClassOp(internalName).eval(ctx);
       ctx.push(ctx.whereMyClassAt(internalName));
    }
 
