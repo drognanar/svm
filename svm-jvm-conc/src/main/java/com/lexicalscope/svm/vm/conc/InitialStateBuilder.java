@@ -49,9 +49,9 @@ public class InitialStateBuilder {
    private InstructionFactory instructionFactory = new ConcInstructionFactory();
    private InstructionSourceFactory instructionSourceFactory = new BaseInstructionSourceFactory();
    private HeapFactory heapFactory = new CheckingHeapFactory();
-   private final NativeMethods natives = DefaultNativeMethods.natives();
    private final InstrumentationBuilder instrumentationBuilder = new InstrumentationBuilder();
    private final MetaState metaState = new HashMetaState();
+   private NativeMethods natives = DefaultNativeMethods.natives();
    private InstructionSource instructionSource;
 
    public JStateImpl createInitialState(
@@ -139,6 +139,11 @@ public class InitialStateBuilder {
 
    public InitialStateBuilder heapFactory(final HeapFactory heapFactory) {
       this.heapFactory = heapFactory;
+      return this;
+   }
+
+   public InitialStateBuilder useNatives(NativeMethods natives) {
+      this.natives = natives;
       return this;
    }
 

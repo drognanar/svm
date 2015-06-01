@@ -1,12 +1,16 @@
 package com.lexicalscope.svm.vm.symb;
 
+import static com.lexicalscope.svm.j.instruction.TerminationMetaKey.*;
+import static com.lexicalscope.svm.j.instruction.concrete.object.SymbolicParametersMetaKey.S_PARAMETERS;
 import static com.lexicalscope.svm.j.instruction.concrete.object.SymbolCounterMetaKey.SC;
 import static com.lexicalscope.svm.j.instruction.symbolic.PcMetaKey.PC;
 import static com.lexicalscope.svm.vm.conc.InitialStateBuilder.initialState;
 
 import com.lexicalscope.svm.heap.HeapFactory;
+import com.lexicalscope.svm.j.instruction.TerminationMetaKey;
 import com.lexicalscope.svm.j.instruction.concrete.object.SymbolicParametersMetaKey;
 import com.lexicalscope.svm.j.instruction.symbolic.SymbInstructionFactory;
+import com.lexicalscope.svm.j.instruction.symbolic.ops.natives.SymbolicNativeMethods;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.TrueSymbol;
 import com.lexicalscope.svm.vm.conc.DepthFirstStateSearchFactory;
 import com.lexicalscope.svm.vm.conc.FastHeapFactory;
@@ -29,9 +33,11 @@ public class SymbVmFactory {
         final JvmBuilder vmBuilder = new JvmBuilder()
                 .searchWith(searchFactory)
                 .initialState(initialState()
+                        .useNatives(SymbolicNativeMethods.natives())
                         .instructionFactory(instructionFactory)
                         .heapFactory(heapFactory)
                         .meta(PC, new TrueSymbol())
+                        .meta(TERMINATION, false)
                         .meta(SC, 0)
                         .meta(S_PARAMETERS, new HashMap()));
         return vmBuilder;
