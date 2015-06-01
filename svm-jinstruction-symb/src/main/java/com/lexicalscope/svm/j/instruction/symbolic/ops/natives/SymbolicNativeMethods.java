@@ -12,6 +12,7 @@ public class SymbolicNativeMethods {
         symbolicNatives.addAll(DefaultNativeMethods.nativeMethodList());
         symbolicNatives.add(new Symbolic_newArray("newCharArraySymbol", "()[C"));
         symbolicNatives.add(new Symbolic_Java_lang_system_arraycopy());
+        symbolicNatives.add(new Symbolic_selectState());
 
         return DefaultNativeMethods.natives(symbolicNatives);
     }

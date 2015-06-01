@@ -1,4 +1,4 @@
-package com.lexicalscope.svm.j.natives;
+package com.lexicalscope.svm.j.instruction.symbolic.ops.natives;
 
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
 import com.lexicalscope.svm.j.instruction.symbolic.PcMetaKey;
@@ -6,6 +6,8 @@ import com.lexicalscope.svm.j.instruction.symbolic.symbols.BoolSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ICmpEqSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.IConstSymbol;
 import com.lexicalscope.svm.j.instruction.symbolic.symbols.ITerminalSymbol;
+import com.lexicalscope.svm.j.natives.AbstractNativeMethodDef;
+import com.lexicalscope.svm.j.natives.Symbolic_newSymbol;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.MethodBody;
@@ -35,8 +37,10 @@ public class Symbolic_selectState extends AbstractNativeMethodDef {
         @Override
         public void eval(JState ctx) {
             int count = (int) ctx.pop();
+            assert count > 0: "Cannot select one from 0 states.";
+
             JState[] forks = new JState[count];
-            ITerminalSymbol selectionSymbol = Symbolic_newSymbol.getNewSymbol(ctx);
+            ITerminalSymbol selectionSymbol = Symbolic_newSymbol.getNewSymbol("select", ctx);
             for (int i = 0; i < count; i++) {
                 forks[i] = ctx.snapshot();
                 forks[i].push(i);
@@ -44,7 +48,8 @@ public class Symbolic_selectState extends AbstractNativeMethodDef {
                 BoolSymbol newConstraints = previousConstraints.and(new ICmpEqSymbol(selectionSymbol, new IConstSymbol(i)));
                 forks[i].setMeta(PC, newConstraints);
             }
-            ctx.fork(forks);
+
+            ctx.forkDisjoined(forks);
         }
 
         @Override
