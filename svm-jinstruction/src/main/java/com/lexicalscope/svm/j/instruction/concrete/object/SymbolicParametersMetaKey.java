@@ -30,14 +30,29 @@ public class SymbolicParametersMetaKey implements MetaKey<Map> {
     }
 
     public static int countObjects(Map passedParameters, Object receiver, Object passedClass) {
-        return getObject(passedParameters, receiver, passedClass).size();
+        List<Object> possibleValues = getPossibleValues(passedParameters, receiver, passedClass);
+        if (possibleValues == null) {
+            return 0;
+        }
+        return possibleValues.size();
+    }
+
+    public static List<Object> getPossibleValues(Map passedParameters, Object receiver, Object passedClass) {
+        if (!passedParameters.containsKey(receiver)) {
+            return null;
+        }
+
+        Map passedObjectParameters = (Map) passedParameters.get(receiver);
+        if (!passedObjectParameters.containsKey(passedClass)) {
+            return null;
+        }
+        List possibleValues = (List) passedObjectParameters.get(passedClass);
+        return possibleValues;
     }
 
     public static List<Object> getObject(Map passedParameters, Object receiver, Object passedClass) {
-        assert passedParameters.containsKey(receiver): "No parameters were ever passed to the receiver.";
-        Map passedObjectParameters = (Map) passedParameters.get(receiver);
-        assert passedObjectParameters.containsKey(passedClass): "No instance of a given class was ever passed to the object.";
-        List possibleValues = (List) passedObjectParameters.get(passedClass);
+        List<Object> possibleValues = getPossibleValues(passedParameters, receiver, passedClass);
+        assert possibleValues != null: "No parameters were ever passed to the receiver.";
         return possibleValues;
     }
 

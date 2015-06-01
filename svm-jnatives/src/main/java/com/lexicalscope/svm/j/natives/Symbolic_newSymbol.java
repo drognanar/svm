@@ -30,7 +30,7 @@ public class Symbolic_newSymbol extends AbstractNativeMethodDef {
     private class GetSymbolOp implements Vop {
         @Override
         public void eval(JState ctx) {
-            ctx.push(getNewSymbol(ctx));
+            ctx.push(getNewSymbol("symbol", ctx));
         }
 
         @Override
@@ -39,9 +39,11 @@ public class Symbolic_newSymbol extends AbstractNativeMethodDef {
         }
     }
 
-    public static ITerminalSymbol getNewSymbol(JState ctx) {
+    public static ITerminalSymbol getNewSymbol(String prefix, JState ctx) {
         int counter = ctx.getMeta(SC);
-        ITerminalSymbol symbol = new ITerminalSymbol(String.format("%s%d", "symbol", counter));
+        String methodName = ctx.previousFrame().context().toString();
+        String symbolName = String.format("%s_%s_%d", prefix, methodName, counter);
+        ITerminalSymbol symbol = new ITerminalSymbol(symbolName);
         ctx.setMeta(SC, counter + 1);
         return symbol;
     }

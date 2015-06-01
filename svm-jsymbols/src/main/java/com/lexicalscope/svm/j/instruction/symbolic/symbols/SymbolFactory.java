@@ -7,6 +7,8 @@ public class SymbolFactory {
     /** Create an integer symbols while symbolically executing the program. */
     public static native int newIntSymbol();
 
+    public static native char[] newCharArraySymbol();
+
     /** Create a boolean symbols while symbolically executing the program. */
     public static native boolean newBooleanSymbol();
 
@@ -26,7 +28,11 @@ public class SymbolFactory {
     private static native Object getPassedParameter(Object receiver, Class<?> klass, int index);
 
     public static Object getPassedParameter(Object receiver, Class<?> klass) {
-        int parameterIndex = selectState(countParameters(receiver, klass));
+        int params = countParameters(receiver, klass);
+        if (params == 0) {
+            return null;
+        }
+        int parameterIndex = selectState(params);
         return getPassedParameter(receiver, klass, parameterIndex);
     }
 

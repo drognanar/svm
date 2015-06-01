@@ -13,6 +13,7 @@ public class SymbolicNativeMethods {
         symbolicNatives.add(new Symbolic_newArray("newCharArraySymbol", "()[C"));
         symbolicNatives.add(new Symbolic_Java_lang_system_arraycopy());
         symbolicNatives.add(new Symbolic_selectState());
+        symbolicNatives.add(new Symbolic_getArgument());
 
         return DefaultNativeMethods.natives(symbolicNatives);
     }

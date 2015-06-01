@@ -71,9 +71,7 @@ public class DefaultNativeMethods implements NativeMethods {
                 new Symbolic_getPassedParameter(),
                 new Symbolic_countParameters(),
                 new Symbolic_passParameter(),
-                new Symbolic_selectState(),
-                new Symbolic_randomChoice(),
-                new Symbolic_getArgument()
+                new Symbolic_randomChoice()
         );
     }
 
