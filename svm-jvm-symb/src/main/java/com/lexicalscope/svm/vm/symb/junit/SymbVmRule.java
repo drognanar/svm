@@ -37,12 +37,6 @@ public class SymbVmRule extends VmRule {
       return new SymbVmRule(symbInstructionFactory, feasibilityChecker, SymbVmFactory.symbolicVmBuilder(symbInstructionFactory, factory));
    }
 
-   private static JvmBuilder getSearchFactory(SymbInstructionFactory symbInstructionFactory, FeasibilityChecker feasibilityChecker, StateSearchFactory factory) {
-      return factory == null
-              ? SymbVmFactory.symbolicVmBuilder(symbInstructionFactory, feasibilityChecker)
-              : SymbVmFactory.symbolicVmBuilder(symbInstructionFactory, factory);
-   }
-
    @Override protected void configureTarget(final FluentObject<Object> object) {
       solverRule.createSymbols(object);
    }
