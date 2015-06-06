@@ -17,6 +17,7 @@ public interface InstructionFactory {
    BinaryOperator imulOperation();
    BinaryOperator iremOperation();
    BinaryOperator isubOperation();
+   BinaryOperator idivOperation();
    BinaryOperator iandOperation();
    UnaryOperator inegOperation();
 

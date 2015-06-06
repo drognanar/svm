@@ -1,5 +1,6 @@
 package com.lexicalscope.svm.j.instruction.symbolic;
 
+import com.lexicalscope.svm.j.instruction.symbolic.ops.SIDivOperator;
 import com.lexicalscope.svm.j.instruction.symbolic.ops.SIRemOperator;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -87,6 +88,11 @@ public class SymbInstructionFactory implements InstructionFactory {
    @Override
    public BinaryOperator isubOperation() {
       return siBinary(new SISubOperator());
+   }
+
+   @Override
+   public BinaryOperator idivOperation() {
+      return siBinary(new SIDivOperator());
    }
 
    private SIBinaryOperatorAdapter siBinary(final SIBinaryOperator op) {

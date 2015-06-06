@@ -478,6 +478,12 @@ public class BaseInstructionSource implements InstructionSource {
    }
 
    @Override
+   public InstructionSource idiv(final InstructionSource.InstructionSink sink) {
+      return binaryOp(instructionFactory.idivOperation(), idiv, sink);
+   }
+
+
+   @Override
    public InstructionSource iadd(final InstructionSource.InstructionSink sink) {
       return binaryOp(instructionFactory.iaddOperation(), iadd, sink);
    }

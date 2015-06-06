@@ -89,6 +89,8 @@ public class InstructionSwitch {
                   return s.irem(sink);
                case Opcodes.IMUL:
                   return s.imul(sink);
+               case Opcodes.IDIV:
+                  return s.idiv(sink);
                case Opcodes.FMUL:
                   return s.fmul(sink);
                case Opcodes.FDIV:

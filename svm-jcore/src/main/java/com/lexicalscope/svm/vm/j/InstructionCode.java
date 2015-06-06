@@ -34,6 +34,7 @@ public enum InstructionCode {
    iadd,
    irem,
    imul,
+   idiv,
    isub,
    ineg,
    ishl,

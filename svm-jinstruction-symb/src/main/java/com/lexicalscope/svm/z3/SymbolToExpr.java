@@ -52,6 +52,10 @@ public class SymbolToExpr implements SymbolVisitor<Expr, Z3Exception> {
       return ctx.mkBVSub((BitVecExpr) toExpr(left), (BitVecExpr) toExpr(right));
    }
 
+   @Override public BitVecExpr div(final ISymbol left, final ISymbol right) throws Z3Exception {
+      return ctx.mkBVSDiv((BitVecExpr) toExpr(left), (BitVecExpr) toExpr(right));
+   }
+
    @Override public BitVecExpr mul(final ISymbol left, final ISymbol right) throws Z3Exception {
       return ctx.mkBVMul((BitVecExpr) toExpr(left), (BitVecExpr) toExpr(right));
    }

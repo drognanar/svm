@@ -1,5 +1,6 @@
 package com.lexicalscope.svm.j.instruction.factory;
 
+import com.lexicalscope.svm.j.instruction.concrete.integer.IDivOperator;
 import com.lexicalscope.svm.j.instruction.concrete.integer.IRemOperator;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -94,6 +95,11 @@ public class ConcInstructionFactory implements InstructionFactory {
    @Override
    public BinaryOperator isubOperation() {
       return new ISubOperator();
+   }
+
+   @Override
+   public BinaryOperator idivOperation() {
+      return new IDivOperator();
    }
 
    @Override
