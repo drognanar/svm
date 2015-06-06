@@ -37,6 +37,15 @@ public class TestCanFindConstructorCall {
       }
    }
 
+   public static class ClassCallingNestedConstructors {
+      public ClassCallingNestedConstructors(ClassCallingNestedConstructors c) {
+      }
+
+      public static void method() {
+         new ClassCallingNestedConstructors(new ClassCallingNestedConstructors(null));
+      }
+   }
+
    public static class ClassCallingSuperConstructor extends ClassUnderConstruction {
       public ClassCallingSuperConstructor() {
          super();
@@ -67,5 +76,13 @@ public class TestCanFindConstructorCall {
       new FindConstructorCall(anyKlass()).findInstruction(method.entry(), counting);
 
       assertThat("found constructor", counting, countIs(0));
+   }
+
+   @Test public void findNestedConstructors() {
+      final SMethod method = classLoader.virtualMethod(ClassCallingNestedConstructors.class, "method", NOARGS_VOID_DESC);
+
+      new FindConstructorCall(anyKlass()).findInstruction(method.entry(), counting);
+
+      assertThat("found constructor", counting, countIs(2));
    }
 }
