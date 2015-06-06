@@ -79,6 +79,7 @@ public class TreeSearch implements StateSearch<JState> {
    }
 
    @Override public void reachedLeaf() {
+      pending.complete();
       observer.leaf(pending);
       results.add(pending);
 

@@ -18,9 +18,9 @@ import com.lexicalscope.svm.vm.TerminationException;
 import com.lexicalscope.svm.vm.j.klass.SClass;
 
 public class JStateImpl implements JState {
-   private final Statics statics;
+   private Statics statics;
    private final Stack stack;
-   private final Heap heap;
+   private Heap heap;
    private final SnapshotableMetaState meta;
    private final StateSearch<JState> search;
    private final StateTag descendentTag;
@@ -273,6 +273,12 @@ public class JStateImpl implements JState {
 
    @Override public StackFrame currentFrame() {
       return stack.currentFrame();
+   }
+
+   @Override
+   public void complete() {
+      heap = null;
+      statics = null;
    }
 
    @Override

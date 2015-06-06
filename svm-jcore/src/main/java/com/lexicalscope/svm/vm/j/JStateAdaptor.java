@@ -54,6 +54,10 @@ public class JStateAdaptor implements JState {
    }
 
    @Override
+   public void complete() {
+   }
+
+   @Override
    public void advanceToNextInstruction() {
       delegate.advanceToNextInstruction();
    }

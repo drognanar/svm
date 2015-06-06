@@ -62,6 +62,11 @@ public class FakeVmState implements JState {
       return null;
    }
 
+   @Override
+   public void complete() {
+
+   }
+
    @Override public void advanceToNextInstruction() {
 
    }
