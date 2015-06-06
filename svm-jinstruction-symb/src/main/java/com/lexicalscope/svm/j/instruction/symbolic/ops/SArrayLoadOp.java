@@ -18,6 +18,16 @@ public class SArrayLoadOp implements Vop {
    private final FeasibilityChecker feasibilityChecker;
    private final ArrayLoadOp concreteArrayLoad;
 
+   private static ArrayLoadOp.ValueTransform widenSymbolicChar = new ArrayLoadOp.ValueTransform() {
+      @Override public Object transformForLoad(final Object value) {
+         if (value instanceof ISymbol) {
+            return value;
+         }
+         assert value instanceof Character;
+         return (int)(char)value;
+      }
+   };
+
    public SArrayLoadOp(final FeasibilityChecker feasibilityChecker, final ArrayLoadOp concreteArrayLoad) {
       this.feasibilityChecker = feasibilityChecker;
       this.concreteArrayLoad = concreteArrayLoad;
@@ -56,7 +66,7 @@ public class SArrayLoadOp implements Vop {
    }
 
    public static Vop caLoad(final FeasibilityChecker feasibilityChecker) {
-      return new SArrayLoadOp(feasibilityChecker, ArrayLoadOp.caLoad());
+      return new SArrayLoadOp(feasibilityChecker, new ArrayLoadOp(widenSymbolicChar));
    }
 
    @Override public <T> T query(final InstructionQuery<T> instructionQuery) {

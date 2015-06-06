@@ -18,6 +18,15 @@ public class SArrayStoreOp implements Vop {
    private final FeasibilityChecker feasibilityChecker;
    private final ArrayStoreOp concreteArrayStore;
 
+   private static ArrayStoreOp.ValueTransform charTransform = new ArrayStoreOp.ValueTransform() {
+      @Override public Object transformForStore(final Object value) {
+         if (value instanceof ISymbol) {
+            return value;
+         }
+         return (char)(int)value;
+      }
+   };
+
    public SArrayStoreOp(final FeasibilityChecker feasibilityChecker, final ArrayStoreOp concreteArrayStore) {
       this.feasibilityChecker = feasibilityChecker;
       this.concreteArrayStore = concreteArrayStore;
@@ -58,7 +67,7 @@ public class SArrayStoreOp implements Vop {
    }
 
    public static Vop caStore(final FeasibilityChecker feasibilityChecker) {
-      return new SArrayStoreOp(feasibilityChecker, ArrayStoreOp.caStore());
+      return new SArrayStoreOp(feasibilityChecker, new ArrayStoreOp(charTransform));
    }
 
    @Override public <T> T query(final InstructionQuery<T> instructionQuery) {

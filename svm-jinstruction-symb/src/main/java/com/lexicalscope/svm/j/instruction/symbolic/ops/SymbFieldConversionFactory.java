@@ -20,8 +20,9 @@ public class SymbFieldConversionFactory implements FieldConversionFactory {
 
    private static final class IntToChar implements FieldConversion {
       @Override public Object convert(final Object val) {
+         assert val instanceof Integer || val instanceof ISymbol;
          if(val instanceof ISymbol) {
-            throw new IllegalStateException("symbolic char not supported");
+            return val;
          }
          return (char)(int) val;
       }
@@ -29,8 +30,9 @@ public class SymbFieldConversionFactory implements FieldConversionFactory {
 
    private static final class CharToInt implements FieldConversion {
       @Override public Object convert(final Object val) {
+         assert val instanceof Character || val instanceof ISymbol;
          if(val instanceof ISymbol) {
-            throw new IllegalStateException("symbolic char not supported");
+            return val;
          }
          return (int)(char) val;
       }
