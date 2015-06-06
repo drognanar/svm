@@ -18,11 +18,14 @@ public class InstanceOfOp implements Vop {
 
    @Override public void eval(final JState ctx) {
       final ObjectRef address = (ObjectRef) ctx.pop();
-      if(!ctx.nullPointer().equals(address)) {
+      if(ctx.nullPointer().equals(address)) {
          ctx.push(1);
          return;
       }
 
+      // If instance is not of an expected class then the class might not be defined yet.
+      // TODO: might be replaced by a try {} catch {} given that in most cases the class will be loaded.
+      new DefineClassOp(klassName).eval(ctx);
       final SClass classFromHeap = (SClass) ctx.get(address, OBJECT_TYPE_MARKER_OFFSET);
       final SClass classFromInstruction = ctx.loadKlassFor(klassName);
 

@@ -18,7 +18,7 @@ public class CheckCastOp implements Vop {
 
    @Override public void eval(final JState ctx) {
       final ObjectRef address = (ObjectRef) ctx.peek();
-      if(!ctx.nullPointer().equals(address)) {
+      if(ctx.nullPointer().equals(address)) {
          return;
       }
 
