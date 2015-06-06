@@ -4,7 +4,6 @@ import static com.lexicalscope.svm.vm.j.InstructionCode.*;
 
 import com.lexicalscope.svm.heap.ObjectRef;
 import com.lexicalscope.svm.j.instruction.MethodCallVop;
-import com.lexicalscope.svm.j.instruction.StateAssertion;
 import com.lexicalscope.svm.j.instruction.concrete.klass.LoadingOp;
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
 import com.lexicalscope.svm.stack.MethodScope;
@@ -115,7 +114,7 @@ public class MethodCallInstruction {
 
    private static MethodResolver receiver(final Object[] args, final SMethodName sMethodName, final JState ctx) {
       final Object receiver = ctx.get((ObjectRef) args[0], SClass.OBJECT_TYPE_MARKER_OFFSET);
-      StateAssertion.assertState(receiver != null, sMethodName.toString());
+      assert receiver != null: sMethodName.toString();
       assert receiver instanceof MethodResolver : "no " + sMethodName + " in " + receiver;
       return (MethodResolver) receiver;
    }
