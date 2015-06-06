@@ -11,6 +11,7 @@ import com.lexicalscope.svm.partition.spec.BehaviourUnchanged;
 import com.lexicalscope.svm.partition.spec.CallContext;
 import com.lexicalscope.svm.partition.trace.PartitionInstrumentation;
 import com.lexicalscope.svm.partition.trace.symb.tree.GuidedStateSearchFactory;
+import com.lexicalscope.svm.search.NullGuidedSearchObserver;
 import com.lexicalscope.svm.vm.conc.StateSearchFactory;
 import com.lexicalscope.svm.vm.symb.junit.SymbVmRule;
 import com.lexicalscope.svm.z3.FeasibilityChecker;
@@ -33,7 +34,7 @@ public class TestRouterInequivalence {
     public void setUp() {
         symbol = new ITerminalSymbol("s");
         FeasibilityChecker feasibilityChecker = new FeasibilityChecker();
-        StateSearchFactory factory = new GuidedStateSearchFactory(feasibilityChecker);
+        StateSearchFactory factory = new GuidedStateSearchFactory(new NullGuidedSearchObserver(), feasibilityChecker);
         vm = SymbVmRule.createSymbVmRule(feasibilityChecker, factory);
         vm.entryPoint(ExampleServing.class, "main", "(I)V");
         vm.loadFrom(new Class[]{ExamplesOneMarker.class, ExamplesTwoMarker.class});
