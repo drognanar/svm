@@ -6,6 +6,7 @@ import java.util.List;
 import com.lexicalscope.svm.partition.trace.HashTrace.CallReturn;
 import com.lexicalscope.svm.partition.trace.Trace;
 import com.lexicalscope.svm.partition.trace.TraceElement;
+import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 public class FakeTrace implements Trace {
@@ -27,7 +28,7 @@ public class FakeTrace implements Trace {
       return null;
    }
 
-   @Override public Trace extend(final SMethodDescriptor methodCalled, final CallReturn callReturn, final Object... args) {
+   @Override public Trace extend(final JState ctx, final SMethodDescriptor methodCalled, final CallReturn callReturn, final Object... args) {
       return null;
    }
 

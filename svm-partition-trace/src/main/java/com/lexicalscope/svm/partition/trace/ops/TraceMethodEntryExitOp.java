@@ -48,7 +48,7 @@ class TraceMethodEntryExitOp implements Vop {
             args = ctx.locals(methodName.argSize());
          }
          final Trace trace = ctx.getMeta(TRACE);
-         ctx.setMeta(TRACE, trace.extend(methodName, callReturn, args));
+         ctx.setMeta(TRACE, trace.extend(ctx, methodName, callReturn, args));
          ctx.goal();
       }
    }

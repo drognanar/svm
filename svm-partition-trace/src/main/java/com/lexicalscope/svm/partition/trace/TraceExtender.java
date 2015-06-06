@@ -1,7 +1,14 @@
 package com.lexicalscope.svm.partition.trace;
 
+import com.lexicalscope.svm.heap.ObjectRef;
+import com.lexicalscope.svm.j.instruction.concrete.array.NewArrayOp;
+import com.lexicalscope.svm.vm.j.JState;
+import com.lexicalscope.svm.vm.j.code.AsmSMethodName;
+
 import static java.util.Arrays.copyOf;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +33,26 @@ public class TraceExtender {
       for (final int i : objectArgIndexes) {
          normalisedArgs[i + 1] = aliasForArg(normalisedArgs[i + 1]);
       }
+   }
+
+   public void normaliseArrayArguments(JState ctx, final AsmSMethodName.ArrayArgItem[] arrayArgIndexes) {
+      for (final AsmSMethodName.ArrayArgItem i : arrayArgIndexes) {
+         normalisedArgs[i.index + 1] = normaliseArray(ctx, (ObjectRef) normalisedArgs[i.index + 1], i.objectElementType);
+      }
+   }
+
+   private Object normaliseArray(JState ctx, ObjectRef address, boolean objectElementType) {
+      int length = (int) ctx.get(address, NewArrayOp.ARRAY_LENGTH_OFFSET);
+      ArrayList<Object> arr = new ArrayList<>(length);
+      for (int i = 0; i < length; i++) {
+         if (objectElementType) {
+            arr.add(i, aliasForArg(ctx.get(address, NewArrayOp.ARRAY_PREAMBLE + i)));
+         } else {
+            arr.add(i, ctx.get(address, NewArrayOp.ARRAY_PREAMBLE + i));
+         }
+      }
+
+      return arr;
    }
 
    private Alias aliasForArg(final Object arg) {

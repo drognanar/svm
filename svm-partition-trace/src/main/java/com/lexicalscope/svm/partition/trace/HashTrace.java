@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.klass.SMethodDescriptor;
 
 public class HashTrace implements Trace {
@@ -32,11 +33,12 @@ public class HashTrace implements Trace {
    }
 
    @Override
-   public Trace extend(final SMethodDescriptor methodCalled, final CallReturn callReturn, final Object ... args) {
+   public Trace extend(final JState ctx, final SMethodDescriptor methodCalled, final CallReturn callReturn, final Object ... args) {
       final TraceExtender traceExtender = new TraceExtender(args, map, nextAlias);
 
       if(callReturn.equals(CALL)) {
          traceExtender.aliasesForCallArguments(methodCalled.objectArgIndexes());
+         traceExtender.normaliseArrayArguments(ctx, methodCalled.arrayArgIndexes());
       }
       if(callReturn.equals(CALL) || methodCalled.returnIsObject()) {
          traceExtender.aliasesForZerothArguments();

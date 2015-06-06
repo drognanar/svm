@@ -11,12 +11,12 @@ public class TraceBuilder {
    public static TraceBuilder trace() { return new TraceBuilder(); }
 
    public TraceBuilder methodCall(final Class<?> klass, final String name, final String desc, final Object ... args) {
-      trace = trace.extend(new AsmSMethodName(klass, name, desc), CALL, args);
+      trace = trace.extend(null, new AsmSMethodName(klass, name, desc), CALL, args);
       return this;
    }
 
    public TraceBuilder methodReturn(final Class<?> klass, final String name, final String desc, final Object ... args) {
-      trace = trace.extend(new AsmSMethodName(klass, name, desc), RETURN, args);
+      trace = trace.extend(null, new AsmSMethodName(klass, name, desc), RETURN, args);
       return this;
    }
 
@@ -26,7 +26,7 @@ public class TraceBuilder {
    }
 
    public static Trace terminateTrace(final Trace trace) {
-      return trace.extend(JavaConstants.INITIAL_FRAME_NAME, RETURN);
+      return trace.extend(null, JavaConstants.INITIAL_FRAME_NAME, RETURN);
    }
 
    public Trace build() {

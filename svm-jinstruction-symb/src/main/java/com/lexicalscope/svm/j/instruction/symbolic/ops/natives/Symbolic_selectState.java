@@ -33,7 +33,7 @@ public class Symbolic_selectState extends AbstractNativeMethodDef {
     public static void pushValues(JState ctx, Object[] values) {
         SMethodDescriptor context = (SMethodDescriptor) ctx.currentFrame().context();
         Trace trace = ctx.getMeta(TRACE);
-        trace = trace.extend(context, HashTrace.CallReturn.CALL, 0);
+        trace = trace.extend(ctx, context, HashTrace.CallReturn.CALL, 0);
         ctx.setMeta(TRACE, trace);
 
         JState[] forks = new JState[values.length];
@@ -41,7 +41,7 @@ public class Symbolic_selectState extends AbstractNativeMethodDef {
             forks[i] = ctx.snapshot();
             forks[i].push(values[i]);
 
-            Trace forkTrace = trace.extend(context, HashTrace.CallReturn.RETURN, 0, i);
+            Trace forkTrace = trace.extend(ctx, context, HashTrace.CallReturn.RETURN, 0, i);
             forks[i].setMeta(TRACE, forkTrace);
         }
 

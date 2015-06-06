@@ -20,6 +20,7 @@ public final class AsmSMethodName implements Comparable<AsmSMethodName>, SMethod
    private final SVirtualMethodName virtualName;
    private final int hashCode;
    private final int[] objectArgIndexes;
+   private final ArrayArgItem[] arrayArgIndexes;
    private final boolean returnTypeIsObject;
 
    public AsmSMethodName(
@@ -39,6 +40,7 @@ public final class AsmSMethodName implements Comparable<AsmSMethodName>, SMethod
       this.virtualName = new AsmSVirtualMethodName(name, desc);
       this.hashCode = klassName.hashCode() ^ virtualName.hashCode();
       this.objectArgIndexes = indexesOfObjectArgs(desc);
+      this.arrayArgIndexes = indexesOfArrayArgs(desc);
       this.returnTypeIsObject = getReturnType(desc).getSort() == Type.OBJECT;
    }
 
@@ -51,6 +53,22 @@ public final class AsmSMethodName implements Comparable<AsmSMethodName>, SMethod
          }
       }
       return Ints.toArray(result);
+   }
+
+   private static ArrayArgItem[] indexesOfArrayArgs(final String desc) {
+      final List<ArrayArgItem> result = new ArrayList<>();
+      final Type[] argumentTypes = Type.getArgumentTypes(desc);
+      for (int j = 0; j < argumentTypes.length; j++) {
+         if(argumentTypes[j].getSort() == Type.ARRAY) {
+            result.add(new ArrayArgItem(j, argumentTypes[j].getElementType().getSort() == Type.OBJECT));
+         }
+      }
+
+      ArrayArgItem[] items = new ArrayArgItem[result.size()];
+      for (int i = 0; i < items.length; i++) {
+         items[i] = result.get(i);
+      }
+      return items;
    }
 
    @Override public boolean returnIsObject() {
@@ -126,6 +144,10 @@ public final class AsmSMethodName implements Comparable<AsmSMethodName>, SMethod
       return objectArgIndexes;
    }
 
+   @Override public ArrayArgItem[] arrayArgIndexes() {
+      return arrayArgIndexes;
+   }
+
    @Override
    public int returnCount() {
       return getArgumentsAndReturnSizes(desc()) & 0x03;
@@ -165,5 +187,15 @@ public final class AsmSMethodName implements Comparable<AsmSMethodName>, SMethod
 
    @Override public boolean declaredOn(final Matcher<KlassInternalName> klassInternalNameMatcher) {
       return klassInternalNameMatcher.matches(klassName());
+   }
+
+   public static class ArrayArgItem {
+      public int index;
+      public boolean objectElementType;
+
+      public ArrayArgItem(int index, boolean objectElementType) {
+         this.index = index;
+         this.objectElementType = objectElementType;
+      }
    }
 }

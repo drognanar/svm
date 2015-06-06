@@ -1,5 +1,6 @@
 package com.lexicalscope.svm.vm.j.klass;
 
+import com.lexicalscope.svm.vm.j.code.AsmSMethodName;
 import org.hamcrest.Matcher;
 
 import com.lexicalscope.svm.stack.trace.SMethodName;
@@ -19,6 +20,7 @@ public interface SMethodDescriptor extends SMethodName {
    String desc();
 
    int[] objectArgIndexes();
+   AsmSMethodName.ArrayArgItem[] arrayArgIndexes();
    boolean returnIsObject();
    int argSize();
    int returnCount();
