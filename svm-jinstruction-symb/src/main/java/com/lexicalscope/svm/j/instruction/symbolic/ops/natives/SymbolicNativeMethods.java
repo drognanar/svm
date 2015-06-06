@@ -14,6 +14,12 @@ public class SymbolicNativeMethods {
         symbolicNatives.add(new Symbolic_Java_lang_system_arraycopy());
         symbolicNatives.add(new Symbolic_selectState());
         symbolicNatives.add(new Symbolic_getArgument());
+        symbolicNatives.add(new Symbolic_randomChoice());
+        symbolicNatives.add(new Symbolic_newSymbol("newIntSymbol", "()I"));
+        symbolicNatives.add(new Symbolic_newSymbol("newBooleanSymbol", "()Z"));
+        symbolicNatives.add(new Symbolic_getPassedParameter());
+        symbolicNatives.add(new Symbolic_countParameters());
+        symbolicNatives.add(new Symbolic_passParameter());
 
         return DefaultNativeMethods.natives(symbolicNatives);
     }

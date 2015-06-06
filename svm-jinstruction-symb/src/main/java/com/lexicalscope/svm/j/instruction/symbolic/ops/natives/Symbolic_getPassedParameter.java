@@ -1,9 +1,9 @@
-package com.lexicalscope.svm.j.natives;
+package com.lexicalscope.svm.j.instruction.symbolic.ops.natives;
 
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
+import com.lexicalscope.svm.j.natives.AbstractNativeMethodDef;
 import com.lexicalscope.svm.vm.j.*;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.lexicalscope.svm.j.instruction.concrete.object.SymbolicParametersMetaKey.S_PARAMETERS;

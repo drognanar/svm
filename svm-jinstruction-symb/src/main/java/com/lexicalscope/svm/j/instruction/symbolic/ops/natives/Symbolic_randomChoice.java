@@ -1,6 +1,7 @@
-package com.lexicalscope.svm.j.natives;
+package com.lexicalscope.svm.j.instruction.symbolic.ops.natives;
 
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
+import com.lexicalscope.svm.j.natives.AbstractNativeMethodDef;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.MethodBody;
@@ -25,10 +26,8 @@ public class Symbolic_randomChoice extends AbstractNativeMethodDef {
     private class RandomChoiceOp implements Vop {
         @Override
         public void eval(JState ctx) {
-            JState[] forks = ctx.fork();
-            forks[0].push(0);
-            forks[1].push(1);
-            ctx.fork(forks);
+            Object[] values = new Object[] {0, 1};
+            Symbolic_selectState.pushValues(ctx, values);
         }
 
         @Override

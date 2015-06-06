@@ -1,6 +1,7 @@
-package com.lexicalscope.svm.j.natives;
+package com.lexicalscope.svm.j.instruction.symbolic.ops.natives;
 
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
+import com.lexicalscope.svm.j.natives.AbstractNativeMethodDef;
 import com.lexicalscope.svm.vm.j.InstructionQuery;
 import com.lexicalscope.svm.vm.j.JState;
 import com.lexicalscope.svm.vm.j.MethodBody;
