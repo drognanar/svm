@@ -17,11 +17,11 @@ import com.lexicalscope.svm.vm.j.klass.SClass;
 public class StaticsImpl implements Statics {
    // TODO[tim]: need fast-clone version
    private static final KlassInternalName klassKlassName = internalName(Class.class);
-   private final Map<KlassInternalName, SClass> defined;
+   private final CowMap<KlassInternalName, SClass> defined;
 
    // TODO[tim]: combine these maps for efficiency
-   private final Map<SClass, ObjectRef> staticsAddresses;
-   private final Map<SClass, ObjectRef> classAddresses;
+   private final CowMap<SClass, ObjectRef> staticsAddresses;
+   private final CowMap<SClass, ObjectRef> classAddresses;
 
    private final SClassLoader classLoader;
 
@@ -34,9 +34,9 @@ public class StaticsImpl implements Statics {
 
    private StaticsImpl(
          final SClassLoader classLoader,
-         final Map<KlassInternalName, SClass> defined,
-         final Map<SClass, ObjectRef> staticsAddresses,
-         final Map<SClass, ObjectRef> classAddresses) {
+         final CowMap<KlassInternalName, SClass> defined,
+         final CowMap<SClass, ObjectRef> staticsAddresses,
+         final CowMap<SClass, ObjectRef> classAddresses) {
        this.defined = defined;
        this.classLoader = classLoader;
        this.staticsAddresses = staticsAddresses;

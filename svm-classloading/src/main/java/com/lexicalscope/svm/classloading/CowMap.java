@@ -9,11 +9,7 @@ public class CowMap<K, V> implements Map<K, V> {
     private MapInternal internal;
 
     public CowMap() {
-        this(new HashMap<K, V>());
-    }
-
-    public CowMap(Map<K, V> delegate) {
-        this.internal = new MapInternal(delegate);
+        internal = new MapInternal(new HashMap<K, V>());
     }
 
     public CowMap(CowMap<K, V> map) {
