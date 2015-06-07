@@ -5,6 +5,7 @@ import static java.util.Objects.hash;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
@@ -14,16 +15,16 @@ import com.lexicalscope.svm.stack.trace.SStackTrace;
 import com.lexicalscope.svm.stack.trace.SStackTraceElement;
 
 public class DequeStack implements Stack {
-   private final Deque<StackFrame> stack;
+   private DequeStackFrame stack;
    private Object currentThread;
 
-   private DequeStack(final Deque<StackFrame> stack, final Object currentThread) {
+   private DequeStack(final DequeStackFrame stack, final Object currentThread) {
       this.stack = stack;
       this.currentThread = currentThread;
    }
 
    public DequeStack() {
-      this(new ArrayDeque<StackFrame>(), null);
+      this(DequeStackFrame.topFrame(), null);
    }
 
    public DequeStack(final StackFrame firstStackFrame) {
@@ -33,13 +34,19 @@ public class DequeStack implements Stack {
 
    @Override
    public Stack popFrame(final int returnCount) {
-      pushOperands(stack.pop().pop(returnCount));
+      pushOperands(pop().pop(returnCount));
       return this;
    }
 
    @Override public Stack push(final StackFrame stackFrame) {
-      stack.push(stackFrame);
+      this.stack = stack.push(stackFrame);
       return this;
+   }
+
+   public StackFrame pop() {
+      DequeStackFrame oldStackFrame = this.stack;
+      this.stack = this.stack.pop();
+      return oldStackFrame.getFrame();
    }
 
    private Stack pushOperands(final Object[] operands) {
@@ -49,7 +56,7 @@ public class DequeStack implements Stack {
 
    @Override
    public StackFrame topFrame() {
-      return stack.peek();
+      return stack.getFrame();
    }
 
    @Override
@@ -59,10 +66,7 @@ public class DequeStack implements Stack {
 
    @Override
    public DequeStack snapshot() {
-      final ArrayDeque<StackFrame> stackCopy = new ArrayDeque<>(stack.size());
-      for (final Iterator<StackFrame> iterator = stack.descendingIterator(); iterator.hasNext();) {
-         stackCopy.push(iterator.next().snapshot());
-      }
+      DequeStackFrame stackCopy = stack.snapshot();
       assert stackCopy.size() == stack.size();
       return new DequeStack(stackCopy, currentThread);
    }
@@ -89,13 +93,11 @@ public class DequeStack implements Stack {
    }
 
    @Override public StackFrame previousFrame() {
-      final Iterator<StackFrame> iterator = stack.iterator();
-      iterator.next();
-      return iterator.next();
-   };
+      return stack.getPreviousFrame().getFrame();
+   }
 
    @Override public StackFrame currentFrame() {
-      return stack.iterator().next();
+      return stack.getFrame();
    };
 
    @Override
@@ -115,5 +117,83 @@ public class DequeStack implements Stack {
    @Override
    public String toString() {
       return String.format("%s", stack);
+   }
+
+   public static class DequeStackFrame implements Iterable<StackFrame> {
+      /**
+       * Previous frame on the stack.
+       */
+      private DequeStackFrame previousFrame = null;
+
+      /**
+       * Frame.
+       */
+      private StackFrame frame;
+
+      /**
+       * Size of the stack frame.
+       */
+      private int size;
+
+      /**
+       * Returns whether a StackFrame is shared between multiple JState instances.
+       */
+      private boolean shared = false;
+
+      public DequeStackFrame(StackFrame frame, DequeStackFrame previousFrame, int size) {
+         this.frame = frame;
+         this.previousFrame = previousFrame;
+         this.size = size;
+      }
+
+      public static DequeStackFrame topFrame() {
+         return new DequeStackFrame(null, null, 0);
+      }
+
+      public DequeStackFrame snapshot() {
+         previousFrame.shared = true;
+         return new DequeStackFrame(frame.snapshot(), previousFrame, size);
+      }
+
+      public DequeStackFrame pop() {
+         DequeStackFrame previous = previousFrame;
+         return previous.shared ? previous.snapshot() : previous;
+      }
+
+      public DequeStackFrame push(StackFrame frame) {
+         return new DequeStackFrame(frame, this, size + 1);
+      }
+
+      public StackFrame getFrame() {
+         return frame;
+      }
+
+      public DequeStackFrame getPreviousFrame() {
+         return previousFrame;
+      }
+
+      public int size() {
+         return size;
+      }
+
+      public StackFrame[] toArray() {
+         StackFrame[] arr = new StackFrame[size];
+         DequeStackFrame frame = this;
+         for (int i = 0; i < size; i++) {
+            arr[i] = frame.getFrame();
+            frame = frame.previousFrame;
+         }
+         return arr;
+      }
+
+      @Override
+      public String toString() {
+         return Arrays.toString(toArray());
+      }
+
+      @Override
+      public Iterator<StackFrame> iterator() {
+         return Arrays.asList(toArray()).iterator();
+      }
    }
 }
