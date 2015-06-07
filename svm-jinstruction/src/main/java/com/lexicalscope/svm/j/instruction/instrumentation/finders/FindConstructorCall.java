@@ -11,6 +11,8 @@ import com.lexicalscope.svm.vm.j.KlassInternalName;
 import com.lexicalscope.svm.vm.j.queries.IsConstructorCall;
 import com.lexicalscope.svm.vm.j.queries.IsNewInstruction;
 
+import java.util.Stack;
+
 public class FindConstructorCall implements InstructionFinder {
    private interface SearchState {
       void matchInstruction(Instruction instruction, InstructionInstrumentor instrumentor);
@@ -20,6 +22,7 @@ public class FindConstructorCall implements InstructionFinder {
       @Override public void matchInstruction(final Instruction instruction, final InstructionInstrumentor instrumentor) {
          if(instruction.query(new IsNewInstruction(klass)))
          {
+            newCalls++;
             state = new LookingForConstructor();
          }
       }
@@ -27,23 +30,27 @@ public class FindConstructorCall implements InstructionFinder {
 
    private class LookingForConstructor implements FindConstructorCall.SearchState {
       @Override public void matchInstruction(final Instruction instruction, final InstructionInstrumentor instrumentor) {
-         assert !instruction.query(new IsNewInstruction(klass)) :
-            "found two new instructions with no constructor inbetween";
-
-         if(instruction.query(new IsConstructorCall(klass)))
-         {
-            instrumentor.candidate(instruction);
-            state = new LookingForNew();
+         if (instruction.query(new IsNewInstruction(klass))) {
+            newCalls++;
          }
-         else
+         else if(instruction.query(new IsConstructorCall(klass)))
          {
-            assert !instruction.query(new IsConstructorCall(any(KlassInternalName.class))) :
-               "found the wrong constructor after a new instruction";
+            newCalls--;
+            instrumentor.candidate(instruction);
+            if (newCalls == 0) {
+               state = new LookingForNew();
+            }
+         }
+         else if (instruction.query(new IsConstructorCall(any(KlassInternalName.class))))
+         {
+            newCalls--;
+            assert newCalls > 0: "Top constructor needs to match the type of NEW";
          }
       }
    }
 
    private FindConstructorCall.SearchState state = new LookingForNew();
+   private int newCalls = 0;
    private final Matcher<KlassInternalName> klass;
 
    public FindConstructorCall(final Matcher<KlassInternalName> klass) {
@@ -54,5 +61,6 @@ public class FindConstructorCall implements InstructionFinder {
       for (final Instruction instruction : methodEntry) {
          state.matchInstruction(instruction, instrumentor);
       }
+      assert newCalls == 0: "Unbalanced NEW and init calls.";
    }
 }
