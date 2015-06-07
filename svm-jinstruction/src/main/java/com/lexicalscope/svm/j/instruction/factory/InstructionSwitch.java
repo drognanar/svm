@@ -79,6 +79,8 @@ public class InstructionSwitch {
                   return s.return2(methodName, sink);
                case Opcodes.ARETURN:
                   return s.return1(methodName, sink);
+               case Opcodes.ATHROW:
+                  return s.athrow(sink);
                case Opcodes.IAND:
                   return s.iand(sink);
                case Opcodes.LAND:

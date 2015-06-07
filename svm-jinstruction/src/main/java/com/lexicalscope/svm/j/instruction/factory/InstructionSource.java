@@ -113,6 +113,7 @@ public interface InstructionSource {
    InstructionSource iaload(InstructionSink sink);
    InstructionSource aaload(InstructionSink sink);
    InstructionSource arraylength(InstructionSink sink);
+   InstructionSource athrow(InstructionSink sink);
 
    InstructionSource ldcint(int cst, InstructionSink sink);
    InstructionSource ldclong(long cst, InstructionSink sink);

@@ -99,6 +99,7 @@ public enum InstructionCode {
    iaload,
    aaload,
    arraylength,
+   athrow,
 
    ldcint,
    ldclong,

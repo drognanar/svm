@@ -3,6 +3,7 @@ package com.lexicalscope.svm.j.instruction.factory;
 import static com.lexicalscope.svm.vm.j.InstructionCode.*;
 import static com.lexicalscope.svm.vm.j.KlassInternalName.internalName;
 
+import com.lexicalscope.svm.j.instruction.concrete.exceptions.AThrowOp;
 import com.lexicalscope.svm.j.instruction.concrete.integer.I2COp;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -362,6 +363,11 @@ public class BaseInstructionSource implements InstructionSource {
    @Override
    public InstructionSource arraylength(final InstructionSource.InstructionSink sink) {
       return linearInstruction(new ArrayLengthOp(), arraylength, sink);
+   }
+
+   @Override
+   public InstructionSource athrow(final InstructionSource.InstructionSink sink) {
+      return linearInstruction(new AThrowOp(), athrow, sink);
    }
 
    @Override
