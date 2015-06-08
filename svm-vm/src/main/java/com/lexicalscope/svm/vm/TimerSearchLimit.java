@@ -1,18 +1,26 @@
 package com.lexicalscope.svm.vm;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Search limit that ensures that the execution does not exceed a specified time.
  */
 public class TimerSearchLimit implements SearchLimits {
     /**
-     * Time in milliseconds when the execution started.
-     */
-    public long startTime;
-
-    /**
      * Threshold in milliseconds that the execution should not exceed.
      */
     public final long thresholdMillis;
+
+    /**
+     * Timer that schedules the timeout.
+     */
+    private Timer timer;
+
+    /**
+     * True if the vm should keep on executing.
+     */
+    private boolean withinLimits = true;
 
     public TimerSearchLimit(long thresholdMillis) {
         this.thresholdMillis = thresholdMillis;
@@ -25,8 +33,7 @@ public class TimerSearchLimit implements SearchLimits {
 
     @Override
     public boolean withinLimits() {
-        long currentTime = System.currentTimeMillis();
-        return currentTime - startTime <= thresholdMillis;
+        return withinLimits;
     }
 
     @Override
@@ -35,6 +42,20 @@ public class TimerSearchLimit implements SearchLimits {
 
     @Override
     public void reset() {
-        startTime = System.currentTimeMillis();
+        done();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                withinLimits = false;
+            }
+        }, thresholdMillis);
+    }
+
+    @Override public void done() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 }

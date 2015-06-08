@@ -43,6 +43,7 @@ public class TestVmImpl {
          oneOf(state0).eval();
          oneOf(limits).searchedState(); inSequence(limitsOrder);
          oneOf(search).pendingState(); will(returnValue(null));
+         oneOf(limits).done(); inSequence(limitsOrder);
          oneOf(search).firstResult(); will(returnValue(stateR));
       }});
 
@@ -58,6 +59,7 @@ public class TestVmImpl {
          oneOf(search).reachedLeaf();
          oneOf(limits).searchedState(); inSequence(limitsOrder);
          oneOf(search).pendingState(); will(returnValue(null));
+         oneOf(limits).done(); inSequence(limitsOrder);
          oneOf(search).firstResult(); will(returnValue(stateR));
       }});
 
@@ -69,6 +71,7 @@ public class TestVmImpl {
          oneOf(limits).reset(); inSequence(limitsOrder);
          oneOf(search).pendingState(); will(returnValue(state0));
          oneOf(limits).withinLimits(); will(returnValue(false)); inSequence(limitsOrder);
+         oneOf(limits).done(); inSequence(limitsOrder);
          oneOf(search).firstResult(); will(returnValue(stateR));
       }});
 

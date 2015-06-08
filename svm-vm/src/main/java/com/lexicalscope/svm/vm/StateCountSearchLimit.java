@@ -14,4 +14,7 @@ public class StateCountSearchLimit implements SearchLimits {
    @Override public void reset() {
       count = 0;
    }
+
+   @Override public void done() {
+   }
 }

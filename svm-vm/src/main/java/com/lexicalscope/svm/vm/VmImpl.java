@@ -28,6 +28,7 @@ public final class VmImpl<S extends VmState> implements Vm<S> {
 			}
 			limits.searchedState();
 		}
+	   limits.done();
 		return search.firstResult();
 	}
 

@@ -5,4 +5,5 @@ public interface SearchLimits {
 
    void searchedState();
    void reset();
+   void done();
 }
