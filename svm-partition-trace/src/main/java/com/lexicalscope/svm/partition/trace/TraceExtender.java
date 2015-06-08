@@ -42,6 +42,9 @@ public class TraceExtender {
    }
 
    private Object normaliseArray(JState ctx, ObjectRef address, boolean objectElementType) {
+      if (address == ctx.nullPointer()) {
+         return address;
+      }
       int length = (int) ctx.get(address, NewArrayOp.ARRAY_LENGTH_OFFSET);
       ArrayList<Object> arr = new ArrayList<>(length);
       for (int i = 0; i < length; i++) {
