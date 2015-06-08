@@ -52,11 +52,7 @@ public final class JvmBuilder {
       return this;
    }
 
-   public void addNative(NativeMethodDef nativeMethod) {
-       this.initialState().natives();
-   }
-
-   public InitialStateBuilder initialState() {
+    public InitialStateBuilder initialState() {
       return this.initialStateBuilder;
    }
 }
