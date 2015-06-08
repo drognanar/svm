@@ -103,9 +103,10 @@ public class TreeSearch implements StateSearch<JState> {
       final TraceTree child = pushGoalToCurrentNode(goal);
 
       observer.forkAt(parent);
-      for (JState state : states) {
+      for (int i = 0; i < states.length; i++) {
+         JState state = states[i];
          final Trace disjoinedGoal = metaExtractor.goal(state);
-         final TraceTree disjoinedChild = child.child(disjoinedGoal);
+         final TraceTree disjoinedChild = child.child(disjoinedGoal, i);
 
          pushStateToSearchLater(disjoinedChild, state);
       }

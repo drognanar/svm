@@ -20,7 +20,7 @@ public class TraceTree {
    private final Trace nodeTrace;
    private final StatesCollection pStates;
    private final StatesCollection qStates;
-   private final LinkedHashMap<Trace, TraceTree> children = new LinkedHashMap<>();
+   private final LinkedHashMap<Object, TraceTree> children = new LinkedHashMap<>();
    private final TraceTreeObserver ttObserver;
    private FastListLocation pLocation;
    private FastListLocation qLocation;
@@ -78,11 +78,15 @@ public class TraceTree {
    }
 
    public TraceTree child(final Trace trace) {
-      if(!children.containsKey(trace)) {
+      return child(trace, trace);
+   }
+
+   public TraceTree child(final Trace trace, Object key) {
+      if(!children.containsKey(key)) {
          final TraceTree child = new TraceTree(trace, stateSelection, ttObserver);
-         children.put(trace, child);
+         children.put(key, child);
       }
-      return children.get(trace);
+      return children.get(key);
    }
 
    public Collection<TraceTree> children() {
