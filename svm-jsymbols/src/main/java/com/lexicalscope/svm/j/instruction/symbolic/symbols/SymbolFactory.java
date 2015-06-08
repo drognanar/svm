@@ -4,6 +4,9 @@ import java.util.Iterator;
 
 /** Class that contains methods generating symbolic inputs. */
 public class SymbolFactory {
+    private static final int MAX_BREADTH = 10;
+    private static final int SPLIT = 4;
+
     /** Create an integer symbols while symbolically executing the program. */
     public static native int newIntSymbol();
 
@@ -13,7 +16,21 @@ public class SymbolFactory {
     public static native boolean newBooleanSymbol();
 
     /** Method to select one option out of many. */
-    public static native int selectState(int states);
+    public static int selectState(int states) {
+        if (states <= MAX_BREADTH) {
+            return selectStateInner(states);
+        } else {
+            int size = (states + SPLIT - 1) / SPLIT;
+            int partition = selectStateInner(4);
+            int from = partition * size;
+            int to = Math.min(states, (partition + 1) * size);
+            passParameter(null, Object.class, from);
+            passParameter(null, Object.class, to);
+            return from + selectState(to - from);
+        }
+    }
+
+    private static native int selectStateInner(int states);
 
     /** Randomly chooses between true and false. */
     public static native boolean randomChoice();

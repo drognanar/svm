@@ -18,7 +18,7 @@ import static com.lexicalscope.svm.partition.trace.TraceMetaKey.TRACE;
  */
 public class Symbolic_selectState extends AbstractNativeMethodDef {
     public Symbolic_selectState() {
-        super("com/lexicalscope/svm/j/instruction/symbolic/symbols/SymbolFactory", "selectState", "(I)I");
+        super("com/lexicalscope/svm/j/instruction/symbolic/symbols/SymbolFactory", "selectStateInner", "(I)I");
     }
 
     @Override
