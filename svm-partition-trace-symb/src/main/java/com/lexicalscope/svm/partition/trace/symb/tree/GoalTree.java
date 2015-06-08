@@ -31,8 +31,8 @@ public final class GoalTree implements InputSubset {
 
    public GoalTree(final GoalMapFactory goalMapFactory, final FeasibilityChecker feasibilityChecker) {
       this.feasibilityChecker = feasibilityChecker;
-      this.coveredPc = new FalseSymbol();
-      this.childrenCoverPc = new FalseSymbol();
+      this.coveredPc = FalseSymbol.FF;
+      this.childrenCoverPc = FalseSymbol.FF;
       this.openNodes = new OpenNodes(feasibilityChecker);
       this.children = goalMapFactory.newGoalMap();
       this.childFactory = new SubtreeFactory<GoalTree>() {

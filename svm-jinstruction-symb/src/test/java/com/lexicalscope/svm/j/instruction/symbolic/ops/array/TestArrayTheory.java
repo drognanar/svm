@@ -23,7 +23,7 @@ public class TestArrayTheory {
    private final FeasibilityChecker feasbilityChecker = new FeasibilityChecker();
 
    private final StateBuilder state = new StateBuilder();
-   private final BoolSymbol pc = new TrueSymbol();
+   private final BoolSymbol pc = TrueSymbol.TT;
 
    @Test public void storeAndSelectAtSymbolicIndex() throws Exception {
       final ITerminalSymbol indexSymbol = state.intSymbol();

@@ -17,8 +17,8 @@ public final class ICmpGeStrategy implements BinarySBranchOp {
 
    @Override public BoolSymbol conditionSymbol(final Integer value1, final Integer value2) {
       if (value1 >= value2) {
-         return new TrueSymbol();
+         return TrueSymbol.TT;
       }
-      return new FalseSymbol();
+      return FalseSymbol.FF;
    }
 }

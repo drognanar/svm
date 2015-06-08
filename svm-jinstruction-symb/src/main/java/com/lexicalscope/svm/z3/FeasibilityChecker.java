@@ -42,8 +42,8 @@ public class FeasibilityChecker extends TypeSafeDiagnosingMatcher<BoolSymbol> im
          throw new RuntimeException("could not enable warning messages", e);
       }
       //Log.open("test.log");
-      satisfiableCache.put(new TrueSymbol(), true);
-      satisfiableCache.put(new FalseSymbol(), false);
+      satisfiableCache.put(TrueSymbol.TT, true);
+      satisfiableCache.put(FalseSymbol.FF, false);
 
       final HashMap<String, String> cfg = new HashMap<String, String>();
       cfg.put("model", "true");

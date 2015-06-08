@@ -21,8 +21,8 @@ public final class ICmpNeStrategy implements BinarySBranchOp {
 
    private BoolSymbol pConditionSymbol(final int value1, final int value2) {
       if (value1 != value2) {
-         return new TrueSymbol();
+         return TrueSymbol.TT;
       }
-      return new FalseSymbol();
+      return FalseSymbol.FF;
    }
 }

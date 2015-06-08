@@ -57,10 +57,10 @@ public class PcBuilder {
    }
 
    public static BoolSymbol truth() {
-      return new TrueSymbol();
+      return TrueSymbol.TT;
    }
 
    public static BoolSymbol falsity() {
-      return new FalseSymbol();
+      return FalseSymbol.FF;
    }
 }

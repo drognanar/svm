@@ -36,7 +36,7 @@ public class SymbVmFactory {
                         .useNatives(SymbolicNativeMethods.natives())
                         .instructionFactory(instructionFactory)
                         .heapFactory(heapFactory)
-                        .meta(PC, new TrueSymbol())
+                        .meta(PC, TrueSymbol.TT)
                         .meta(TERMINATION, false)
                         .meta(SC, 0)
                         .meta(S_PARAMETERS, new HashMap()));

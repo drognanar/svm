@@ -39,7 +39,7 @@ public class TestGoalTree {
    }
 
    @Test public void rootHasEmptyPc() throws Exception {
-      assertThat(goalTree.covers(), solver.equivalent(new FalseSymbol()));
+      assertThat(goalTree.covers(), solver.equivalent(FalseSymbol.FF));
    }
 
    @Test public void firstGoalCreatesFirstChild() throws Exception {

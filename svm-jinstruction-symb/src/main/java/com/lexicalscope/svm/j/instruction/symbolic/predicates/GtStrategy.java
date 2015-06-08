@@ -13,9 +13,9 @@ public final class GtStrategy implements UnarySBranchOp {
 
    @Override public BoolSymbol conditionSymbol(final Integer value) {
       if(value > 0) {
-         return new TrueSymbol();
+         return TrueSymbol.TT;
       }
-      return new FalseSymbol();
+      return FalseSymbol.FF;
    }
 
    @Override public String toString() {

@@ -2,6 +2,10 @@ package com.lexicalscope.svm.j.instruction.symbolic.symbols;
 
 
 public class FalseSymbol implements BoolSymbol {
+   public static FalseSymbol FF = new FalseSymbol();
+
+   private FalseSymbol() { }
+
    @Override public boolean isTT() {
       return false;
    }
@@ -27,14 +31,6 @@ public class FalseSymbol implements BoolSymbol {
    }
 
    @Override public BoolSymbol not() {
-      return new TrueSymbol();
-   }
-
-   @Override public int hashCode() {
-      return FalseSymbol.class.hashCode();
-   }
-
-   @Override public boolean equals(final Object obj) {
-      return obj != null && obj.getClass().equals(this.getClass());
+      return TrueSymbol.TT;
    }
 }

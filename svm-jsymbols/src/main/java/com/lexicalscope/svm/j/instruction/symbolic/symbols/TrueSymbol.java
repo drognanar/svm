@@ -2,6 +2,10 @@ package com.lexicalscope.svm.j.instruction.symbolic.symbols;
 
 
 public final class TrueSymbol implements BoolSymbol {
+   public static TrueSymbol TT = new TrueSymbol();
+
+   private TrueSymbol() {}
+
    @Override public boolean isTT() {
       return true;
    }
@@ -23,18 +27,10 @@ public final class TrueSymbol implements BoolSymbol {
    }
 
    @Override public BoolSymbol not() {
-      return new FalseSymbol();
+      return FalseSymbol.FF;
    }
 
    @Override public String toString() {
       return "TT";
-   }
-
-   @Override public int hashCode() {
-      return TrueSymbol.class.hashCode();
-   }
-
-   @Override public boolean equals(final Object obj) {
-      return obj != null && obj.getClass().equals(this.getClass());
    }
 }
