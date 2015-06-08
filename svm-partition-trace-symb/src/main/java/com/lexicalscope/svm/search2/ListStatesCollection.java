@@ -1,14 +1,12 @@
 package com.lexicalscope.svm.search2;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import com.lexicalscope.svm.search.Randomiser;
 import com.lexicalscope.svm.vm.j.JState;
 
 public class ListStatesCollection implements StatesCollection {
-   private final List<JState> states = new ArrayList<>();
+   private final FastRemovalList<JState> states = new FastRemovalList<>();
    private final TraceTreeSideObserver listener;
    private final Randomiser randomiser;
 

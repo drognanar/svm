@@ -22,6 +22,8 @@ public class TraceTree {
    private final StatesCollection qStates;
    private final LinkedHashMap<Trace, TraceTree> children = new LinkedHashMap<>();
    private final TraceTreeObserver ttObserver;
+   private FastListLocation pLocation;
+   private FastListLocation qLocation;
    private BoolSymbol pPc = falsity();
    private BoolSymbol qPc = falsity();
 
@@ -39,11 +41,11 @@ public class TraceTree {
       this.stateSelection = stateSelection;
       this.ttObserver = ttObserver;
       pStates = stateSelection.statesCollection(new TraceTreeSideObserver(){
-         @Override public void stateAvailable() { ttObserver.pstateAvailable(TraceTree.this); }
+         @Override public void stateAvailable() { pLocation = ttObserver.pstateAvailable(TraceTree.this); }
          @Override public void stateUnavailable() { ttObserver.pstateUnavailable(TraceTree.this); }});
 
       qStates = stateSelection.statesCollection(new TraceTreeSideObserver(){
-         @Override public void stateAvailable() { ttObserver.qstateAvailable(TraceTree.this); }
+         @Override public void stateAvailable() { qLocation = ttObserver.qstateAvailable(TraceTree.this); }
          @Override public void stateUnavailable() { ttObserver.qstateUnavailable(TraceTree.this); }});
    }
 
@@ -143,6 +145,14 @@ public class TraceTree {
             return actual.children();
          }
       };
+   }
+
+   public FastListLocation pLocation() {
+      return pLocation;
+   }
+
+   public FastListLocation qLocation() {
+      return qLocation;
    }
 
    public BoolSymbol pPc() {

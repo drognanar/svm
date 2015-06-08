@@ -44,7 +44,7 @@ public class TestTreeSearchToExhaustion {
    {
       instrumentPartition(changedRouter(), unchangedEntry(), vm);
       vm.entryPoint(ExampleServing.class, "main", "(I)V");
-      vm.builder().searchWith(new TreeSearchFactory(searchObserver, vm.feasbilityChecker(), new TreeSearchStateSelectionRandom(new ConstantRandomiser(0))));
+      vm.builder().searchWith(new TreeSearchFactory(searchObserver, vm.feasbilityChecker(), new TreeSearchStateSelectionRandom(new ConstantRandomiser(0), new ArrayListCollectionFactory())));
    }
 
    public ISymbol symbol = new ITerminalSymbol("s");

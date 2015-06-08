@@ -1,43 +1,39 @@
 package com.lexicalscope.svm.search2;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 
 public class TraceTreeTracker implements TraceTreeObserver {
-   private final List<TraceTree> pstatesAvailable = new ArrayList<TraceTree>();
-   private final List<TraceTree> qstatesAvailable = new ArrayList<TraceTree>();
+   private final FastRemovalList<TraceTree> pstatesAvailable = new FastRemovalList<>();
+   private final FastRemovalList<TraceTree> qstatesAvailable = new FastRemovalList<>();
 
-   @Override public void pstateAvailable(final TraceTree traceTree) {
-      pstatesAvailable.add(traceTree);
+   @Override public FastListLocation pstateAvailable(final TraceTree traceTree) {
+      return pstatesAvailable.addItem(traceTree);
    }
 
    @Override public void pstateUnavailable(final TraceTree traceTree) {
-      pstatesAvailable.remove(traceTree);
+      pstatesAvailable.remove(traceTree.pLocation());
    }
 
-   @Override public void qstateAvailable(final TraceTree traceTree) {
-      qstatesAvailable.add(traceTree);
+   @Override public FastListLocation qstateAvailable(final TraceTree traceTree) {
+      return qstatesAvailable.addItem(traceTree);
    }
 
    @Override public void qstateUnavailable(final TraceTree traceTree) {
-      qstatesAvailable.remove(traceTree);
+      qstatesAvailable.remove(traceTree.qLocation());
    }
 
-   public List<TraceTree> pstatesAvailable() {
+   public FastRemovalList<TraceTree> pstatesAvailable() {
       return pstatesAvailable;
    }
 
-   public List<TraceTree> qstatesAvailable() {
+   public FastRemovalList<TraceTree> qstatesAvailable() {
       return qstatesAvailable;
    }
 
-   public static FeatureMatcher<TraceTreeTracker, Collection<TraceTree>> hasPstatesAvailable(final Matcher<? super Collection<TraceTree>> contains) {
-      return new FeatureMatcher<TraceTreeTracker, Collection<TraceTree>>(contains, "tree with p states available", "pStates available") {
-         @Override protected Collection<TraceTree> featureValueOf(final TraceTreeTracker actual) {
+   public static FeatureMatcher<TraceTreeTracker, FastRemovalList<TraceTree>> hasPstatesAvailable(final Matcher<? super FastRemovalList<TraceTree>> contains) {
+      return new FeatureMatcher<TraceTreeTracker, FastRemovalList<TraceTree>>(contains, "tree with p states available", "pStates available") {
+         @Override protected FastRemovalList<TraceTree> featureValueOf(final TraceTreeTracker actual) {
             return actual.pstatesAvailable();
          }
       };

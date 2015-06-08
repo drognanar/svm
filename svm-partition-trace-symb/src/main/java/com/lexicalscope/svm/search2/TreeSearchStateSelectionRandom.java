@@ -1,7 +1,5 @@
 package com.lexicalscope.svm.search2;
 
-import java.util.List;
-
 import com.lexicalscope.svm.search.Randomiser;
 
 public class TreeSearchStateSelectionRandom implements TreeSearchStateSelection {
@@ -19,15 +17,15 @@ public class TreeSearchStateSelectionRandom implements TreeSearchStateSelection 
       this(randomiser, new ListStatesCollectionFactory());
    }
 
-   @Override public TraceTree qnode(final List<TraceTree> qstatesAvailable) {
+   @Override public TraceTree qnode(final FastRemovalList<TraceTree> qstatesAvailable) {
       return pickNode(qstatesAvailable);
    }
 
-   @Override public TraceTree pnode(final List<TraceTree> pstatesAvailable) {
+   @Override public TraceTree pnode(final FastRemovalList<TraceTree> pstatesAvailable) {
       return pickNode(pstatesAvailable);
    }
 
-   private TraceTree pickNode(final List<TraceTree> statesAvailable) {
+   private TraceTree pickNode(final FastRemovalList<TraceTree> statesAvailable) {
       final int node = randomiser.random(statesAvailable.size());
       return statesAvailable.get(node);
    }
