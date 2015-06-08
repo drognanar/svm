@@ -23,7 +23,6 @@ public final class VmImpl<S extends VmState> implements Vm<S> {
 			try {
 			   pending.eval();
 			} catch (final TerminationException termination) {
-			   search.reachedLeaf();
 			} catch (final RuntimeException e) {
 				throw e;
 			}

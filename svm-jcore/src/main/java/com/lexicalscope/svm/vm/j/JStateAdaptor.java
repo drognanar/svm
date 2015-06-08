@@ -54,7 +54,8 @@ public class JStateAdaptor implements JState {
    }
 
    @Override
-   public void complete() {
+   public void terminate() {
+      delegate.terminate();
    }
 
    @Override

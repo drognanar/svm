@@ -276,7 +276,8 @@ public class JStateImpl implements JState {
    }
 
    @Override
-   public void complete() {
+   public void terminate() {
+      search.reachedLeaf();
       heap = null;
       statics = null;
    }

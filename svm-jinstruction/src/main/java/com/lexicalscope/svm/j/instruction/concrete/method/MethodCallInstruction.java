@@ -4,6 +4,7 @@ import static com.lexicalscope.svm.vm.j.InstructionCode.*;
 
 import com.lexicalscope.svm.heap.ObjectRef;
 import com.lexicalscope.svm.j.instruction.MethodCallVop;
+import com.lexicalscope.svm.j.instruction.StateAssertion;
 import com.lexicalscope.svm.j.instruction.concrete.klass.LoadingOp;
 import com.lexicalscope.svm.j.instruction.factory.InstructionSource;
 import com.lexicalscope.svm.stack.MethodScope;
@@ -108,6 +109,7 @@ public class MethodCallInstruction {
    }
 
    private static Resolution resolveVirtualMethod(final Object[] args, final SMethodDescriptor sMethodName, final JState ctx) {
+      StateAssertion.assertState(ctx, args[0] != ctx.nullPointer(), "Cannot be null");
       final MethodResolver receiverKlass = receiver(args, sMethodName, ctx);
       return new Resolution(receiverKlass.virtualMethod(sMethodName));
    }

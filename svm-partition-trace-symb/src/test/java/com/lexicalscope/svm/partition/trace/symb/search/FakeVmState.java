@@ -63,7 +63,7 @@ public class FakeVmState implements JState {
    }
 
    @Override
-   public void complete() {
+   public void terminate() {
 
    }
 

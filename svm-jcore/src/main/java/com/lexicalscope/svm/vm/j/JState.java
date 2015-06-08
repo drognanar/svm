@@ -20,7 +20,7 @@ public interface JState extends Snapshotable<JState>, VmState {
    StackFrame previousFrame();
    StackFrame currentFrame();
 
-   void complete();
+   void terminate();
 
    void advanceToNextInstruction();
    void advanceTo(Instruction instruction);

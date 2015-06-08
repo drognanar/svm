@@ -13,7 +13,7 @@ import com.lexicalscope.svm.vm.j.Vop;
 public class AThrowOp implements Vop {
     @Override
     public void eval(JState ctx) {
-        StateAssertion.assertState(false, "Catching exceptions is not implemented.");
+        StateAssertion.assertState(ctx, false, "Catching exceptions is not implemented.");
     }
 
     @Override
